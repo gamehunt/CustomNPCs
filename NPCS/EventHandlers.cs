@@ -1,0 +1,199 @@
+using Exiled.Events.EventArgs;
+using Exiled.Permissions.Extensions;
+using UnityEngine;
+
+using System.IO;
+
+namespace NPCS
+{
+    public class EventHandlers
+    {
+        public Plugin plugin;
+
+        public EventHandlers(Plugin plugin) => this.plugin = plugin;
+
+        public void OnRoundStart()
+        {
+        }
+
+        public void OnRoundEnd(RoundEndedEventArgs ev)
+        {
+            NPCComponent[] npcs = Object.FindObjectsOfType<NPCComponent>();
+            foreach (NPCComponent npc in npcs)
+            {
+                Npc obj_npc = Npc.FromComponent(npc);
+                obj_npc.Kill(false);
+            }
+        }
+
+        public void OnRACMD(SendingRemoteAdminCommandEventArgs ev)
+        {
+            switch (ev.Name)
+            {
+                case "npc_create":
+                    ev.IsAllowed = false;
+                    if (!ev.Sender.CheckPermission("npc.all"))
+                    {
+                        ev.ReplyMessage = "Access denied!";
+                        ev.Success = false;
+                        break;
+                    }
+                    if (ev.Arguments.Count == 0)
+                    {
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation);
+                    }
+                    else if (ev.Arguments.Count == 1)
+                    {
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, RoleType.ClassD, ItemType.None, ev.Arguments[0]);
+                    }
+                    else if (ev.Arguments.Count == 2)
+                    {
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, (RoleType)int.Parse(ev.Arguments[1]), ItemType.None, ev.Arguments[0]);
+                    }
+                    else if (ev.Arguments.Count == 3)
+                    {
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, (RoleType)int.Parse(ev.Arguments[1]), (ItemType)int.Parse(ev.Arguments[2]), ev.Arguments[0]);
+                    }
+                    else if (ev.Arguments.Count == 4)
+                    {
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, (RoleType)int.Parse(ev.Arguments[1]), (ItemType)int.Parse(ev.Arguments[2]), ev.Arguments[0], ev.Arguments[3]);
+                    }
+                    break;
+
+                case "npc_clean":
+                    ev.IsAllowed = false;
+                    if (!ev.Sender.CheckPermission("npc.all"))
+                    {
+                        ev.ReplyMessage = "Access denied!";
+                        ev.Success = false;
+                        break;
+                    }
+                    NPCComponent[] npcs = Object.FindObjectsOfType<NPCComponent>();
+                    foreach (NPCComponent npc in npcs)
+                    {
+                        Npc obj_npc = Npc.FromComponent(npc);
+                        obj_npc.Kill(false);
+                    }
+                    break;
+
+                case "npc_remove":
+                    ev.IsAllowed = false;
+                    if (!ev.Sender.CheckPermission("npc.all"))
+                    {
+                        ev.ReplyMessage = "Access denied!";
+                        ev.Success = false;
+                        break;
+                    }
+                    if (ev.Arguments.Count > 0)
+                    {
+                        NPCComponent[] _npcs = Object.FindObjectsOfType<NPCComponent>();
+                        Npc obj_npc = Npc.FromComponent(_npcs[int.Parse(ev.Arguments[0])]);
+                        obj_npc.Kill(false);
+                    }
+                    else
+                    {
+                        ev.ReplyMessage = "You need to provide NPC's id!";
+                    }
+                    break;
+
+                case "npc_list":
+                    ev.IsAllowed = false;
+                    if (!ev.Sender.CheckPermission("npc.all"))
+                    {
+                        ev.ReplyMessage = "Access denied!";
+                        ev.Success = false;
+                        break;
+                    }
+                    NPCComponent[] __npcs = Object.FindObjectsOfType<NPCComponent>();
+                    int id = 0;
+                    foreach (NPCComponent npc in __npcs)
+                    {
+                        Npc obj_npc = Npc.FromComponent(npc);
+                        ev.Sender.RemoteAdminMessage($"{id} | {obj_npc.Name} | {Path.GetFileName(obj_npc.RootNode.NodeFile)}", true, plugin.Name);
+                        id++;
+                    }
+                    break;
+
+                case "npc_load":
+                    ev.IsAllowed = false;
+                    if (!ev.Sender.CheckPermission("npc.all"))
+                    {
+                        ev.ReplyMessage = "Access denied!";
+                        ev.Success = false;
+                        break;
+                    }
+                    if (ev.Arguments.Count < 1)
+                    {
+                        ev.ReplyMessage = "You need to provide path to file!";
+                        ev.Success = false;
+                        break;
+                    }
+                    Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, ev.Arguments[0]);
+                    break;
+                case "npc_save":
+                    ev.IsAllowed = false;
+                    if (!ev.Sender.CheckPermission("npc.all"))
+                    {
+                        ev.ReplyMessage = "Access denied!";
+                        ev.Success = false;
+                        break;
+                    }
+                    if (ev.Arguments.Count < 2)
+                    {
+                        ev.ReplyMessage = "You need to provide npc id and path to file!";
+                        ev.Success = false;
+                        break;
+                    }
+                    NPCComponent[] ___npcs = Object.FindObjectsOfType<NPCComponent>();
+                    Npc __obj_npc = Npc.FromComponent(___npcs[int.Parse(ev.Arguments[0])]);
+                    __obj_npc.Serialize(ev.Arguments[1]);
+                    break;
+            }
+        }
+
+        public void OnCMD(SendingConsoleCommandEventArgs ev)
+        {
+            if (ev.Name == "talk")
+            {
+                ev.IsAllowed = false;
+                bool flag = false;
+                NPCComponent[] npcs = Object.FindObjectsOfType<NPCComponent>();
+                foreach (NPCComponent npc in npcs)
+                {
+                    Npc obj_npc = Npc.FromComponent(npc);
+                    if (Vector3.Distance(npc.transform.position, ev.Player.Position) < 3f)
+                    {
+                        //ev.ReturnMessage = $"Talking to {obj_npc.GameObject.GetComponent<NicknameSync>().Network_myNickSync}";
+                        obj_npc.TalkWith(ev.Player);
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    ev.ReturnMessage = "NPCs not found!";
+                }
+            }
+            else if (ev.Name == "answ")
+            {
+                ev.IsAllowed = false;
+                if (ev.Arguments.Count == 1)
+                {
+                    NPCComponent[] npcs = Object.FindObjectsOfType<NPCComponent>();
+                    foreach (NPCComponent npc in npcs)
+                    {
+                        Npc obj_npc = Npc.FromComponent(npc);
+                        if (Vector3.Distance(npc.transform.position, ev.Player.Position) < 3f)
+                        {
+                            obj_npc.HandleAnswer(ev.Player, ev.Arguments[0]);
+                        }
+                    }
+                }
+                else
+                {
+                    ev.ReturnMessage = "You must provide answer number!";
+                }
+            }
+        }
+    }
+}
