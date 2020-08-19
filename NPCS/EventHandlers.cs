@@ -1,8 +1,12 @@
 using Exiled.Events.EventArgs;
 using Exiled.Permissions.Extensions;
 using UnityEngine;
-
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using Exiled.Events;
+using Exiled.API.Features;
 
 namespace NPCS
 {
@@ -14,11 +18,12 @@ namespace NPCS
 
         public void OnRoundStart()
         {
+
         }
 
         public void OnRoundEnd(RoundEndedEventArgs ev)
         {
-            NPCComponent[] npcs = Object.FindObjectsOfType<NPCComponent>();
+            NPCComponent[] npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
             foreach (NPCComponent npc in npcs)
             {
                 Npc obj_npc = Npc.FromComponent(npc);
@@ -40,7 +45,7 @@ namespace NPCS
                     }
                     if (ev.Arguments.Count == 0)
                     {
-                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation);
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation,"default_bot.yml");
                     }
                     else if (ev.Arguments.Count == 1)
                     {
@@ -68,7 +73,7 @@ namespace NPCS
                         ev.Success = false;
                         break;
                     }
-                    NPCComponent[] npcs = Object.FindObjectsOfType<NPCComponent>();
+                    NPCComponent[] npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                     foreach (NPCComponent npc in npcs)
                     {
                         Npc obj_npc = Npc.FromComponent(npc);
@@ -86,7 +91,7 @@ namespace NPCS
                     }
                     if (ev.Arguments.Count > 0)
                     {
-                        NPCComponent[] _npcs = Object.FindObjectsOfType<NPCComponent>();
+                        NPCComponent[] _npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                         Npc obj_npc = Npc.FromComponent(_npcs[int.Parse(ev.Arguments[0])]);
                         obj_npc.Kill(false);
                     }
@@ -104,7 +109,7 @@ namespace NPCS
                         ev.Success = false;
                         break;
                     }
-                    NPCComponent[] __npcs = Object.FindObjectsOfType<NPCComponent>();
+                    NPCComponent[] __npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                     int id = 0;
                     foreach (NPCComponent npc in __npcs)
                     {
@@ -144,7 +149,7 @@ namespace NPCS
                         ev.Success = false;
                         break;
                     }
-                    NPCComponent[] ___npcs = Object.FindObjectsOfType<NPCComponent>();
+                    NPCComponent[] ___npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                     Npc __obj_npc = Npc.FromComponent(___npcs[int.Parse(ev.Arguments[0])]);
                     __obj_npc.Serialize(ev.Arguments[1]);
                     break;
@@ -157,7 +162,7 @@ namespace NPCS
             {
                 ev.IsAllowed = false;
                 bool flag = false;
-                NPCComponent[] npcs = Object.FindObjectsOfType<NPCComponent>();
+                NPCComponent[] npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                 foreach (NPCComponent npc in npcs)
                 {
                     Npc obj_npc = Npc.FromComponent(npc);
@@ -179,7 +184,7 @@ namespace NPCS
                 ev.IsAllowed = false;
                 if (ev.Arguments.Count == 1)
                 {
-                    NPCComponent[] npcs = Object.FindObjectsOfType<NPCComponent>();
+                    NPCComponent[] npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                     foreach (NPCComponent npc in npcs)
                     {
                         Npc obj_npc = Npc.FromComponent(npc);

@@ -17,7 +17,6 @@ namespace NPCS
     //This component provides interface to control NPC
     internal class Npc
     {
-
         //For simpler saving
         private class NPCSerializeInfo
         {
@@ -52,23 +51,23 @@ namespace NPCS
                 }
             }
 
-            public string root_node {
+            public string root_node
+            {
                 get
                 {
                     return Path.GetFileName(parent.RootNode.NodeFile);
                 }
             }
-
         }
 
-        /*public enum MovementDirection
+        public enum MovementDirection
         {
             NONE,
             FORWARD,
             BACKWARD,
             LEFT,
             RIGHT
-        };*/
+        };
 
         public GameObject GameObject { get; set; }
 
@@ -144,9 +143,17 @@ namespace NPCS
             }
         }
 
-        //public MovementDirection currentDirection;
-
-        //private CoroutineHandle movement_handle;
+        public MovementDirection CurMovementDirection
+        {
+            get
+            {
+                return NPCComponent.curDir;
+            }
+            set
+            {
+                NPCComponent.curDir = value;
+            }
+        }
 
         public Npc(GameObject obj)
         {
@@ -173,64 +180,54 @@ namespace NPCS
             }
         }
 
-        //TODO
-        /*
-       private IEnumerator<float> MoveCoroutine()
-       {
-           bool exit = false;
-           for (; ; )
-           {
-               if (exit)
-               {
-                   break;
-               }
-               switch (currentDirection)
-               {
-                   case MovementDirection.FORWARD:
-                       try
-                       {
-                           OverridePosition(GameObject.transform.position + ReferenceHub.PlayerCameraReference.forward / 10);
-                       }
-                       catch (Exception e) { }
-                       break;
+        private static IEnumerator<float> MoveCoroutine(NPCComponent cmp)
+        {
+            for (; ; )
+            {
+                switch (cmp.curDir)
+                {
+                    case MovementDirection.FORWARD:
+                        try
+                        {
+                            cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10,cmp.transform.rotation.y,true);
+                        }
+                        catch (Exception e) { }
+                        break;
 
-                   case MovementDirection.BACKWARD:
-                       try
-                       {
-                           OverridePosition(GameObject.transform.position - ReferenceHub.PlayerCameraReference.forward / 10);
-                       }
-                       catch (Exception e) { }
-                       break;
+                    case MovementDirection.BACKWARD:
+                        try
+                        {
+                            cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
+                        }
+                        catch (Exception e) { }
+                        break;
 
-                   case MovementDirection.LEFT:
-                       try
-                       {
-                           OverridePosition(GameObject.transform.position + (Quaternion.AngleAxis(90, Vector3.up) * ReferenceHub.PlayerCameraReference.forward) / 10);
-                       }
-                       catch (Exception e) { }
-                       break;
+                    case MovementDirection.LEFT:
+                        try
+                        {
+                            cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
+                        }
+                        catch (Exception e) { }
+                        break;
 
-                   case MovementDirection.RIGHT:
-                       try
-                       {
-                           OverridePosition(GameObject.transform.position - (Quaternion.AngleAxis(90, Vector3.up) * ReferenceHub.PlayerCameraReference.forward) / 10);
-                       }
-                       catch (Exception e) { }
-                       break;
+                    case MovementDirection.RIGHT:
+                        try
+                        {
+                            cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
+                        }
+                        catch (Exception e) { }
+                        break;
 
-                   default:
-                       exit = true;
-                       break;
-               }
-               yield return Timing.WaitForSeconds(0.1f);
-           }
-       }
-       */
-        //TODO
-        /*
+                    default:
+                        break;
+                }
+                yield return Timing.WaitForSeconds(0.1f);
+            }
+        }
+
         public void Move(MovementDirection dir)
         {
-            currentDirection = dir;
+            CurMovementDirection = dir;
             switch (dir)
             {
                 case MovementDirection.FORWARD:
@@ -252,10 +249,7 @@ namespace NPCS
                 default:
                     break;
             }
-            Timing.KillCoroutines(movement_handle);
-            movement_handle = Timing.RunCoroutine(MoveCoroutine());
         }
-        */
 
         public void TalkWith(Player p)
         {
@@ -324,18 +318,29 @@ namespace NPCS
             obj.transform.position = pos;
             obj.transform.rotation = rot;
 
-            obj.GetComponent<QueryProcessor>().NetworkPlayerId = 9999;
-            obj.GetComponent<QueryProcessor>().PlayerId = 9999;
+            obj.GetComponent<QueryProcessor>().NetworkPlayerId = QueryProcessor._idIterator++;
+            obj.GetComponent<QueryProcessor>().PlayerId = QueryProcessor._idIterator++;
+            ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
 
             NPCComponent npcc = obj.AddComponent<NPCComponent>();
 
             NetworkServer.Spawn(obj);
+            PlayerManager.AddPlayer(obj);
+
+            Player ply_obj = new Player(obj);
+            Player.Dictionary.Add(obj, ply_obj);
+
+            Player.IdsCache.Add(ply_obj.Id, ply_obj);
+            Player.UserIdsCache.Add(ccm._privUserId, ply_obj);
+
             Npc b = new Npc(obj)
             {
                 RootNode = (TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node))),
                 ItemHeld = (itemHeld)
             };
-            npcc.coro = Timing.RunCoroutine(UpdateTalking(npcc));
+            npcc.talking_coroutine = Timing.RunCoroutine(UpdateTalking(npcc));
+            npcc.movement_coroutine = Timing.RunCoroutine(MoveCoroutine(npcc));
+            Timing.CallDelayed(0.3f, () => b.ReferenceHub.playerMovementSync.OverridePosition(pos, rot.y, true));
             return b;
         }
 

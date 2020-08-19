@@ -1,9 +1,12 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
+using Exiled.Events;
 using NPCS.Conditions;
 using NPCS.Talking;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Handlers = Exiled.Events.Handlers;
 
 namespace NPCS
@@ -35,6 +38,22 @@ namespace NPCS
                 {
                     Log.Info("CustomNPCs is disabled");
                     return;
+                }
+
+                //Events.DisabledPatches.Add(new Tuple<Type, string>(typeof(PlayerPositionManager), nameof(PlayerPositionManager.TransmitData)));
+                //Events.Instance.ReloadDisabledPatches(); - NullReferenceException mindfuck
+
+                //F u c k
+
+                List<MethodBase> methods = new List<MethodBase>(Events.Instance.Harmony.GetPatchedMethods());
+                foreach (System.Reflection.MethodBase bas in methods)
+                {
+                    var info = HarmonyLib.Harmony.GetPatchInfo(bas);
+                    if (bas.Name.Equals("TransmitData"))
+                    {
+                        Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
+                        Log.Info("Unpatched GhostMode");
+                    }
                 }
 
                 harmony = new HarmonyLib.Harmony("gamehunt.cnpcs");
