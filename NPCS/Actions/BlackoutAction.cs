@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace NPCS.Actions
 {
-    internal class HeldItemAction : NPCS.Talking.NodeAction
+    internal class BlackoutAction : Talking.NodeAction
     {
-        public override string Name => "HeldItemAction";
+        public override string Name => "BlackoutAction";
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
-            npc.ItemHeld = ((ItemType)int.Parse(args["item_type"]));
+            Map.TurnOffAllLights(float.Parse(args["duration"]), bool.Parse(args["hcz_only"]));
         }
     }
 }

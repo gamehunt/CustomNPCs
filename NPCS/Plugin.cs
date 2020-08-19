@@ -86,6 +86,7 @@ namespace NPCS
                 NodeAction.Register(new Actions.DisableEffectAction());
                 NodeAction.Register(new Actions.BroadcastAction());
                 NodeAction.Register(new Actions.HeldItemAction());
+                NodeAction.Register(new Actions.BlackoutAction());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }

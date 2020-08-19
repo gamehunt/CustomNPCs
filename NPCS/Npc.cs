@@ -17,6 +17,8 @@ namespace NPCS
     //This component provides interface to control NPC
     internal class Npc
     {
+
+        //For simpler saving
         private class NPCSerializeInfo
         {
             private readonly Npc parent;
@@ -38,7 +40,7 @@ namespace NPCS
             {
                 get
                 {
-                    return (int)parent.GameObject.GetComponent<CharacterClassManager>().CurClass;
+                    return (int)parent.Role;
                 }
             }
 
@@ -46,7 +48,7 @@ namespace NPCS
             {
                 get
                 {
-                    return (int)parent.GameObject.GetComponent<Inventory>().curItem;
+                    return (int)parent.ItemHeld;
                 }
             }
 
@@ -115,6 +117,30 @@ namespace NPCS
             get
             {
                 return NPCComponent.TalkingStates;
+            }
+        }
+
+        public RoleType Role
+        {
+            get
+            {
+                return GameObject.GetComponent<CharacterClassManager>().CurClass;
+            }
+            set
+            {
+                GameObject.GetComponent<CharacterClassManager>().CurClass = value;
+            }
+        }
+
+        public ItemType ItemHeld
+        {
+            get
+            {
+                return GameObject.GetComponent<Inventory>().curItem;
+            }
+            set
+            {
+                GameObject.GetComponent<Inventory>().SetCurItem(value);
             }
         }
 
@@ -231,16 +257,6 @@ namespace NPCS
         }
         */
 
-        public void SetRole(RoleType role)
-        {
-            GameObject.GetComponent<CharacterClassManager>().CurClass = role;
-        }
-
-        public void SetItemHeld(ItemType item)
-        {
-            GameObject.GetComponent<Inventory>().SetCurItem(item);
-        }
-
         public void TalkWith(Player p)
         {
             TalkingStates.Add(p, RootNode);
@@ -314,9 +330,11 @@ namespace NPCS
             NPCComponent npcc = obj.AddComponent<NPCComponent>();
 
             NetworkServer.Spawn(obj);
-            Npc b = new Npc(obj);
-            b.SetRootNode(TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node)));
-            b.SetItemHeld(itemHeld);
+            Npc b = new Npc(obj)
+            {
+                RootNode = (TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node))),
+                ItemHeld = (itemHeld)
+            };
             npcc.coro = Timing.RunCoroutine(UpdateTalking(npcc));
             return b;
         }
@@ -357,11 +375,6 @@ namespace NPCS
         public static Npc FromComponent(NPCComponent npc)
         {
             return new Npc(npc.gameObject);
-        }
-
-        public void SetRootNode(TalkNode node)
-        {
-            RootNode = node;
         }
 
         public void Kill(bool spawn_ragdoll)
