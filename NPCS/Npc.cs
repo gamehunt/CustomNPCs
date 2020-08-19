@@ -318,8 +318,8 @@ namespace NPCS
             obj.transform.position = pos;
             obj.transform.rotation = rot;
 
-            obj.GetComponent<QueryProcessor>().NetworkPlayerId = QueryProcessor._idIterator++;
             obj.GetComponent<QueryProcessor>().PlayerId = QueryProcessor._idIterator++;
+            obj.GetComponent<QueryProcessor>()._ipAddress = "127.0.0.WAN";
             ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
 
             NPCComponent npcc = obj.AddComponent<NPCComponent>();
