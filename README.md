@@ -1,2 +1,4 @@
 # CustomNPCs
-Plugin that allows you to create NPCs
+Plugin is currently under development, so new features will be added soon
+
+For usage instructions see https://github.com/gamehunt/CustomNPCs/wiki/Get-started
