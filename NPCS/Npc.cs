@@ -184,20 +184,15 @@ namespace NPCS
         {
             for (; ; )
             {
-                RaycastHit hit;
                 switch (cmp.curDir)
                 {
                     case MovementDirection.FORWARD:
                         try
                         {
-                            if (Physics.Linecast(cmp.transform.position, cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, out hit))
+                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
                             {
-                                if (hit.distance <= 1f)
-                                {
-                                    break;
-                                }
+                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
                             }
-                            cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
                         }
                         catch (Exception e) { }
                         break;
@@ -205,14 +200,10 @@ namespace NPCS
                     case MovementDirection.BACKWARD:
                         try
                         {
-                            if (Physics.Linecast(cmp.transform.position, cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, out hit))
+                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
                             {
-                                if (hit.distance <= 1f)
-                                {
-                                    break;
-                                }
+                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
                             }
-                            cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
                         }
                         catch (Exception e) { }
                         break;
@@ -220,14 +211,10 @@ namespace NPCS
                     case MovementDirection.LEFT:
                         try
                         {
-                            if (Physics.Linecast(cmp.transform.position, cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, out hit))
+                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
                             {
-                                if (hit.distance <= 1f)
-                                {
-                                    break;
-                                }
+                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
                             }
-                            cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
                         }
                         catch (Exception e) { }
                         break;
@@ -235,21 +222,19 @@ namespace NPCS
                     case MovementDirection.RIGHT:
                         try
                         {
-                            if (Physics.Linecast(cmp.transform.position, cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, out hit))
+                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
                             {
-                                if (hit.distance <= 1f)
-                                {
-                                    break;
-                                }
+                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
                             }
-                            cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
                         }
                         catch (Exception e) { }
+
                         break;
 
                     default:
                         break;
                 }
+
                 yield return Timing.WaitForSeconds(0.1f);
             }
         }
@@ -276,6 +261,7 @@ namespace NPCS
                     break;
 
                 default:
+                    ReferenceHub.animationController.Networkspeed = new Vector2(0, 0);
                     break;
             }
         }
