@@ -76,6 +76,8 @@ namespace NPCS
                 NodeCondition.Register(new HasEffectCondition());
                 NodeCondition.Register(new HasntEffectCondition());
                 NodeCondition.Register(new PermissionCondition());
+                NodeCondition.Register(new RoundTimeCondition());
+                NodeCondition.Register(new NukeStateCondition());
 
                 NodeAction.Register(new Actions.DieAction());
                 NodeAction.Register(new Actions.GiveItemAction());
@@ -87,6 +89,11 @@ namespace NPCS
                 NodeAction.Register(new Actions.BroadcastAction());
                 NodeAction.Register(new Actions.HeldItemAction());
                 NodeAction.Register(new Actions.BlackoutAction());
+                NodeAction.Register(new Actions.ChangeRoleAction());
+                NodeAction.Register(new Actions.ChangeSelfRoleAction());
+                NodeAction.Register(new Actions.NukeStartAction());
+                NodeAction.Register(new Actions.NukeStopAction());
+                NodeAction.Register(new Actions.StartDecontaminationAction());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }
