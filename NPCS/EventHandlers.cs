@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using Exiled.Events;
 using Exiled.API.Features;
+using MEC;
 
 namespace NPCS
 {
@@ -45,7 +46,8 @@ namespace NPCS
                     }
                     if (ev.Arguments.Count == 0)
                     {
-                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation,"default_npc.yml");
+                        Npc n = Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation,"default_npc.yml");
+                        Timing.CallDelayed(1f, () => n.Move(Npc.MovementDirection.FORWARD));
                     }
                     else if (ev.Arguments.Count == 1)
                     {
