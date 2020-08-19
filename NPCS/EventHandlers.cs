@@ -46,8 +46,7 @@ namespace NPCS
                     }
                     if (ev.Arguments.Count == 0)
                     {
-                        Npc n = Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation,"default_npc.yml");
-                        Timing.CallDelayed(1f, () => n.Move(Npc.MovementDirection.FORWARD));
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation,"default_npc.yml");
                     }
                     else if (ev.Arguments.Count == 1)
                     {
