@@ -356,6 +356,8 @@ namespace NPCS
                     NetworkManager.singleton.spawnPrefabs.FirstOrDefault(p => p.gameObject.name == "Player"));
             CharacterClassManager ccm = obj.GetComponent<CharacterClassManager>();
 
+            NPCComponent npcc = obj.AddComponent<NPCComponent>();
+
             obj.transform.localScale = Vector3.one;
             obj.transform.position = pos;
 
@@ -367,10 +369,9 @@ namespace NPCS
             ccm.CurClass = type;
 
             obj.GetComponent<NicknameSync>().Network_myNickSync = name;
+
             obj.GetComponent<ServerRoles>().MyText = "NPC";
             obj.GetComponent<ServerRoles>().MyColor = "red";
-
-            NPCComponent npcc = obj.AddComponent<NPCComponent>();
 
             NetworkServer.Spawn(obj);
             PlayerManager.AddPlayer(obj);
@@ -390,8 +391,10 @@ namespace NPCS
             npcc.attached_coroutines.Add(Timing.RunCoroutine(UpdateTalking(npcc)));
             npcc.attached_coroutines.Add(Timing.RunCoroutine(MoveCoroutine(npcc)));
 
-            npcc.attached_coroutines.Add(Timing.CallDelayed(0.3f, () => b.ReferenceHub.playerMovementSync.OverridePosition(pos, 0f, true)));
-            npcc.attached_coroutines.Add(Timing.CallDelayed(0.4f, () => b.Rotation = rot));
+            npcc.attached_coroutines.Add(Timing.CallDelayed(0.3f, () => {
+                b.ReferenceHub.playerMovementSync.OverridePosition(pos, 0f, true);
+                b.Rotation = rot;
+            }));
 
             return b;
         }

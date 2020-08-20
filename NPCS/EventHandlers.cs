@@ -51,6 +51,12 @@ namespace NPCS
                         ev.Success = false;
                         break;
                     }
+                    if (!Round.IsStarted)
+                    {
+                        ev.ReplyMessage = "Round is not started!";
+                        ev.Success = false;
+                        break;
+                    }
                     if (ev.Arguments.Count == 0)
                     {
                         Npc.CreateNPC(ev.Sender.Position, ev.Sender.Rotations, "default_npc.yml");
@@ -81,6 +87,12 @@ namespace NPCS
                         ev.Success = false;
                         break;
                     }
+                    if (!Round.IsStarted)
+                    {
+                        ev.ReplyMessage = "Round is not started!";
+                        ev.Success = false;
+                        break;
+                    }
                     NPCComponent[] npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                     foreach (NPCComponent npc in npcs)
                     {
@@ -94,6 +106,12 @@ namespace NPCS
                     if (!ev.Sender.CheckPermission("npc.all"))
                     {
                         ev.ReplyMessage = "Access denied!";
+                        ev.Success = false;
+                        break;
+                    }
+                    if (!Round.IsStarted)
+                    {
+                        ev.ReplyMessage = "Round is not started!";
                         ev.Success = false;
                         break;
                     }
@@ -117,6 +135,12 @@ namespace NPCS
                         ev.Success = false;
                         break;
                     }
+                    if (!Round.IsStarted)
+                    {
+                        ev.ReplyMessage = "Round is not started!";
+                        ev.Success = false;
+                        break;
+                    }
                     NPCComponent[] __npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                     int id = 0;
                     foreach (NPCComponent npc in __npcs)
@@ -132,6 +156,12 @@ namespace NPCS
                     if (!ev.Sender.CheckPermission("npc.all"))
                     {
                         ev.ReplyMessage = "Access denied!";
+                        ev.Success = false;
+                        break;
+                    }
+                    if (!Round.IsStarted)
+                    {
+                        ev.ReplyMessage = "Round is not started!";
                         ev.Success = false;
                         break;
                     }
@@ -152,6 +182,12 @@ namespace NPCS
                         ev.Success = false;
                         break;
                     }
+                    if (!Round.IsStarted)
+                    {
+                        ev.ReplyMessage = "Round is not started!";
+                        ev.Success = false;
+                        break;
+                    }
                     if (ev.Arguments.Count < 2)
                     {
                         ev.ReplyMessage = "You need to provide npc id and path to file!";
@@ -168,6 +204,12 @@ namespace NPCS
                     if (!ev.Sender.CheckPermission("npc.all"))
                     {
                         ev.ReplyMessage = "Access denied!";
+                        ev.Success = false;
+                        break;
+                    }
+                    if (!Round.IsStarted)
+                    {
+                        ev.ReplyMessage = "Round is not started!";
                         ev.Success = false;
                         break;
                     }
