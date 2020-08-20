@@ -365,13 +365,14 @@ namespace NPCS
             obj.GetComponent<QueryProcessor>()._ipAddress = "127.0.0.WAN";
             ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
 
-            ccm.SetClassID(type);
             ccm.CurClass = type;
+            obj.GetComponent<PlayerStats>().SetHPAmount(ccm.Classes.SafeGet(type).maxHP);
 
             obj.GetComponent<NicknameSync>().Network_myNickSync = name;
 
             obj.GetComponent<ServerRoles>().MyText = "NPC";
             obj.GetComponent<ServerRoles>().MyColor = "red";
+
 
             NetworkServer.Spawn(obj);
             PlayerManager.AddPlayer(obj);
