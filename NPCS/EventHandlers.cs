@@ -1,6 +1,7 @@
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using Exiled.Permissions.Extensions;
+using NPCS.Harmony;
 using System.IO;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace NPCS
 
         public void OnRoundStart()
         {
+            RoundSummaryFix.__npc_endRequested = false;
         }
 
         public void OnRoundEnd(RoundEndedEventArgs ev)

@@ -94,6 +94,8 @@ namespace NPCS
                     sw.Close();
                 }
 
+                Log.Info("Registering conditions...");
+
                 NodeCondition.Register(new RoleCondition());
                 NodeCondition.Register(new HasItemCondition());
                 NodeCondition.Register(new HasntItemCondition());
@@ -104,6 +106,8 @@ namespace NPCS
                 NodeCondition.Register(new PermissionCondition());
                 NodeCondition.Register(new RoundTimeCondition());
                 NodeCondition.Register(new NukeStateCondition());
+
+                Log.Info("Registering actions...");
 
                 NodeAction.Register(new Actions.DieAction());
                 NodeAction.Register(new Actions.GiveItemAction());
@@ -123,6 +127,7 @@ namespace NPCS
                 NodeAction.Register(new Actions.SwitchGodAction());
                 NodeAction.Register(new Actions.MoveAction());
                 NodeAction.Register(new Actions.RotationAction());
+                NodeAction.Register(new Actions.RoundEndAction());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }

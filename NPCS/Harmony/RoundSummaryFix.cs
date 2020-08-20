@@ -13,6 +13,8 @@ namespace NPCS.Harmony
     [HarmonyPatch(typeof(RoundSummary), nameof(RoundSummary.Start))]
     internal class RoundSummaryFix
     {
+        public static bool __npc_endRequested = false;
+
         private static readonly MethodInfo CustomProcess = SymbolExtensions.GetMethodInfo(() => Process(null));
 
         private static IEnumerator<float> Process(RoundSummary instance)
@@ -21,7 +23,7 @@ namespace NPCS.Harmony
             while (roundSummary != null)
             {
                 int count = PlayerManager.players.Count(p => p.GetComponent<NPCComponent>() == null);
-                while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || (roundSummary._keepRoundOnOne && count < 2))
+                while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || ((roundSummary._keepRoundOnOne && count < 2) && !__npc_endRequested))
                     yield return 0.0f;
                 yield return 0.0f;
                 RoundSummary.SumInfo_ClassList newList = default;
@@ -108,7 +110,7 @@ namespace NPCS.Harmony
 
                 roundSummary._roundEnded = endingRoundEventArgs.IsRoundEnded && endingRoundEventArgs.IsAllowed;
 
-                if (roundSummary._roundEnded)
+                if (roundSummary._roundEnded || __npc_endRequested)
                 {
                     FriendlyFireConfig.PauseDetector = true;
                     string str = "Round finished! Anomalies: " + num3 + " | Chaos: " + num2 + " | Facility Forces: " + num1 + " | D escaped percentage: " + num4 + " | S escaped percentage: : " + num5;
