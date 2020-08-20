@@ -26,6 +26,7 @@ namespace NPCS
                 Npc obj_npc = Npc.FromComponent(npc);
                 obj_npc.Kill(false);
             }
+            RoundSummaryFix.__npc_endRequested = false;
         }
 
         public void OnDied(DiedEventArgs ev)

@@ -99,11 +99,11 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.__node;
+                return NPCComponent.root_node;
             }
             set
             {
-                NPCComponent.__node = value;
+                NPCComponent.root_node = value;
             }
         }
 
@@ -123,7 +123,7 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.TalkingStates;
+                return NPCComponent.talking_states;
             }
         }
 
@@ -197,7 +197,7 @@ namespace NPCS
             for (; ; )
             {
                 List<Player> invalid_players = new List<Player>();
-                foreach (Player p in cmp.TalkingStates.Keys)
+                foreach (Player p in cmp.talking_states.Keys)
                 {
                     if (!p.IsAlive || !Player.List.Contains(p) || Vector3.Distance(cmp.transform.position, p.Position) >= 3f)
                     {
@@ -206,7 +206,7 @@ namespace NPCS
                 }
                 foreach (Player p in invalid_players)
                 {
-                    cmp.TalkingStates.Remove(p);
+                    cmp.talking_states.Remove(p);
                 }
                 yield return Timing.WaitForSeconds(0.5f);
             }
@@ -415,7 +415,6 @@ namespace NPCS
                 Npc n = CreateNPC(pos, rot, (RoleType)int.Parse((string)mapping.Children[new YamlScalarNode("role")]), (ItemType)int.Parse((string)mapping.Children[new YamlScalarNode("item_held")]), (string)mapping.Children[new YamlScalarNode("name")], (string)mapping.Children[new YamlScalarNode("root_node")]);
                 if (bool.Parse((string)mapping.Children[new YamlScalarNode("god_mode")]))
                 {
-                    Log.Info("Switched GOD_MODE");
                     Player pl = Player.Get(n.GameObject);
                     pl.IsGodModeEnabled = true;
                 }

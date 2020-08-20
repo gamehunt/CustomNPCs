@@ -9,8 +9,8 @@ namespace NPCS
     //This component contains critical information about NPC
     internal class NPCComponent : MonoBehaviour
     {
-        public TalkNode __node;
-        public Dictionary<Player, TalkNode> TalkingStates = new Dictionary<Player, TalkNode>();
+        public TalkNode root_node;
+        public Dictionary<Player, TalkNode> talking_states = new Dictionary<Player, TalkNode>();
         public CoroutineHandle talking_coroutine;
         public CoroutineHandle movement_coroutine;
         public Npc.MovementDirection curDir;
