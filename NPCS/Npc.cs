@@ -58,6 +58,14 @@ namespace NPCS
                     return Path.GetFileName(parent.RootNode.NodeFile);
                 }
             }
+
+            public bool god_mode
+            {
+                get
+                {
+                    return Player.Get(parent.GameObject).IsGodModeEnabled;
+                }
+            }
         }
 
         public enum MovementDirection

@@ -1,13 +1,8 @@
+using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using Exiled.Permissions.Extensions;
-using UnityEngine;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using Exiled.Events;
-using Exiled.API.Features;
-using MEC;
+using UnityEngine;
 
 namespace NPCS
 {
@@ -19,7 +14,6 @@ namespace NPCS
 
         public void OnRoundStart()
         {
-
         }
 
         public void OnRoundEnd(RoundEndedEventArgs ev)
@@ -56,7 +50,7 @@ namespace NPCS
                     }
                     if (ev.Arguments.Count == 0)
                     {
-                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation,"default_npc.yml");
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, "default_npc.yml");
                     }
                     else if (ev.Arguments.Count == 1)
                     {
@@ -146,6 +140,7 @@ namespace NPCS
                     }
                     Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, ev.Arguments[0]);
                     break;
+
                 case "npc_save":
                     ev.IsAllowed = false;
                     if (!ev.Sender.CheckPermission("npc.all"))
@@ -163,6 +158,24 @@ namespace NPCS
                     NPCComponent[] ___npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                     Npc __obj_npc = Npc.FromComponent(___npcs[int.Parse(ev.Arguments[0])]);
                     __obj_npc.Serialize(ev.Arguments[1]);
+                    break;
+
+                case "npc_god":
+                    ev.IsAllowed = false;
+                    if (!ev.Sender.CheckPermission("npc.all"))
+                    {
+                        ev.ReplyMessage = "Access denied!";
+                        ev.Success = false;
+                        break;
+                    }
+                    if (ev.Arguments.Count < 2)
+                    {
+                        ev.ReplyMessage = "You need to provide npc id and godmode value!";
+                        ev.Success = false;
+                        break;
+                    }
+                    NPCComponent[] ___npcs1 = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
+                    Player.Get(___npcs1[int.Parse(ev.Arguments[0])].gameObject).IsGodModeEnabled = bool.Parse(ev.Arguments[1]);
                     break;
             }
         }
