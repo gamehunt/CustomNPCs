@@ -13,7 +13,7 @@ namespace NPCS.Actions
             npc.Role = (RoleType)int.Parse(args["role"]);
             if (!bool.Parse(args["preserve_position"]))
             {
-                npc.OverridePosition(Map.GetRandomSpawnPoint(npc.Role));
+                npc.Position = (Map.GetRandomSpawnPoint(npc.Role));
             }
         }
     }

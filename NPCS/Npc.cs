@@ -155,6 +155,18 @@ namespace NPCS
             }
         }
 
+        public Vector3 Position {
+            get
+            {
+                return GameObject.GetComponent<PlayerMovementSync>().RealModelPosition;
+            }
+            set
+            {
+                GameObject.GetComponent<PlayerMovementSync>().OverridePosition(value, 0f, false);
+            }
+        }
+
+
         public Npc(GameObject obj)
         {
             GameObject = obj;
@@ -367,6 +379,7 @@ namespace NPCS
         //role: 6
         //item_held: 24
         //root_node: default_node.yml
+        //god_mode: false
         public static Npc CreateNPC(Vector3 pos, Quaternion rot, string path)
         {
             try
@@ -379,7 +392,14 @@ namespace NPCS
                 var mapping =
                     (YamlMappingNode)yaml.Documents[0].RootNode;
 
-                return CreateNPC(pos, rot, (RoleType)int.Parse((string)mapping.Children[new YamlScalarNode("role")]), (ItemType)int.Parse((string)mapping.Children[new YamlScalarNode("item_held")]), (string)mapping.Children[new YamlScalarNode("name")], (string)mapping.Children[new YamlScalarNode("root_node")]);
+                Npc n = CreateNPC(pos, rot, (RoleType)int.Parse((string)mapping.Children[new YamlScalarNode("role")]), (ItemType)int.Parse((string)mapping.Children[new YamlScalarNode("item_held")]), (string)mapping.Children[new YamlScalarNode("name")], (string)mapping.Children[new YamlScalarNode("root_node")]);
+                if (bool.Parse((string)mapping.Children[new YamlScalarNode("god_mode")]))
+                {
+                    Log.Info("Switched GOD_MODE");
+                    Player pl = Player.Get(n.GameObject);
+                    pl.IsGodModeEnabled = true;
+                }
+                return n;
             }
             catch (Exception e)
             {

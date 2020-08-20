@@ -119,6 +119,7 @@ namespace NPCS
                 NodeAction.Register(new Actions.NukeStartAction());
                 NodeAction.Register(new Actions.NukeStopAction());
                 NodeAction.Register(new Actions.StartDecontaminationAction());
+                NodeAction.Register(new Actions.SwitchGodAction());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }
