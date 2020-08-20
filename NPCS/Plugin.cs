@@ -19,7 +19,7 @@ namespace NPCS
         public override string Author { get; } = "gamehunt";
         public override string Name { get; } = "CustomNPCs";
         public override string Prefix { get; } = "CNPCS";
-        public override Version Version { get; } = new Version(1, 0, 0);
+        public override Version Version { get; } = new Version(1, 1, 0);
         public override Version RequiredExiledVersion { get; } = new Version(2, 1, 0);
 
         public override PluginPriority Priority => PluginPriority.Last;
@@ -69,6 +69,8 @@ namespace NPCS
                 Handlers.Server.RoundEnded += EventHandlers.OnRoundEnd;
                 Handlers.Server.SendingRemoteAdminCommand += EventHandlers.OnRACMD;
                 Handlers.Server.SendingConsoleCommand += EventHandlers.OnCMD;
+
+                Handlers.Player.Died += EventHandlers.OnDied;
 
                 if (!Directory.Exists(Config.NPCs_root_path))
                 {
@@ -134,6 +136,8 @@ namespace NPCS
             Handlers.Server.RoundEnded -= EventHandlers.OnRoundEnd;
             Handlers.Server.SendingRemoteAdminCommand -= EventHandlers.OnRACMD;
             Handlers.Server.SendingConsoleCommand -= EventHandlers.OnCMD;
+
+            Handlers.Player.Died -= EventHandlers.OnDied;
 
             EventHandlers = null;
         }

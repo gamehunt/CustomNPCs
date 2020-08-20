@@ -324,18 +324,21 @@ namespace NPCS
                 UnityEngine.Object.Instantiate(
                     NetworkManager.singleton.spawnPrefabs.FirstOrDefault(p => p.gameObject.name == "Player"));
             CharacterClassManager ccm = obj.GetComponent<CharacterClassManager>();
-            ccm.CurClass = type;
-            obj.GetComponent<NicknameSync>().Network_myNickSync = name;
-            obj.GetComponent<ServerRoles>().MyText = "NPC";
-            obj.GetComponent<ServerRoles>().MyColor = "red";
-
-            obj.transform.localScale = Vector3.one;
-            obj.transform.position = pos;
-            obj.transform.rotation = rot;
 
             obj.GetComponent<QueryProcessor>().PlayerId = QueryProcessor._idIterator++;
             obj.GetComponent<QueryProcessor>()._ipAddress = "127.0.0.WAN";
             ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
+
+            obj.GetComponent<NicknameSync>().Network_myNickSync = name;
+            obj.GetComponent<ServerRoles>().MyText = "NPC";
+            obj.GetComponent<ServerRoles>().MyColor = "red";
+
+            ccm.SetClassID(type);
+            ccm.CurClass = type;
+
+            obj.transform.localScale = Vector3.one;
+            obj.transform.position = pos;
+            obj.transform.rotation = rot;
 
             NPCComponent npcc = obj.AddComponent<NPCComponent>();
 
@@ -385,12 +388,6 @@ namespace NPCS
             }
         }
 
-        public void OverridePosition(Vector3 pos)
-        {
-            GameObject.transform.position = pos;
-            NetworkServer.UnSpawn(GameObject);
-            NetworkServer.Spawn(GameObject);
-        }
 
         public static Npc FromComponent(NPCComponent npc)
         {

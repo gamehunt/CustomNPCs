@@ -32,6 +32,16 @@ namespace NPCS
             }
         }
 
+        public void OnDied(DiedEventArgs ev)
+        {
+            NPCComponent cmp = ev.Target.GameObject.GetComponent<NPCComponent>();
+            if (cmp != null)
+            {
+                Npc npc = Npc.FromComponent(cmp);
+                npc.Kill(false);
+            }
+        }
+
         public void OnRACMD(SendingRemoteAdminCommandEventArgs ev)
         {
             switch (ev.Name)
@@ -50,7 +60,7 @@ namespace NPCS
                     }
                     else if (ev.Arguments.Count == 1)
                     {
-                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, RoleType.ClassD, ItemType.None, ev.Arguments[0]);
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, RoleType.Scientist, ItemType.None, ev.Arguments[0]);
                     }
                     else if (ev.Arguments.Count == 2)
                     {
