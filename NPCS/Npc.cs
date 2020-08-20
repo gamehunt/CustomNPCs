@@ -325,20 +325,20 @@ namespace NPCS
                     NetworkManager.singleton.spawnPrefabs.FirstOrDefault(p => p.gameObject.name == "Player"));
             CharacterClassManager ccm = obj.GetComponent<CharacterClassManager>();
 
+            obj.transform.localScale = Vector3.one;
+            obj.transform.position = pos;
+            obj.transform.rotation = rot;
+
             obj.GetComponent<QueryProcessor>().PlayerId = QueryProcessor._idIterator++;
             obj.GetComponent<QueryProcessor>()._ipAddress = "127.0.0.WAN";
             ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
 
-            obj.GetComponent<NicknameSync>().Network_myNickSync = name;
-            obj.GetComponent<ServerRoles>().MyText = "NPC";
-            obj.GetComponent<ServerRoles>().MyColor = "red";
-
             ccm.SetClassID(type);
             ccm.CurClass = type;
 
-            obj.transform.localScale = Vector3.one;
-            obj.transform.position = pos;
-            obj.transform.rotation = rot;
+            obj.GetComponent<NicknameSync>().Network_myNickSync = name;
+            obj.GetComponent<ServerRoles>().MyText = "NPC";
+            obj.GetComponent<ServerRoles>().MyColor = "red";
 
             NPCComponent npcc = obj.AddComponent<NPCComponent>();
 
@@ -387,7 +387,6 @@ namespace NPCS
                 return null;
             }
         }
-
 
         public static Npc FromComponent(NPCComponent npc)
         {
