@@ -3,6 +3,7 @@ using MEC;
 using NPCS.Talking;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace NPCS.Actions
@@ -27,11 +28,15 @@ namespace NPCS.Actions
                 case "left":
                     npc.Move(Npc.MovementDirection.LEFT);
                     break;
+                case "jump":
+                    npc.ReferenceHub.animationController.Networkspeed = new UnityEngine.Vector2(1, 1);
+                    npc.NPCComponent.attached_coroutines.Add(Timing.CallDelayed(float.Parse(args["duration"].Replace('.', ',')), () => npc.ReferenceHub.animationController.NetworkcurAnim = 0));
+                    break;
                 default:
                     npc.Move(Npc.MovementDirection.NONE);
                     break;
             }
-            Timing.CallDelayed(float.Parse(args["duration"]), () => npc.Move(Npc.MovementDirection.NONE));
+            npc.NPCComponent.attached_coroutines.Add(Timing.CallDelayed(float.Parse(args["duration"].Replace('.',',')), () => npc.Move(Npc.MovementDirection.NONE)));
         }
     }
 }

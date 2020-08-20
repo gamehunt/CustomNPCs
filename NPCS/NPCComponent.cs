@@ -11,15 +11,15 @@ namespace NPCS
     {
         public TalkNode root_node;
         public Dictionary<Player, TalkNode> talking_states = new Dictionary<Player, TalkNode>();
-        public CoroutineHandle talking_coroutine;
-        public CoroutineHandle movement_coroutine;
+
+        public List<CoroutineHandle> attached_coroutines = new List<CoroutineHandle>();
+
         public Npc.MovementDirection curDir;
 
         private void OnDestroy()
         {
             Log.Debug("Destroying component", Plugin.Instance.Config.VerboseOutput);
-            Timing.KillCoroutines(talking_coroutine);
-            Timing.KillCoroutines(movement_coroutine);
+            Timing.KillCoroutines(attached_coroutines);
         }
     }
 }

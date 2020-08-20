@@ -387,10 +387,12 @@ namespace NPCS
                 ItemHeld = (itemHeld)
             };
 
-            npcc.talking_coroutine = Timing.RunCoroutine(UpdateTalking(npcc));
-            npcc.movement_coroutine = Timing.RunCoroutine(MoveCoroutine(npcc));
-            Timing.CallDelayed(0.3f, () => b.ReferenceHub.playerMovementSync.OverridePosition(pos, 0f, true));
-            Timing.CallDelayed(0.4f, () => b.Rotation = rot);
+            npcc.attached_coroutines.Add(Timing.RunCoroutine(UpdateTalking(npcc)));
+            npcc.attached_coroutines.Add(Timing.RunCoroutine(MoveCoroutine(npcc)));
+
+            npcc.attached_coroutines.Add(Timing.CallDelayed(0.3f, () => b.ReferenceHub.playerMovementSync.OverridePosition(pos, 0f, true)));
+            npcc.attached_coroutines.Add(Timing.CallDelayed(0.4f, () => b.Rotation = rot));
+
             return b;
         }
 
