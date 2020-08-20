@@ -363,7 +363,11 @@ namespace NPCS
 
             obj.GetComponent<QueryProcessor>().NetworkPlayerId = QueryProcessor._idIterator++;
             obj.GetComponent<QueryProcessor>()._ipAddress = "127.0.0.WAN";
-            //ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
+
+            if (Plugin.Instance.Config.DisplayNPCInPlayerList)
+            {
+                ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
+            }
 
             ccm.CurClass = type;
             obj.GetComponent<PlayerStats>().SetHPAmount(ccm.Classes.SafeGet(type).maxHP);
@@ -381,7 +385,11 @@ namespace NPCS
             Player.Dictionary.Add(obj, ply_obj);
 
             Player.IdsCache.Add(ply_obj.Id, ply_obj);
-            //Player.UserIdsCache.Add(ccm._privUserId, ply_obj);
+
+            if (Plugin.Instance.Config.DisplayNPCInPlayerList)
+            {
+                Player.UserIdsCache.Add(ccm._privUserId, ply_obj);
+            }
 
             Npc b = new Npc(obj)
             {

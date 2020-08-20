@@ -12,6 +12,9 @@ namespace NPCS
         [Description("Enables debug output (Spams trash in console)")]
         public bool VerboseOutput { get; set; } = false;
 
+        [Description("Should PlayerList contains NPCs?")]
+        public bool DisplayNPCInPlayerList { get; set; } = false;
+
         public static string NPCs_root_path = Path.Combine(Paths.Configs, "npcs");
 
         public static string NPCs_nodes_path = Path.Combine(NPCs_root_path, "nodes");
