@@ -5,4 +5,4 @@ For usage instructions see https://github.com/gamehunt/CustomNPCs/wiki/Get-start
 
 Known Issues:
 
- - No known issues)
+ - No **known** issues)
