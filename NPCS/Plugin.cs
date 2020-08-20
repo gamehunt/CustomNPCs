@@ -62,6 +62,10 @@ namespace NPCS
                     {
                         Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
                         Log.Info("Unpatched ReferenceHub.OnDestroy");
+                    }else if (bas.Name.Equals("BanUser"))
+                    {
+                        Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
+                        Log.Info("Unpatched BanPlayer.BanUser");
                     }
                 }
 
