@@ -47,7 +47,7 @@ namespace NPCS.Talking
                     NodeCondition cond = NodeCondition.GetFromToken((string)item.Children[new YamlScalarNode("token")]);
                     if (cond != null)
                     {
-                        Log.Debug($"Recognized token: {cond.Name}",Plugin.Instance.Config.VerboseOutput);
+                        Log.Debug($"Recognized token: {cond.Name}", Plugin.Instance.Config.VerboseOutput);
                         var yml_args = (YamlSequenceNode)item.Children[new YamlScalarNode("args")];
                         Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
                         foreach (YamlMappingNode arg in yml_args)

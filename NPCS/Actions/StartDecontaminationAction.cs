@@ -1,6 +1,5 @@
 ﻿using Exiled.API.Features;
 using LightContainmentZoneDecontamination;
-using System;
 using System.Collections.Generic;
 
 namespace NPCS.Actions

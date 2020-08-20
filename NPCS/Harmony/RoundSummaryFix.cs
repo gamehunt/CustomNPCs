@@ -1,19 +1,12 @@
-﻿using HarmonyLib;
-
-using UnityEngine;
-
-using System;
+﻿using Exiled.Events.EventArgs;
+using Exiled.Events.Handlers;
+using GameCore;
+using HarmonyLib;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Collections.Generic;
-
-using MEC;
-
-using Exiled.Events.EventArgs;
-using Exiled.Events.Handlers;
-
-using GameCore;
-using System.Linq;
+using UnityEngine;
 
 namespace NPCS.Harmony
 {

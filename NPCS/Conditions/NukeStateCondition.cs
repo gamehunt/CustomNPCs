@@ -1,6 +1,5 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
 
 namespace NPCS.Conditions
@@ -15,16 +14,22 @@ namespace NPCS.Conditions
             {
                 case "idle":
                     return !Warhead.IsDetonated && !Warhead.IsInProgress;
+
                 case "not_detonated":
                     return !Warhead.IsDetonated;
+
                 case "not_in_progress":
                     return !Warhead.IsInProgress;
+
                 case "in_progress":
                     return Warhead.IsInProgress;
+
                 case "detonated":
                     return Warhead.IsDetonated;
+
                 case "not_idle":
                     return Warhead.IsInProgress || Warhead.IsDetonated;
+
                 default:
                     return false;
             }

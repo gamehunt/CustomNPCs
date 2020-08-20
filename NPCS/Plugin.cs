@@ -53,7 +53,8 @@ namespace NPCS
                     {
                         Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
                         Log.Info("Unpatched GhostMode");
-                    }else if(bas.DeclaringType.Name.Equals("RoundSummary") && bas.Name.Equals("Start"))
+                    }
+                    else if (bas.DeclaringType.Name.Equals("RoundSummary") && bas.Name.Equals("Start"))
                     {
                         Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
                         Log.Info("Unpatched RoundSummary.Start");

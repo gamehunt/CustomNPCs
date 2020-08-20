@@ -19,7 +19,7 @@ namespace NPCS.Talking
         public static void Register(NodeAction cond)
         {
             registry.Add(cond);
-            Log.Debug($"Registered action token: {cond.Name}",Plugin.Instance.Config.VerboseOutput);
+            Log.Debug($"Registered action token: {cond.Name}", Plugin.Instance.Config.VerboseOutput);
         }
     }
 }

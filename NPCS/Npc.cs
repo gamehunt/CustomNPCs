@@ -163,7 +163,8 @@ namespace NPCS
             }
         }
 
-        public Vector3 Position {
+        public Vector3 Position
+        {
             get
             {
                 return GameObject.GetComponent<PlayerMovementSync>().RealModelPosition;
@@ -173,7 +174,6 @@ namespace NPCS
                 GameObject.GetComponent<PlayerMovementSync>().OverridePosition(value, 0f, false);
             }
         }
-
 
         public Npc(GameObject obj)
         {

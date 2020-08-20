@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
+﻿using CustomPlayerEffects;
 using Exiled.API.Features;
 using HarmonyLib;
-
-using Exiled;
-using PlayableScps;
-using CustomPlayerEffects;
 using Mirror;
+using PlayableScps;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NPCS.Harmony
 {
     [HarmonyPatch(typeof(PlayerPositionManager), nameof(PlayerPositionManager.TransmitData))]
     [HarmonyPriority(Priority.First)]
-    class GhostModeFixPatch
+    internal class GhostModeFixPatch
     {
         private static bool Prefix(PlayerPositionManager __instance)
         {
