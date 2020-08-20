@@ -5,6 +5,4 @@ For usage instructions see https://github.com/gamehunt/CustomNPCs/wiki/Get-start
 
 Known Issues:
   
-  ClassD NPCs are unhitable. Idk wtf
-  
   All NPCs have 1 hp. Will be fixed soon (I believe)
