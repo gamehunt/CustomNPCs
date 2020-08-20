@@ -58,6 +58,10 @@ namespace NPCS
                     {
                         Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
                         Log.Info("Unpatched RoundSummary.Start");
+                    }else if(bas.DeclaringType.Name.Equals("ReferenceHub") && bas.Name.Equals("OnDestroy"))
+                    {
+                        Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
+                        Log.Info("Unpatched ReferenceHub.OnDestroy");
                     }
                 }
 
