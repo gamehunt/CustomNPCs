@@ -50,23 +50,23 @@ namespace NPCS
                     }
                     if (ev.Arguments.Count == 0)
                     {
-                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, "default_npc.yml");
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.Rotations, "default_npc.yml");
                     }
                     else if (ev.Arguments.Count == 1)
                     {
-                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, RoleType.Scientist, ItemType.None, ev.Arguments[0]);
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.Rotations, RoleType.Scientist, ItemType.None, ev.Arguments[0]);
                     }
                     else if (ev.Arguments.Count == 2)
                     {
-                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, (RoleType)int.Parse(ev.Arguments[1]), ItemType.None, ev.Arguments[0]);
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.Rotations, (RoleType)int.Parse(ev.Arguments[1]), ItemType.None, ev.Arguments[0]);
                     }
                     else if (ev.Arguments.Count == 3)
                     {
-                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, (RoleType)int.Parse(ev.Arguments[1]), (ItemType)int.Parse(ev.Arguments[2]), ev.Arguments[0]);
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.Rotations, (RoleType)int.Parse(ev.Arguments[1]), (ItemType)int.Parse(ev.Arguments[2]), ev.Arguments[0]);
                     }
                     else if (ev.Arguments.Count == 4)
                     {
-                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, (RoleType)int.Parse(ev.Arguments[1]), (ItemType)int.Parse(ev.Arguments[2]), ev.Arguments[0], ev.Arguments[3]);
+                        Npc.CreateNPC(ev.Sender.Position, ev.Sender.Rotations, (RoleType)int.Parse(ev.Arguments[1]), (ItemType)int.Parse(ev.Arguments[2]), ev.Arguments[0], ev.Arguments[3]);
                     }
                     break;
 
@@ -138,7 +138,7 @@ namespace NPCS
                         ev.Success = false;
                         break;
                     }
-                    Npc.CreateNPC(ev.Sender.Position, ev.Sender.GameObject.transform.rotation, ev.Arguments[0]);
+                    Npc.CreateNPC(ev.Sender.Position, ev.Sender.Rotations, ev.Arguments[0]);
                     break;
 
                 case "npc_save":

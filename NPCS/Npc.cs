@@ -175,6 +175,18 @@ namespace NPCS
             }
         }
 
+        public Vector2 Rotation
+        {
+            get
+            {
+                return GameObject.GetComponent<PlayerMovementSync>().RotationSync;
+            }
+            set
+            {
+                GameObject.GetComponent<PlayerMovementSync>().RotationSync = value;
+            }
+        }
+
         public Npc(GameObject obj)
         {
             GameObject = obj;
@@ -254,7 +266,6 @@ namespace NPCS
                     default:
                         break;
                 }
-
                 yield return Timing.WaitForSeconds(0.1f);
             }
         }
@@ -338,7 +349,7 @@ namespace NPCS
             }
         }
 
-        public static Npc CreateNPC(Vector3 pos, Quaternion rot, RoleType type = RoleType.ClassD, ItemType itemHeld = ItemType.None, string name = "(EMPTY)", string root_node = "default_node.yml")
+        public static Npc CreateNPC(Vector3 pos, Vector2 rot, RoleType type = RoleType.ClassD, ItemType itemHeld = ItemType.None, string name = "(EMPTY)", string root_node = "default_node.yml")
         {
             GameObject obj =
                 UnityEngine.Object.Instantiate(
@@ -347,9 +358,8 @@ namespace NPCS
 
             obj.transform.localScale = Vector3.one;
             obj.transform.position = pos;
-            obj.transform.rotation = rot;
 
-            obj.GetComponent<QueryProcessor>().PlayerId = QueryProcessor._idIterator++;
+            obj.GetComponent<QueryProcessor>().NetworkPlayerId = QueryProcessor._idIterator++;
             obj.GetComponent<QueryProcessor>()._ipAddress = "127.0.0.WAN";
             ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
 
@@ -376,9 +386,11 @@ namespace NPCS
                 RootNode = (TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node))),
                 ItemHeld = (itemHeld)
             };
+
             npcc.talking_coroutine = Timing.RunCoroutine(UpdateTalking(npcc));
             npcc.movement_coroutine = Timing.RunCoroutine(MoveCoroutine(npcc));
-            Timing.CallDelayed(0.3f, () => b.ReferenceHub.playerMovementSync.OverridePosition(pos, rot.y, true));
+            Timing.CallDelayed(0.3f, () => b.ReferenceHub.playerMovementSync.OverridePosition(pos, 0f, true));
+            Timing.CallDelayed(0.4f, () => b.Rotation = rot);
             return b;
         }
 
@@ -388,7 +400,7 @@ namespace NPCS
         //item_held: 24
         //root_node: default_node.yml
         //god_mode: false
-        public static Npc CreateNPC(Vector3 pos, Quaternion rot, string path)
+        public static Npc CreateNPC(Vector3 pos, Vector2 rot, string path)
         {
             try
             {
