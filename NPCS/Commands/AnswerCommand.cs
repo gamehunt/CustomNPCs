@@ -1,22 +1,17 @@
 ﻿using CommandSystem;
-using System;
-using RemoteAdmin;
 using Exiled.API.Features;
-using Exiled.Permissions.Extensions;
-using System.Collections.Generic;
-using System.Text;
-
+using RemoteAdmin;
+using System;
 using UnityEngine;
-
 
 namespace NPCS.Commands
 {
     [CommandHandler(typeof(CommandSystem.ClientCommandHandler))]
-    class AnswerCommand : ICommand
+    internal class AnswerCommand : ICommand
     {
         public string Command => "answer";
 
-        public string[] Aliases => new string[] { "answ"};
+        public string[] Aliases => new string[] { "answ" };
 
         public string Description => "Command that allow u to answer to NPC";
 

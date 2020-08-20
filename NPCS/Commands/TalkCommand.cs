@@ -1,17 +1,13 @@
 ﻿using CommandSystem;
-using System;
-using RemoteAdmin;
 using Exiled.API.Features;
-using Exiled.Permissions.Extensions;
-using System.Collections.Generic;
-using System.Text;
-
+using RemoteAdmin;
+using System;
 using UnityEngine;
 
 namespace NPCS.Commands
 {
     [CommandHandler(typeof(CommandSystem.ClientCommandHandler))]
-    class TalkCommand : ICommand
+    internal class TalkCommand : ICommand
     {
         public string Command => "talk";
 

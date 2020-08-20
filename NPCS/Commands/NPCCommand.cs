@@ -3,13 +3,12 @@ using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
 using RemoteAdmin;
 using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace NPCS.Commands
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    internal class NPCCommand: ICommand
+    internal class NPCCommand : ICommand
     {
         public string Command { get; } = "npc";
 
@@ -126,6 +125,7 @@ namespace NPCS.Commands
                         Player.Get(___npcs1[int.Parse(arguments.At(1))].gameObject).IsGodModeEnabled = bool.Parse(arguments.At(2));
                         response = "God-Mode switched";
                         break;
+
                     default:
                         response = "Unknown sub-command!";
                         break;
