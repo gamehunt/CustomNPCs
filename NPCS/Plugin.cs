@@ -76,8 +76,6 @@ namespace NPCS
 
                 Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
                 Handlers.Server.RoundEnded += EventHandlers.OnRoundEnd;
-                Handlers.Server.SendingRemoteAdminCommand += EventHandlers.OnRACMD;
-                Handlers.Server.SendingConsoleCommand += EventHandlers.OnCMD;
 
                 Handlers.Player.Died += EventHandlers.OnDied;
 
@@ -151,8 +149,6 @@ namespace NPCS
 
             Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Handlers.Server.RoundEnded -= EventHandlers.OnRoundEnd;
-            Handlers.Server.SendingRemoteAdminCommand -= EventHandlers.OnRACMD;
-            Handlers.Server.SendingConsoleCommand -= EventHandlers.OnCMD;
 
             Handlers.Player.Died -= EventHandlers.OnDied;
 
