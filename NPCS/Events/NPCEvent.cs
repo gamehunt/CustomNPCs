@@ -2,6 +2,7 @@
 using MEC;
 using NPCS.Talking;
 using System.Collections.Generic;
+using System;
 
 namespace NPCS.Events
 {
@@ -24,7 +25,13 @@ namespace NPCS.Events
             NPC.IsActionLocked = true;
             foreach (NodeAction act in acts.Keys)
             {
-                act.Process(NPC, Player, acts[act]);
+                try
+                {
+                    act.Process(NPC, Player, acts[act]);
+                }catch(Exception e)
+                {
+                    Log.Error($"Exception during processing action {act.Name}: {e}");
+                }
                 yield return Timing.WaitForSeconds(float.Parse(acts[act]["next_action_delay"].Replace('.', ',')));
             }
             NPC.IsActionLocked = false;
