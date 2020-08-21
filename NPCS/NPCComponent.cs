@@ -17,6 +17,7 @@ namespace NPCS
         public Npc.MovementDirection curDir;
 
         public bool action_locked = false;
+        public Player lock_handler = null;
         public bool locked = false;
 
         public bool is_exclusive = false;

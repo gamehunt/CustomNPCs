@@ -207,6 +207,18 @@ namespace NPCS
             }
         }
 
+        public Player LockHandler
+        {
+            get
+            {
+                return NPCComponent.lock_handler;
+            }
+            set
+            {
+                NPCComponent.lock_handler = value;
+            }
+        }
+
         public bool IsActionLocked
         {
             get
@@ -251,6 +263,11 @@ namespace NPCS
                 foreach (Player p in invalid_players)
                 {
                     cmp.talking_states.Remove(p);
+                    if(p == cmp.lock_handler)
+                    {
+                        cmp.lock_handler = null;
+                        cmp.locked = false;
+                    }
                 }
                 yield return Timing.WaitForSeconds(0.5f);
             }
@@ -344,6 +361,7 @@ namespace NPCS
         private IEnumerator<float> StartTalkCoroutine(Player p)
         {
             IsLocked = true;
+            LockHandler = p;
             TalkingStates.Add(p, RootNode);
             bool end = RootNode.Send(Name, p);
             IsActionLocked = true;
