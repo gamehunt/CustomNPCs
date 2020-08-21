@@ -38,13 +38,13 @@ namespace NPCS
 
         public void OnGrenadeExplosion(ExplodingGrenadeEventArgs ev)
         {
-            foreach(Player p in ev.TargetToDamages.Keys)
+            foreach (Player p in ev.TargetToDamages.Keys)
             {
                 NPCComponent component = p.GameObject.GetComponent<NPCComponent>();
                 if (component != null)
                 {
                     p.Health -= ev.TargetToDamages[p];
-                    if(p.Health <= 0f)
+                    if (p.Health <= 0f)
                     {
                         Npc obj_npc = Npc.FromComponent(component);
                         obj_npc.Kill(true);

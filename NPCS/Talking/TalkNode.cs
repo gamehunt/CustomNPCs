@@ -34,10 +34,8 @@ namespace NPCS.Talking
                 //conditions:
                 // - token: SomeToken
                 //   args:
-                //    - name: SomeArg1
-                //      value: 10
-                //    - name: SomeArg2
-                //      value: SomeTextValue
+                //    some_arg: some_value
+                //    some_arg1: some_value1
 
                 Log.Debug("Parsing conditions...", Plugin.Instance.Config.VerboseOutput);
                 var conditions = (YamlSequenceNode)mapping.Children[new YamlScalarNode("conditions")];
@@ -48,11 +46,11 @@ namespace NPCS.Talking
                     if (cond != null)
                     {
                         Log.Debug($"Recognized token: {cond.Name}",Plugin.Instance.Config.VerboseOutput);
-                        var yml_args = (YamlSequenceNode)item.Children[new YamlScalarNode("args")];
+                        var yml_args = (YamlMappingNode)item.Children[new YamlScalarNode("args")];
                         Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
-                        foreach (YamlMappingNode arg in yml_args)
+                        foreach (YamlScalarNode arg in yml_args.Children.Keys)
                         {
-                            arg_bindings.Add((string)arg.Children[new YamlScalarNode("name")], (string)arg.Children[new YamlScalarNode("value")]);
+                            arg_bindings.Add((string)arg, (string)yml_args.Children[arg]);
                         }
                         Conditions.Add(cond, arg_bindings);
                     }
@@ -68,10 +66,8 @@ namespace NPCS.Talking
                 //actions:
                 // - token: SomeToken
                 //   args:
-                //    - name: SomeArg1
-                //      value: 10
-                //    - name: SomeArg2
-                //      value: SomeTextValue
+                //    some_arg: some_value
+                //    some_arg1: some_value1
 
                 Log.Debug("Parsing actions...", Plugin.Instance.Config.VerboseOutput);
                 var actions = (YamlSequenceNode)mapping.Children[new YamlScalarNode("actions")];
@@ -82,11 +78,11 @@ namespace NPCS.Talking
                     if (act != null)
                     {
                         Log.Debug($"Recognized token: {act.Name}", Plugin.Instance.Config.VerboseOutput);
-                        var yml_args = (YamlSequenceNode)item.Children[new YamlScalarNode("args")];
+                        var yml_args = (YamlMappingNode)item.Children[new YamlScalarNode("args")];
                         Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
-                        foreach (YamlMappingNode arg in yml_args)
+                        foreach (YamlScalarNode arg in yml_args.Children.Keys)
                         {
-                            arg_bindings.Add((string)arg.Children[new YamlScalarNode("name")], (string)arg.Children[new YamlScalarNode("value")]);
+                            arg_bindings.Add((string)arg.Value, (string)yml_args.Children[arg]);
                         }
                         Actions.Add(act, arg_bindings);
                     }
@@ -100,12 +96,12 @@ namespace NPCS.Talking
                 //Format:
                 //------------
                 //next_nodes:
-                // - node_Path: /relative/path/to/node
+                // - /relative/path/to/node
                 Log.Debug("Parsing next nodes...", Plugin.Instance.Config.VerboseOutput);
                 var next = (YamlSequenceNode)mapping.Children[new YamlScalarNode("next_nodes")];
-                foreach (YamlMappingNode item in next)
+                foreach (YamlScalarNode item in next)
                 {
-                    NextNodes.Add(TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, (string)item.Children[new YamlScalarNode("node_path")])));
+                    NextNodes.Add(TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, (string)item.Value)));
                 }
             }
             catch (Exception e)
