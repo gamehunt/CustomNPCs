@@ -1,6 +1,5 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
-using Exiled.Events;
 using NPCS.Conditions;
 using NPCS.Talking;
 using System;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Handlers = Exiled.Events.Handlers;
+using Evs = Exiled.Events;
 
 namespace NPCS
 {
@@ -45,26 +45,26 @@ namespace NPCS
 
                 //F u c k
 
-                List<MethodBase> methods = new List<MethodBase>(Events.Instance.Harmony.GetPatchedMethods());
+                List<MethodBase> methods = new List<MethodBase>(Evs.Events.Instance.Harmony.GetPatchedMethods());
                 foreach (System.Reflection.MethodBase bas in methods)
                 {
                     var info = HarmonyLib.Harmony.GetPatchInfo(bas);
                     if (bas.Name.Equals("TransmitData"))
                     {
-                        Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
+                        Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
                         Log.Info("Unpatched GhostMode");
                     }
                     else if (bas.DeclaringType.Name.Equals("RoundSummary") && bas.Name.Equals("Start"))
                     {
-                        Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
+                        Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
                         Log.Info("Unpatched RoundSummary.Start");
                     }else if(bas.DeclaringType.Name.Equals("ReferenceHub") && bas.Name.Equals("OnDestroy"))
                     {
-                        Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
+                        Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
                         Log.Info("Unpatched ReferenceHub.OnDestroy");
                     }else if (bas.Name.Equals("BanUser"))
                     {
-                        Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Events.Instance.Harmony.Id);
+                        Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
                         Log.Info("Unpatched BanPlayer.BanUser");
                     }
                 }

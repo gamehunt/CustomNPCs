@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Features;
 using MEC;
 using Mirror;
+using NPCS.Events;
 using NPCS.Talking;
 using RemoteAdmin;
 using System;
@@ -243,6 +244,14 @@ namespace NPCS
             }
         }
 
+        public Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>> Events
+        {
+            get
+            {
+                return NPCComponent.attached_events;
+            }
+        }
+
         public Npc(GameObject obj)
         {
             GameObject = obj;
@@ -263,7 +272,7 @@ namespace NPCS
                 foreach (Player p in invalid_players)
                 {
                     cmp.talking_states.Remove(p);
-                    if(p == cmp.lock_handler)
+                    if (p == cmp.lock_handler)
                     {
                         cmp.lock_handler = null;
                         cmp.locked = false;
@@ -510,6 +519,7 @@ namespace NPCS
         //root_node: default_node.yml
         //god_mode: false
         //is_exclusive: true
+        //events: []
         public static Npc CreateNPC(Vector3 pos, Vector2 rot, string path)
         {
             try
@@ -529,6 +539,35 @@ namespace NPCS
                     pl.IsGodModeEnabled = true;
                 }
                 n.IsExclusive = bool.Parse((string)mapping.Children[new YamlScalarNode("is_exclusive")]);
+
+                YamlSequenceNode events = (YamlSequenceNode)mapping.Children[new YamlScalarNode("events")];
+
+                foreach (YamlMappingNode event_node in events.Children)
+                {
+                    var actions = (YamlSequenceNode)event_node.Children[new YamlScalarNode("actions")];
+                    Dictionary<NodeAction, Dictionary<string, string>> actions_mapping = new Dictionary<NodeAction, Dictionary<string, string>>();
+                    foreach (YamlMappingNode action_node in actions)
+                    {
+                        NodeAction act = NodeAction.GetFromToken((string)action_node.Children[new YamlScalarNode("token")]);
+                        if (act != null)
+                        {
+                            Log.Debug($"Recognized action: {act.Name}", Plugin.Instance.Config.VerboseOutput);
+                            var yml_args = (YamlMappingNode)action_node.Children[new YamlScalarNode("args")];
+                            Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
+                            foreach (YamlScalarNode arg in yml_args.Children.Keys)
+                            {
+                                arg_bindings.Add((string)arg.Value, (string)yml_args.Children[arg]);
+                            }
+                            actions_mapping.Add(act, arg_bindings);
+                        }
+                        else
+                        {
+                            Log.Error($"Failed to parse action: {(string)action_node.Children[new YamlScalarNode("token")]} (invalid token)");
+                        }
+                    }
+                    n.Events.Add((string)event_node.Children[new YamlScalarNode("token")], actions_mapping);
+                }
+
                 return n;
             }
             catch (Exception e)
@@ -568,6 +607,18 @@ namespace NPCS
             else
             {
                 Log.Error("Failed to save npc: File exists!");
+            }
+        }
+
+        public void FireEvent(NPCEvent ev)
+        {
+            try
+            {
+                ev.FireActions(Events[ev.Name]);
+            }
+            catch (KeyNotFoundException e)
+            {
+                Log.Debug($"Skipping unused event {ev.Name}", Plugin.Instance.Config.VerboseOutput);
             }
         }
     }

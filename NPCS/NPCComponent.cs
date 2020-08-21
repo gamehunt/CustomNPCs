@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using MEC;
+using NPCS.Events;
 using NPCS.Talking;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace NPCS
         public Dictionary<Player, TalkNode> talking_states = new Dictionary<Player, TalkNode>();
 
         public List<CoroutineHandle> attached_coroutines = new List<CoroutineHandle>();
+
+        public Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>> attached_events = new Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>>(); //Horrible
 
         public Npc.MovementDirection curDir;
 

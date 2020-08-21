@@ -35,6 +35,7 @@ item_held: 24
 root_node: default_node.yml
 god_mode: true
 is_exclusive: true
+events: []
 ";
     }
 }
