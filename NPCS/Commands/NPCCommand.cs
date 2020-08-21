@@ -23,6 +23,7 @@ namespace NPCS.Commands
                 if (!s.CheckPermission("npc.all"))
                 {
                     response = "Access denied!";
+                    return false;
                 }
                 if (!Round.IsStarted)
                 {
@@ -148,6 +149,7 @@ namespace NPCS.Commands
             else
             {
                 response = "Only players can use this!";
+                return false;
             }
             return true;
         }
