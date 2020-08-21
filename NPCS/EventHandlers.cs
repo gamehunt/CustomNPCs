@@ -53,7 +53,9 @@ namespace NPCS
                         p.Health -= ev.TargetToDamages[p];
                         if (p.Health <= 0f)
                         {
-                            obj_npc.Kill(true);
+                            NPCDiedEvent npc_ev = new NPCDiedEvent(obj_npc, ev.Thrower);
+                            obj_npc.FireEvent(npc_ev);
+                            obj_npc.NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(Utils.CallOnUnlock(() => obj_npc.Kill(true), obj_npc)));
                         }
                     }
                 }
