@@ -5,4 +5,4 @@ For usage instructions see https://github.com/gamehunt/CustomNPCs/wiki/Get-start
 
 Known Issues:
 
- - NPCs are unhitable by grenades
+ - No **known** issues
