@@ -16,6 +16,8 @@ namespace NPCS
 
         public Npc.MovementDirection curDir;
 
+        public bool locked = false;
+
         private void OnDestroy()
         {
             Log.Debug("Destroying component", Plugin.Instance.Config.VerboseOutput);

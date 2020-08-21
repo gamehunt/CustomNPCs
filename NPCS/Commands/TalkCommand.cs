@@ -25,11 +25,20 @@ namespace NPCS.Commands
                 foreach (NPCComponent npc in npcs)
                 {
                     Npc obj_npc = Npc.FromComponent(npc);
-                    if (Vector3.Distance(npc.transform.position, s.Position) < 3f)
+                    if (!obj_npc.IsLocked)
                     {
-                        obj_npc.TalkWith(s);
-                        flag = true;
-                        break;
+                        if (Vector3.Distance(npc.transform.position, s.Position) < 3f)
+                        {
+                            obj_npc.TalkWith(s);
+                            flag = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        response = null;
+                        s.SendConsoleMessage($"[{obj_npc.Name}] I'm busy, wait a second!", "yellow");
+                        return false;
                     }
                 }
                 if (!flag)

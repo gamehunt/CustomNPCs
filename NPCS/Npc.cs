@@ -187,6 +187,18 @@ namespace NPCS
             }
         }
 
+        public bool IsLocked
+        {
+            get
+            {
+                return NPCComponent.locked;
+            }
+            set
+            {
+                NPCComponent.locked = value;
+            }
+        }
+
         public Npc(GameObject obj)
         {
             GameObject = obj;
@@ -199,7 +211,7 @@ namespace NPCS
                 List<Player> invalid_players = new List<Player>();
                 foreach (Player p in cmp.talking_states.Keys)
                 {
-                    if (!p.IsAlive || !Player.List.Contains(p) || Vector3.Distance(cmp.transform.position, p.Position) >= 3f)
+                    if (!p.IsAlive || !Player.List.Contains(p))
                     {
                         invalid_players.Add(p);
                     }
@@ -297,19 +309,27 @@ namespace NPCS
             }
         }
 
-        public void TalkWith(Player p)
+        private IEnumerator<float> StartTalkCoroutine(Player p)
         {
             TalkingStates.Add(p, RootNode);
             bool end = RootNode.Send(Name, p);
+            IsLocked = true;
             foreach (NodeAction action in RootNode.Actions.Keys)
             {
                 action.Process(this, p, RootNode.Actions[action]);
+                yield return Timing.WaitForSeconds(float.Parse(RootNode.Actions[action]["next_action_delay"].Replace('.', ',')));
             }
+            IsLocked = false;
             if (end)
             {
                 TalkingStates.Remove(p);
                 p.SendConsoleMessage(Name + " ended talk", "yellow");
             }
+        }
+
+        public void TalkWith(Player p)
+        {
+            NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(StartTalkCoroutine(p)));
         }
 
         private IEnumerator<float> HandleAnswerCoroutine(Player p, string answer)
@@ -322,6 +342,7 @@ namespace NPCS
                     if (cur_node.NextNodes.TryGet(node, out TalkNode new_node))
                     {
                         TalkingStates[p] = new_node;
+                        IsLocked = true;
                         bool end = new_node.Send(Name, p);
                         foreach (NodeAction action in new_node.Actions.Keys)
                         {
@@ -333,8 +354,9 @@ namespace NPCS
                             {
                                 Log.Error($"Exception during processing action {action.Name}: {e}");
                             }
-                            yield return Timing.WaitForSeconds(float.Parse(new_node.Actions[action]["next_action_delay"]));
+                            yield return Timing.WaitForSeconds(float.Parse(new_node.Actions[action]["next_action_delay"].Replace('.', ',')));
                         }
+                        IsLocked = false;
                         if (end)
                         {
                             TalkingStates.Remove(p);
@@ -359,7 +381,14 @@ namespace NPCS
 
         public void HandleAnswer(Player p, string answer)
         {
-            NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(HandleAnswerCoroutine(p, answer)));
+            if (!IsLocked)
+            {
+                NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(HandleAnswerCoroutine(p, answer)));
+            }
+            else
+            {
+                p.SendConsoleMessage($"[{Name}] I'm busy now, wait a second", "yellow");
+            }
         }
 
         public static Npc CreateNPC(Vector3 pos, Vector2 rot, RoleType type = RoleType.ClassD, ItemType itemHeld = ItemType.None, string name = "(EMPTY)", string root_node = "default_node.yml")
