@@ -19,7 +19,14 @@ namespace NPCS.Harmony
 
                 var ev = new LeftEventArgs(player);
 
-                Log.SendRaw($"Player {ev.Player.Nickname} ({ev.Player.UserId}) ({player?.Id}) disconnected", ConsoleColor.Green);
+                if (player.GameObject.GetComponent<NPCComponent>() == null)
+                {
+                    Log.SendRaw($"Player {ev.Player.Nickname} ({ev.Player.UserId}) ({player?.Id}) disconnected", ConsoleColor.Green);
+                }
+                else
+                {
+                    Log.SendRaw($"NPC {ev.Player.Nickname} ({player?.Id}) deconstructed", ConsoleColor.Green);
+                }
 
                 Exiled.Events.Handlers.Player.OnLeft(ev);
 
@@ -32,7 +39,7 @@ namespace NPCS.Harmony
             }
             catch (Exception exception)
             {
-                Log.Error($"Exiled.Events.Patches.Events.Player.Left: {exception}\n{exception.StackTrace}");
+                Log.Error($"Exiled.Events.Patches.Events.Player.Left (Repatched by CustomNPCs!!!): {exception}\n{exception.StackTrace}");
             }
         }
     }
