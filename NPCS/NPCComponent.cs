@@ -16,7 +16,10 @@ namespace NPCS
 
         public Npc.MovementDirection curDir;
 
+        public bool action_locked = false;
         public bool locked = false;
+
+        public bool is_exclusive = false;
 
         private void OnDestroy()
         {

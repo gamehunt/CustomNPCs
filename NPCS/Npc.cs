@@ -66,6 +66,14 @@ namespace NPCS
                     return Player.Get(parent.GameObject).IsGodModeEnabled;
                 }
             }
+
+            public bool is_exclusive
+            {
+                get
+                {
+                    return parent.IsExclusive;
+                }
+            }
         }
 
         public enum MovementDirection
@@ -199,6 +207,30 @@ namespace NPCS
             }
         }
 
+        public bool IsActionLocked
+        {
+            get
+            {
+                return NPCComponent.action_locked;
+            }
+            set
+            {
+                NPCComponent.action_locked = value;
+            }
+        }
+
+        public bool IsExclusive
+        {
+            get
+            {
+                return NPCComponent.is_exclusive;
+            }
+            set
+            {
+                NPCComponent.is_exclusive = value;
+            }
+        }
+
         public Npc(GameObject obj)
         {
             GameObject = obj;
@@ -311,19 +343,21 @@ namespace NPCS
 
         private IEnumerator<float> StartTalkCoroutine(Player p)
         {
+            IsLocked = true;
             TalkingStates.Add(p, RootNode);
             bool end = RootNode.Send(Name, p);
-            IsLocked = true;
+            IsActionLocked = true;
             foreach (NodeAction action in RootNode.Actions.Keys)
             {
                 action.Process(this, p, RootNode.Actions[action]);
                 yield return Timing.WaitForSeconds(float.Parse(RootNode.Actions[action]["next_action_delay"].Replace('.', ',')));
             }
-            IsLocked = false;
+            IsActionLocked = false;
             if (end)
             {
                 TalkingStates.Remove(p);
                 p.SendConsoleMessage(Name + " ended talk", "yellow");
+                IsLocked = false;
             }
         }
 
@@ -342,7 +376,7 @@ namespace NPCS
                     if (cur_node.NextNodes.TryGet(node, out TalkNode new_node))
                     {
                         TalkingStates[p] = new_node;
-                        IsLocked = true;
+                        IsActionLocked = true;
                         bool end = new_node.Send(Name, p);
                         foreach (NodeAction action in new_node.Actions.Keys)
                         {
@@ -356,11 +390,12 @@ namespace NPCS
                             }
                             yield return Timing.WaitForSeconds(float.Parse(new_node.Actions[action]["next_action_delay"].Replace('.', ',')));
                         }
-                        IsLocked = false;
+                        IsActionLocked = false;
                         if (end)
                         {
                             TalkingStates.Remove(p);
                             p.SendConsoleMessage(Name + " ended talk", "yellow");
+                            IsLocked = false;
                         }
                     }
                     else
@@ -381,7 +416,7 @@ namespace NPCS
 
         public void HandleAnswer(Player p, string answer)
         {
-            if (!IsLocked)
+            if (!IsActionLocked)
             {
                 NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(HandleAnswerCoroutine(p, answer)));
             }
@@ -419,7 +454,6 @@ namespace NPCS
             obj.GetComponent<ServerRoles>().MyText = "NPC";
             obj.GetComponent<ServerRoles>().MyColor = "red";
 
-
             NetworkServer.Spawn(obj);
             PlayerManager.AddPlayer(obj); //I'm not sure if I need this
 
@@ -442,7 +476,8 @@ namespace NPCS
             npcc.attached_coroutines.Add(Timing.RunCoroutine(UpdateTalking(npcc)));
             npcc.attached_coroutines.Add(Timing.RunCoroutine(MoveCoroutine(npcc)));
 
-            npcc.attached_coroutines.Add(Timing.CallDelayed(0.3f, () => {
+            npcc.attached_coroutines.Add(Timing.CallDelayed(0.3f, () =>
+            {
                 b.ReferenceHub.playerMovementSync.OverridePosition(pos, 0f, true);
                 b.Rotation = rot;
             }));
@@ -456,6 +491,7 @@ namespace NPCS
         //item_held: 24
         //root_node: default_node.yml
         //god_mode: false
+        //is_exclusive: true
         public static Npc CreateNPC(Vector3 pos, Vector2 rot, string path)
         {
             try
@@ -474,6 +510,7 @@ namespace NPCS
                     Player pl = Player.Get(n.GameObject);
                     pl.IsGodModeEnabled = true;
                 }
+                n.IsExclusive = bool.Parse((string)mapping.Children[new YamlScalarNode("is_exclusive")]);
                 return n;
             }
             catch (Exception e)

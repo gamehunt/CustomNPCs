@@ -25,7 +25,7 @@ namespace NPCS.Commands
                 foreach (NPCComponent npc in npcs)
                 {
                     Npc obj_npc = Npc.FromComponent(npc);
-                    if (!obj_npc.IsLocked)
+                    if (!obj_npc.IsActionLocked && !(obj_npc.IsExclusive && obj_npc.IsLocked))
                     {
                         if (Vector3.Distance(npc.transform.position, s.Position) < 3f)
                         {

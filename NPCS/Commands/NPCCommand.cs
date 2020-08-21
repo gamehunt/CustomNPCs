@@ -62,7 +62,14 @@ namespace NPCS.Commands
                             response = "You need to provide path to file!";
                             return false;
                         }
-                        Npc.CreateNPC(s.Position, s.Rotations, arguments.At(1));
+                        try
+                        {
+                            Npc.CreateNPC(s.Position, s.Rotations, arguments.At(1));
+                        }catch(Exception e)
+                        {
+                            response = "Failed to load NPC!";
+                            return false;
+                        }
                         response = "NPC loaded";
                         break;
 
@@ -72,9 +79,16 @@ namespace NPCS.Commands
                             response = "You need to provide npc id and path to file!";
                             break;
                         }
-                        NPCComponent[] ___npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
-                        Npc __obj_npc = Npc.FromComponent(___npcs[int.Parse(arguments.At(1))]);
-                        __obj_npc.Serialize(arguments.At(2));
+                        try
+                        {
+                            NPCComponent[] ___npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
+                            Npc __obj_npc = Npc.FromComponent(___npcs[int.Parse(arguments.At(1))]);
+                            __obj_npc.Serialize(arguments.At(2));
+                        }catch(Exception e)
+                        {
+                            response = "Failed to save NPC!";
+                            return false;
+                        }
                         response = "NPC saved";
                         break;
 
