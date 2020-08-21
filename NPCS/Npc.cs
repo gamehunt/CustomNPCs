@@ -325,7 +325,13 @@ namespace NPCS
                         bool end = new_node.Send(Name, p);
                         foreach (NodeAction action in new_node.Actions.Keys)
                         {
-                            action.Process(this, p, new_node.Actions[action]);
+                            try
+                            {
+                                action.Process(this, p, new_node.Actions[action]);
+                            }catch(Exception e)
+                            {
+                                Log.Error($"Exception during processing action {action.Name}: {e}");
+                            }
                         }
                         if (end)
                         {

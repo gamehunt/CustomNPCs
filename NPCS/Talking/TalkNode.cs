@@ -139,9 +139,17 @@ namespace NPCS.Talking
                     bool flag = true;
                     foreach (NodeCondition cond in next.Conditions.Keys)
                     {
-                        if (!cond.Check(p, next.Conditions[cond]))
+                        try
+                        {
+                            if (!cond.Check(p, next.Conditions[cond]))
+                            {
+                                flag = false;
+                                break;
+                            }
+                        }catch(Exception e)
                         {
                             flag = false;
+                            Log.Error($"Exception during {cond.Name} condition check: {e}");
                             break;
                         }
                     }
