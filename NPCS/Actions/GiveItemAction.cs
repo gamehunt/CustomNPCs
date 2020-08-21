@@ -10,6 +10,10 @@ namespace NPCS.Actions
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
+            if(player == null)
+            {
+                return;
+            }
             player.AddItem((ItemType)int.Parse(args["item_type"]));
         }
     }

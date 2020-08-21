@@ -11,6 +11,10 @@ namespace NPCS.Actions
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
+            if(player == null)
+            {
+                return;
+            }
             foreach (KeyValuePair<Type, CustomPlayerEffects.PlayerEffect> keyValuePair in player.ReferenceHub.playerEffectsController.AllEffects)
             {
                 if (string.Equals(keyValuePair.Key.ToString(), "customplayereffects." + args["type"], StringComparison.InvariantCultureIgnoreCase))
