@@ -1,6 +1,5 @@
 ﻿using Exiled.API.Features;
 using MEC;
-using NPCS.Events;
 using NPCS.Talking;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +26,7 @@ namespace NPCS
 
         private void OnDestroy()
         {
-            Log.Debug("Destroying component", Plugin.Instance.Config.VerboseOutput);
+            Log.Debug("Destroying NPC component", Plugin.Instance.Config.VerboseOutput);
             Timing.KillCoroutines(attached_coroutines);
         }
     }

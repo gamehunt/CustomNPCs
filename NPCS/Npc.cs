@@ -569,7 +569,6 @@ namespace NPCS
                     }
                     n.Events.Add((string)event_node.Children[new YamlScalarNode("token")], actions_mapping);
                 }
-
                 return n;
             }
             catch (Exception e)

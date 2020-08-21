@@ -3,8 +3,6 @@ using Exiled.Events.EventArgs;
 using MEC;
 using NPCS.Events;
 using NPCS.Harmony;
-using System;
-using System.Collections.Generic;
 
 namespace NPCS
 {
@@ -30,15 +28,6 @@ namespace NPCS
             RoundSummaryFix.__npc_endRequested = false;
         }
 
-        private IEnumerator<float> CallOnUnlock(Action act, Npc locked)
-        {
-            while (locked.IsActionLocked)
-            {
-                yield return 0f;
-            }
-            act.Invoke();
-        }
-
         public void OnDied(DiedEventArgs ev)
         {
             NPCComponent cmp = ev.Target.GameObject.GetComponent<NPCComponent>();
@@ -47,7 +36,7 @@ namespace NPCS
                 Npc npc = Npc.FromComponent(cmp);
                 NPCDiedEvent npc_ev = new NPCDiedEvent(npc, ev.Killer);
                 npc.FireEvent(npc_ev);
-                npc.NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(CallOnUnlock(() => npc.Kill(false), npc)));
+                npc.NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(Utils.CallOnUnlock(() => npc.Kill(false), npc)));
             }
         }
 
