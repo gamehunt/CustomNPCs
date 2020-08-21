@@ -1,12 +1,10 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NPCS.Actions
 {
-    class RotationAction : NodeAction
+    internal class RotationAction : NodeAction
     {
         public override string Name => "RotationAction";
 

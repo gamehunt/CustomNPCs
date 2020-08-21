@@ -14,7 +14,7 @@ namespace NPCS.Actions
             {
                 Map.Broadcast(5, args["text"]);
             }
-            else if(player != null)
+            else if (player != null)
             {
                 player.Broadcast(5, args["text"]);
             }

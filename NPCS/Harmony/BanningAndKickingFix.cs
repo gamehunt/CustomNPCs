@@ -15,14 +15,13 @@ namespace NPCS.Harmony
         {
             try
             {
-
                 Exiled.API.Features.Player issuerPlayer = Exiled.API.Features.Player.Get(issuer) ?? Exiled.API.Features.Server.Host;
 
                 if (user.GetComponent<NPCComponent>() != null)
                 {
                     issuerPlayer.RemoteAdminMessage("WTF U TRIED TO BAN NPC?", false, Plugin.Instance.Name);
                     issuerPlayer.ClearBroadcasts();
-                    issuerPlayer.Broadcast(2,"<color=red>DONT BAN OR KICK NPCs</color>");
+                    issuerPlayer.Broadcast(2, "<color=red>DONT BAN OR KICK NPCs</color>");
                     return false;
                 }
 

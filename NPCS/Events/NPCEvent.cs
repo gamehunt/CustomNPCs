@@ -1,8 +1,8 @@
 ﻿using Exiled.API.Features;
 using MEC;
 using NPCS.Talking;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace NPCS.Events
 {
@@ -28,7 +28,8 @@ namespace NPCS.Events
                 try
                 {
                     act.Process(NPC, Player, acts[act]);
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     Log.Error($"Exception during processing action {act.Name}: {e}");
                 }

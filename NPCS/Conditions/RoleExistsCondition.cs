@@ -1,13 +1,11 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace NPCS.Conditions
 {
-    class RoleExistsCondition : NodeCondition
+    internal class RoleExistsCondition : NodeCondition
     {
         public override string Name => "RoleExistsCondition";
 

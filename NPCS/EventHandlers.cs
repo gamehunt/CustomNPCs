@@ -65,9 +65,9 @@ namespace NPCS
         public void OnDecontamination(DecontaminatingEventArgs ev)
         {
             Npc intr = null;
-            foreach(NPCComponent component in UnityEngine.Object.FindObjectsOfType<NPCComponent>())
+            foreach (NPCComponent component in UnityEngine.Object.FindObjectsOfType<NPCComponent>())
             {
-                if(intr == null)
+                if (intr == null)
                 {
                     intr = Npc.FromComponent(component);
                 }

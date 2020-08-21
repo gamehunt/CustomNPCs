@@ -66,7 +66,8 @@ namespace NPCS.Commands
                         try
                         {
                             Npc.CreateNPC(s.Position, s.Rotations, arguments.At(1));
-                        }catch(Exception e)
+                        }
+                        catch (Exception e)
                         {
                             response = "Failed to load NPC!";
                             return false;
@@ -85,7 +86,8 @@ namespace NPCS.Commands
                             NPCComponent[] ___npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                             Npc __obj_npc = Npc.FromComponent(___npcs[int.Parse(arguments.At(1))]);
                             __obj_npc.Serialize(arguments.At(2));
-                        }catch(Exception e)
+                        }
+                        catch (Exception e)
                         {
                             response = "Failed to save NPC!";
                             return false;

@@ -1,12 +1,10 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NPCS.Conditions
 {
-    class HeldItemCondition : NodeCondition
+    internal class HeldItemCondition : NodeCondition
     {
         public override string Name => "HeldItemCondition";
 

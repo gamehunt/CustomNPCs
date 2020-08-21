@@ -1,13 +1,11 @@
 ﻿using Exiled.API.Features;
 using NPCS.Harmony;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NPCS.Actions
 {
-    class RoundEndAction : NodeAction
+    internal class RoundEndAction : NodeAction
     {
         public override string Name => "RoundEndAction";
 

@@ -1,14 +1,12 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 using UnityEngine;
 
 namespace NPCS.Actions
 {
-    class DropItemAction : NodeAction
+    internal class DropItemAction : NodeAction
     {
         public override string Name => "DropItemAction";
 

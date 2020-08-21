@@ -1,5 +1,4 @@
-﻿using Exiled.API.Features;
-using HarmonyLib;
+﻿using HarmonyLib;
 using System;
 using UnityEngine;
 
