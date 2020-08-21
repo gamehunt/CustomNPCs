@@ -312,7 +312,7 @@ namespace NPCS
             }
         }
 
-        public void HandleAnswer(Player p, string answer)
+        private IEnumerator<float> HandleAnswerCoroutine(Player p, string answer)
         {
             if (TalkingStates.ContainsKey(p))
             {
@@ -328,10 +328,12 @@ namespace NPCS
                             try
                             {
                                 action.Process(this, p, new_node.Actions[action]);
-                            }catch(Exception e)
+                            }
+                            catch (Exception e)
                             {
                                 Log.Error($"Exception during processing action {action.Name}: {e}");
                             }
+                            yield return Timing.WaitForSeconds(float.Parse(new_node.Actions[action]["next_action_delay"]));
                         }
                         if (end)
                         {
@@ -353,6 +355,11 @@ namespace NPCS
             {
                 p.SendConsoleMessage("You aren't talking to this NPC!", "red");
             }
+        }
+
+        public void HandleAnswer(Player p, string answer)
+        {
+            NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(HandleAnswerCoroutine(p, answer)));
         }
 
         public static Npc CreateNPC(Vector3 pos, Vector2 rot, RoleType type = RoleType.ClassD, ItemType itemHeld = ItemType.None, string name = "(EMPTY)", string root_node = "default_node.yml")
