@@ -82,6 +82,7 @@ namespace NPCS
                 Handlers.Player.Died += EventHandlers.OnDied;
 
                 Handlers.Map.ExplodingGrenade += EventHandlers.OnGrenadeExplosion;
+                Handlers.Map.Decontaminating += EventHandlers.OnDecontamination;
 
                 if (!Directory.Exists(Config.NPCs_root_path))
                 {
@@ -117,6 +118,8 @@ namespace NPCS
                 NodeCondition.Register(new RoundTimeCondition());
                 NodeCondition.Register(new NukeStateCondition());
                 NodeCondition.Register(new HeldItemCondition());
+                NodeCondition.Register(new RoleExistsCondition());
+                NodeCondition.Register(new RoleNotExistsCondition());
 
                 Log.Info("Registering actions...");
 
@@ -160,6 +163,7 @@ namespace NPCS
             Handlers.Player.Died -= EventHandlers.OnDied;
 
             Handlers.Map.ExplodingGrenade -= EventHandlers.OnGrenadeExplosion;
+            Handlers.Map.Decontaminating -= EventHandlers.OnDecontamination;
 
             EventHandlers = null;
         }
