@@ -43,11 +43,15 @@ namespace NPCS
                 NPCComponent component = p.GameObject.GetComponent<NPCComponent>();
                 if (component != null)
                 {
-                    p.Health -= ev.TargetToDamages[p];
-                    if (p.Health <= 0f)
+                    Npc obj_npc = Npc.FromComponent(component);
+                    if (!Player.Get(obj_npc.GameObject).IsGodModeEnabled)
                     {
-                        Npc obj_npc = Npc.FromComponent(component);
-                        obj_npc.Kill(true);
+                        p.Health -= ev.TargetToDamages[p];
+                        if (p.Health <= 0f)
+                        {
+
+                            obj_npc.Kill(true);
+                        }
                     }
                 }
             }

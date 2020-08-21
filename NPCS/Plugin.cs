@@ -137,6 +137,7 @@ namespace NPCS
                 NodeAction.Register(new Actions.RotationAction());
                 NodeAction.Register(new Actions.RoundEndAction());
                 NodeAction.Register(new Actions.CassieAction());
+                NodeAction.Register(new Actions.DropItemAction());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }
