@@ -78,7 +78,7 @@ namespace NPCS.Commands
                         if (arguments.Count < 3)
                         {
                             response = "You need to provide npc id and path to file!";
-                            break;
+                            return false;
                         }
                         try
                         {
@@ -143,7 +143,7 @@ namespace NPCS.Commands
 
                     default:
                         response = "Unknown sub-command!";
-                        break;
+                        return false;
                 }
             }
             else
