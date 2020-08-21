@@ -1,3 +1,4 @@
+using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using NPCS.Harmony;
 
@@ -32,6 +33,23 @@ namespace NPCS
             {
                 Npc npc = Npc.FromComponent(cmp);
                 npc.Kill(false);
+            }
+        }
+
+        public void OnGrenadeExplosion(ExplodingGrenadeEventArgs ev)
+        {
+            foreach(Player p in ev.TargetToDamages.Keys)
+            {
+                NPCComponent component = p.GameObject.GetComponent<NPCComponent>();
+                if (component != null)
+                {
+                    p.Health -= ev.TargetToDamages[p];
+                    if(p.Health <= 0f)
+                    {
+                        Npc obj_npc = Npc.FromComponent(component);
+                        obj_npc.Kill(true);
+                    }
+                }
             }
         }
     }

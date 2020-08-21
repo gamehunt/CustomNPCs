@@ -79,6 +79,8 @@ namespace NPCS
 
                 Handlers.Player.Died += EventHandlers.OnDied;
 
+                Handlers.Map.ExplodingGrenade += EventHandlers.OnGrenadeExplosion;
+
                 if (!Directory.Exists(Config.NPCs_root_path))
                 {
                     Directory.CreateDirectory(Config.NPCs_root_path);
@@ -151,6 +153,8 @@ namespace NPCS
             Handlers.Server.RoundEnded -= EventHandlers.OnRoundEnd;
 
             Handlers.Player.Died -= EventHandlers.OnDied;
+
+            Handlers.Map.ExplodingGrenade -= EventHandlers.OnGrenadeExplosion;
 
             EventHandlers = null;
         }
