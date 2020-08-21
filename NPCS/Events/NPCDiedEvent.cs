@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Exiled.API.Features;
-using NPCS.Actions;
-using NPCS.Talking;
+﻿using Exiled.API.Features;
 
 namespace NPCS.Events
 {
@@ -11,7 +6,7 @@ namespace NPCS.Events
     {
         public override string Name => "NPCDied";
 
-        public NPCDiedEvent(Npc npc,Player p): base(npc, p)
+        public NPCDiedEvent(Npc npc, Player p) : base(npc, p)
         {
         }
     }

@@ -540,6 +540,8 @@ namespace NPCS
                 }
                 n.IsExclusive = bool.Parse((string)mapping.Children[new YamlScalarNode("is_exclusive")]);
 
+                Log.Info("Parsing events...");
+
                 YamlSequenceNode events = (YamlSequenceNode)mapping.Children[new YamlScalarNode("events")];
 
                 foreach (YamlMappingNode event_node in events.Children)

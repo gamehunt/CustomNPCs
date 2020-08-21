@@ -6,8 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Handlers = Exiled.Events.Handlers;
 using Evs = Exiled.Events;
+using Handlers = Exiled.Events.Handlers;
 
 namespace NPCS
 {
@@ -58,11 +58,13 @@ namespace NPCS
                     {
                         Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
                         Log.Info("Unpatched RoundSummary.Start");
-                    }else if(bas.DeclaringType.Name.Equals("ReferenceHub") && bas.Name.Equals("OnDestroy"))
+                    }
+                    else if (bas.DeclaringType.Name.Equals("ReferenceHub") && bas.Name.Equals("OnDestroy"))
                     {
                         Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
                         Log.Info("Unpatched ReferenceHub.OnDestroy");
-                    }else if (bas.Name.Equals("BanUser"))
+                    }
+                    else if (bas.Name.Equals("BanUser"))
                     {
                         Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
                         Log.Info("Unpatched BanPlayer.BanUser");

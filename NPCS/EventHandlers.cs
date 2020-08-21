@@ -45,7 +45,7 @@ namespace NPCS
             if (cmp != null)
             {
                 Npc npc = Npc.FromComponent(cmp);
-                NPCDiedEvent npc_ev = new NPCDiedEvent(npc,ev.Killer);
+                NPCDiedEvent npc_ev = new NPCDiedEvent(npc, ev.Killer);
                 npc.FireEvent(npc_ev);
                 npc.NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(CallOnUnlock(() => npc.Kill(false), npc)));
             }
@@ -64,7 +64,6 @@ namespace NPCS
                         p.Health -= ev.TargetToDamages[p];
                         if (p.Health <= 0f)
                         {
-
                             obj_npc.Kill(true);
                         }
                     }

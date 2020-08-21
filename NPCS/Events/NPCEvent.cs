@@ -1,17 +1,15 @@
 ﻿using Exiled.API.Features;
 using MEC;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NPCS.Events
 {
-    abstract class NPCEvent
+    internal abstract class NPCEvent
     {
         public abstract string Name { get; }
 
-        public NPCEvent(Npc npc,Player p)
+        public NPCEvent(Npc npc, Player p)
         {
             NPC = npc;
             Player = p;
@@ -32,7 +30,7 @@ namespace NPCS.Events
             NPC.IsActionLocked = false;
         }
 
-        public void FireActions(Dictionary<NodeAction,Dictionary<string,string>> acts)
+        public void FireActions(Dictionary<NodeAction, Dictionary<string, string>> acts)
         {
             NPC.NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(RunActions(acts)));
         }
