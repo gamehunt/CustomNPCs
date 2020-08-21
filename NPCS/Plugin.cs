@@ -116,6 +116,7 @@ namespace NPCS
                 NodeCondition.Register(new PermissionCondition());
                 NodeCondition.Register(new RoundTimeCondition());
                 NodeCondition.Register(new NukeStateCondition());
+                NodeCondition.Register(new HeldItemCondition());
 
                 Log.Info("Registering actions...");
 

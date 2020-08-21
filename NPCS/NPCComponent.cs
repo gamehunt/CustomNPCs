@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NPCS
 {
-    //This component contains critical information about NPC
+    //This component contains critical information about NPC. It's only one per NPC
     internal class NPCComponent : MonoBehaviour
     {
         public TalkNode root_node;
