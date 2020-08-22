@@ -36,8 +36,16 @@ namespace NPCS.Commands
                     }
                     else
                     {
+                        if (obj_npc.IsLocked && obj_npc.LockHandler == s)
+                        {
+                            s.SendConsoleMessage($"[{obj_npc.Name}] We are already talking!", "yellow");
+                        }
+                        else
+                        {
+                            s.SendConsoleMessage($"[{obj_npc.Name}] I'm busy, wait a second!", "yellow");
+                        }
                         response = null;
-                        s.SendConsoleMessage($"[{obj_npc.Name}] I'm busy, wait a second!", "yellow");
+
                         return false;
                     }
                 }
