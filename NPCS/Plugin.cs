@@ -40,10 +40,15 @@ namespace NPCS
                     return;
                 }
 
-                //Events.DisabledPatches.Add(new Tuple<Type, string>(typeof(PlayerPositionManager), nameof(PlayerPositionManager.TransmitData)));
-                //Events.Instance.ReloadDisabledPatches(); - NullReferenceException mindfuck
-
                 //F u c k
+
+                //Exiled.Events.Events.DisabledPatches.Add(typeof(PlayerPositionManager).GetMethod(nameof(PlayerPositionManager.TransmitData)));
+                //Exiled.Events.Events.DisabledPatches.Add(typeof(RoundSummary).GetMethod(nameof(RoundSummary.Start)));
+                //Exiled.Events.Events.DisabledPatches.Add(typeof(ReferenceHub).GetMethod(nameof(ReferenceHub.OnDestroy)));
+                //Exiled.Events.Events.DisabledPatches.Add(typeof(BanPlayer).GetMethod(nameof(BanPlayer.BanUser), new[] { typeof(UnityEngine.GameObject), typeof(int), typeof(string), typeof(string), typeof(bool) }));
+                //Exiled.Events.Events.Instance.ReloadDisabledPatches();
+
+
 
                 List<MethodBase> methods = new List<MethodBase>(Evs.Events.Instance.Harmony.GetPatchedMethods());
                 foreach (System.Reflection.MethodBase bas in methods)
@@ -51,25 +56,22 @@ namespace NPCS
                     var info = HarmonyLib.Harmony.GetPatchInfo(bas);
                     if (bas.Name.Equals("TransmitData"))
                     {
-                        Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
-                        Log.Info("Unpatched GhostMode");
+                        Exiled.Events.Events.DisabledPatches.Add(bas);
                     }
                     else if (bas.DeclaringType.Name.Equals("RoundSummary") && bas.Name.Equals("Start"))
                     {
-                        Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
-                        Log.Info("Unpatched RoundSummary.Start");
+                        Exiled.Events.Events.DisabledPatches.Add(bas);
                     }
                     else if (bas.DeclaringType.Name.Equals("ReferenceHub") && bas.Name.Equals("OnDestroy"))
                     {
-                        Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
-                        Log.Info("Unpatched ReferenceHub.OnDestroy");
+                        Exiled.Events.Events.DisabledPatches.Add(bas);
                     }
                     else if (bas.Name.Equals("BanUser"))
                     {
-                        Evs.Events.Instance.Harmony.Unpatch(bas, HarmonyLib.HarmonyPatchType.All, Evs.Events.Instance.Harmony.Id);
-                        Log.Info("Unpatched BanPlayer.BanUser");
+                        Exiled.Events.Events.DisabledPatches.Add(bas);
                     }
                 }
+                Exiled.Events.Events.Instance.ReloadDisabledPatches();
 
                 harmony = new HarmonyLib.Harmony("gamehunt.cnpcs");
                 harmony.PatchAll();

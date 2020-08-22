@@ -126,7 +126,7 @@ namespace NPCS.Harmony
                                 }
                                 else if (shouldRotate)
                                 {
-                                    ppd = new PlayerPositionData(ppd.position, Quaternion.Inverse(Quaternion.LookRotation(FindLookRotation(player.Position, currentTarget.Position))).eulerAngles.y, ppd.playerID);
+                                    ppd = new PlayerPositionData(ppd.position, Quaternion.LookRotation(FindLookRotation(player.Position, currentTarget.Position)).eulerAngles.y, ppd.playerID);
                                 }
 
                                 __instance._transmitBuffer[index] = ppd;
@@ -162,6 +162,6 @@ namespace NPCS.Harmony
             }
         }
 
-        private static Vector3 FindLookRotation(Vector3 player, Vector3 target) => (player - target).normalized;
+        private static Vector3 FindLookRotation(Vector3 player, Vector3 target) => (target - player).normalized;
     }
 }
