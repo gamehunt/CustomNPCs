@@ -9,7 +9,7 @@ Known Issues:
 
 Todo:
 
-- Merge Npc and NPCComponent
+- **Merge Npc and NPCComponent**
 
 - Add more events
 
