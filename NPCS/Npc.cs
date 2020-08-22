@@ -378,8 +378,11 @@ namespace NPCS
             float dist = heading.magnitude;
             Rotation = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
             Move(MovementDirection.FORWARD);
-            NPCComponent.attached_coroutines.Add(Timing.CallDelayed(0.1f * (dist / (pl.CameraTransform.forward / 10).magnitude), () => Move(MovementDirection.NONE)));
-            IsActionLocked = false;
+            NPCComponent.attached_coroutines.Add(Timing.CallDelayed(0.1f * (dist / (pl.CameraTransform.forward / 10).magnitude), () => {
+                Move(MovementDirection.NONE);
+                IsActionLocked = false;
+            }));
+
         }
 
         private IEnumerator<float> StartTalkCoroutine(Player p)
