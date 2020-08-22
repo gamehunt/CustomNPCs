@@ -31,6 +31,8 @@ namespace NPCS
 
         public bool is_exclusive = false;
 
+        public float speed = 2f;
+
         private void OnDestroy()
         {
             Log.Debug("Destroying NPC component", Plugin.Instance.Config.VerboseOutput);

@@ -284,6 +284,18 @@ namespace NPCS
             }
         }
 
+        public float MovementSpeed
+        {
+            get
+            {
+                return NPCComponent.speed;
+            }
+            set
+            {
+                NPCComponent.speed = value;
+            }
+        }
+
         public Npc(GameObject obj)
         {
             GameObject = obj;
@@ -354,9 +366,9 @@ namespace NPCS
                     case MovementDirection.FORWARD:
                         try
                         {
-                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
+                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
                             {
-                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
+                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
                             }
                         }
                         catch (Exception e) { }
@@ -365,9 +377,9 @@ namespace NPCS
                     case MovementDirection.BACKWARD:
                         try
                         {
-                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
+                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
                             {
-                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
+                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
                             }
                         }
                         catch (Exception e) { }
@@ -376,9 +388,9 @@ namespace NPCS
                     case MovementDirection.LEFT:
                         try
                         {
-                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
+                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
                             {
-                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
+                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
                             }
                         }
                         catch (Exception e) { }
@@ -387,9 +399,9 @@ namespace NPCS
                     case MovementDirection.RIGHT:
                         try
                         {
-                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
+                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
                             {
-                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10, cmp.transform.rotation.y, true);
+                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
                             }
                         }
                         catch (Exception e) { }
@@ -480,19 +492,19 @@ namespace NPCS
             switch (dir)
             {
                 case MovementDirection.FORWARD:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(1, 0);
+                    ReferenceHub.animationController.Networkspeed = new Vector2(MovementSpeed, 0);
                     break;
 
                 case MovementDirection.BACKWARD:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(-1, 0);
+                    ReferenceHub.animationController.Networkspeed = new Vector2(-MovementSpeed, 0);
                     break;
 
                 case MovementDirection.RIGHT:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(0, 1);
+                    ReferenceHub.animationController.Networkspeed = new Vector2(0, MovementSpeed);
                     break;
 
                 case MovementDirection.LEFT:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(0, -1);
+                    ReferenceHub.animationController.Networkspeed = new Vector2(0, -MovementSpeed);
                     break;
 
                 default:
@@ -526,7 +538,7 @@ namespace NPCS
             float dist = heading.magnitude;
             Rotation = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
             Move(MovementDirection.FORWARD);
-            float eta = 0.1f * (dist / (pl.CameraTransform.forward / 10).magnitude);
+            float eta = 0.1f * (dist / (pl.CameraTransform.forward / 10 * MovementSpeed).magnitude);
             NPCComponent.movement_coroutines.Add(Timing.CallDelayed(eta, () =>
             {
                 Move(MovementDirection.NONE);
