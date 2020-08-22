@@ -32,10 +32,12 @@ namespace NPCS.Harmony
 
                 foreach (GameObject gameObject in players)
                 {
-                    if (gameObject.GetComponent<NPCComponent>() != null)
+
+                    if(gameObject.GetComponent<NPCComponent>() != null)
                     {
                         continue;
                     }
+
                     Player player = Player.Get(gameObject);
                     Array.Copy(__instance._receivedData, __instance._transmitBuffer, __instance._usedData);
 
@@ -60,8 +62,9 @@ namespace NPCS.Harmony
                         {
                             PlayerPositionData ppd = __instance._transmitBuffer[index];
                             Player currentTarget = Player.Get(players[index]);
-                            Scp096 scp096 = player.ReferenceHub.scpsController.CurrentScp as Scp096;
+                            PlayableScps.Scp096 scp096 = player.ReferenceHub.scpsController.CurrentScp as PlayableScps.Scp096;
                             bool canSee = true;
+                            bool shouldRotate = false;
 
                             if (currentTarget?.ReferenceHub == null)
                                 continue;
@@ -93,7 +96,7 @@ namespace NPCS.Harmony
 
                                 if (ReferenceHub.TryGetHub(__instance._transmitBuffer[index].playerID, out ReferenceHub hub2))
                                 {
-                                    if (player.ReferenceHub.scpsController.CurrentScp is Scp096 currentScp && currentScp.Enraged && (!currentScp.HasTarget(hub2) && hub2.characterClassManager.CurRole.team != Team.SCP))
+                                    if (player.ReferenceHub.scpsController.CurrentScp is PlayableScps.Scp096 currentScp && currentScp.Enraged && (!currentScp.HasTarget(hub2) && hub2.characterClassManager.CurRole.team != Team.SCP))
                                     {
                                         canSee = false;
                                     }
@@ -101,17 +104,30 @@ namespace NPCS.Harmony
                                     {
                                         bool flag = false;
                                         if (scp096 != null)
-                                            flag = scp096.HasTarget(hub2);
+                                            flag = scp096._targets.Contains(hub2);
 
-                                        if (player.ReferenceHub.characterClassManager.CurClass != RoleType.Scp079 &&
-                                            player.ReferenceHub.characterClassManager.CurClass != RoleType.Spectator &&
-                                            !flag)
-                                            canSee = false;
+                                        canSee = flag;
                                     }
                                 }
 
+                                switch (player.Role)
+                                {
+                                    case RoleType.Scp173 when !Exiled.Events.Events.Instance.Config.CanTutorialBlockScp173 && currentTarget.Role == RoleType.Tutorial:
+                                        shouldRotate = true;
+                                        break;
+                                    case RoleType.Scp096 when !Exiled.Events.Events.Instance.Config.CanTutorialTriggerScp096 && currentTarget.Role == RoleType.Tutorial:
+                                        shouldRotate = true;
+                                        break;
+                                }
+
                                 if (!canSee)
+                                {
                                     ppd = new PlayerPositionData(Vector3.up * 6000f, 0.0f, ppd.playerID);
+                                }
+                                else if (shouldRotate)
+                                {
+                                    ppd = new PlayerPositionData(ppd.position, Quaternion.Inverse(Quaternion.LookRotation(FindLookRotation(player.Position, currentTarget.Position))).eulerAngles.y, ppd.playerID);
+                                }
 
                                 __instance._transmitBuffer[index] = ppd;
                             }
@@ -145,5 +161,7 @@ namespace NPCS.Harmony
                 return true;
             }
         }
+
+        private static Vector3 FindLookRotation(Vector3 player, Vector3 target) => (player - target).normalized;
     }
 }

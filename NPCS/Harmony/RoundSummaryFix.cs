@@ -1,12 +1,17 @@
-﻿using Exiled.Events.EventArgs;
-using Exiled.Events.Handlers;
-using GameCore;
-using HarmonyLib;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+
+using Exiled.Events.EventArgs;
+using Exiled.Events.Handlers;
+
+using GameCore;
+
+using HarmonyLib;
+
 using UnityEngine;
+
+using System.Linq;
 
 namespace NPCS.Harmony
 {
@@ -94,16 +99,16 @@ namespace NPCS.Harmony
                     }
                 }
 
-                var endingRoundEventArgs = new EndingRoundEventArgs(RoundSummary.LeadingTeam.Draw, roundSummary._roundEnded);
+                var endingRoundEventArgs = new EndingRoundEventArgs(Exiled.API.Enums.LeadingTeam.Draw,newList, roundSummary._roundEnded);
 
                 if (num1 > 0)
                 {
                     if (RoundSummary.escaped_ds == 0 && RoundSummary.escaped_scientists != 0)
-                        endingRoundEventArgs.LeadingTeam = RoundSummary.LeadingTeam.FacilityForces;
+                        endingRoundEventArgs.LeadingTeam = Exiled.API.Enums.LeadingTeam.FacilityForces;
                 }
                 else
                 {
-                    endingRoundEventArgs.LeadingTeam = RoundSummary.escaped_ds != 0 ? RoundSummary.LeadingTeam.ChaosInsurgency : RoundSummary.LeadingTeam.Anomalies;
+                    endingRoundEventArgs.LeadingTeam = RoundSummary.escaped_ds != 0 ? Exiled.API.Enums.LeadingTeam.ChaosInsurgency : Exiled.API.Enums.LeadingTeam.Anomalies;
                 }
 
                 Server.OnEndingRound(endingRoundEventArgs);
@@ -129,7 +134,7 @@ namespace NPCS.Harmony
 
                         Server.OnRoundEnded(roundEndedEventArgs);
 
-                        roundSummary.RpcShowRoundSummary(roundSummary.classlistStart, roundEndedEventArgs.ClassList, roundEndedEventArgs.LeadingTeam, RoundSummary.escaped_ds, RoundSummary.escaped_scientists, RoundSummary.kills_by_scp, roundEndedEventArgs.TimeToRestart);
+                        roundSummary.RpcShowRoundSummary(roundSummary.classlistStart, roundEndedEventArgs.ClassList, (RoundSummary.LeadingTeam)roundEndedEventArgs.LeadingTeam, RoundSummary.escaped_ds, RoundSummary.escaped_scientists, RoundSummary.kills_by_scp, roundEndedEventArgs.TimeToRestart);
                     }
 
                     for (int i2 = 0; i2 < 50 * (timeToRoundRestart - 1); ++i2)
