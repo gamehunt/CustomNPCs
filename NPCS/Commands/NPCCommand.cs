@@ -5,7 +5,6 @@ using NPCS.Navigation;
 using RemoteAdmin;
 using System;
 using System.IO;
-using System.Linq;
 
 namespace NPCS.Commands
 {
@@ -37,7 +36,7 @@ namespace NPCS.Commands
                     response = "You must be alive to use this!";
                     return false;
                 }
-                if(arguments.Count == 0)
+                if (arguments.Count == 0)
                 {
                     response = "Available subcommands: [create, list, remove, clean, load, save, god, goto]";
                     return false;
@@ -154,6 +153,7 @@ namespace NPCS.Commands
                         Player.Get(___npcs1[int.Parse(arguments.At(1))].gameObject).IsGodModeEnabled = bool.Parse(arguments.At(2));
                         response = "God-Mode switched";
                         break;
+
                     case "goto":
                         if (arguments.Count <= 2)
                         {
@@ -172,6 +172,7 @@ namespace NPCS.Commands
                         npc_obj.GoTo(node.gameObject.transform.position);
                         response = "Navigating npc to node!";
                         break;
+
                     default:
                         response = "Unknown sub-command!";
                         return false;

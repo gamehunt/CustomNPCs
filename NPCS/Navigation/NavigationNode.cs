@@ -27,7 +27,7 @@ namespace NPCS.Navigation
 
         public static void Clear()
         {
-            foreach(NavigationNode navnode in AllNodes)
+            foreach (NavigationNode navnode in AllNodes)
             {
                 Object.Destroy(navnode);
             }
@@ -40,7 +40,7 @@ namespace NPCS.Navigation
 
         private void Awake()
         {
-            Log.Debug($"Node created",Plugin.Instance.Config.VerboseOutput);
+            Log.Debug($"Node created", Plugin.Instance.Config.VerboseOutput);
             AllNodes.Add(this);
         }
 
