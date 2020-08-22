@@ -15,7 +15,8 @@ using YamlDotNet.Serialization;
 
 namespace NPCS
 {
-    //This component provides interface to control NPC. It can be created multiple times for NPC
+    //This component provides interface to control NPC. It can be created multiple times for NPC. 
+    //TODO MOVE ALL THIS SHIT INTO COMPONENT 
     internal class Npc
     {
         //For simpler saving
