@@ -3,6 +3,7 @@ using Exiled.Events.EventArgs;
 using MEC;
 using NPCS.Events;
 using NPCS.Harmony;
+using NPCS.Navigation;
 
 namespace NPCS
 {
@@ -26,6 +27,7 @@ namespace NPCS
                 obj_npc.Kill(false);
             }
             RoundSummaryFix.__npc_endRequested = false;
+            NavigationNode.Clear();
         }
 
         public void OnDied(DiedEventArgs ev)

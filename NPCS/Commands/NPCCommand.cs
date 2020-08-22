@@ -1,9 +1,11 @@
 ﻿using CommandSystem;
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
+using NPCS.Navigation;
 using RemoteAdmin;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace NPCS.Commands
 {
@@ -142,15 +144,23 @@ namespace NPCS.Commands
                         Player.Get(___npcs1[int.Parse(arguments.At(1))].gameObject).IsGodModeEnabled = bool.Parse(arguments.At(2));
                         response = "God-Mode switched";
                         break;
-                    case "__test":
-                        if (arguments.Count <= 1)
+                    case "goto":
+                        if (arguments.Count <= 2)
                         {
-                            response = "You need to provide npc id and godmode value!";
+                            response = "You need to provide npc id and navnode name!";
                             return false;
                         }
+                        string name = arguments.At(2);
                         NPCComponent[] ___npcs2 = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
-                        Npc.FromComponent(___npcs2[int.Parse(arguments.At(1))]).GoTo(s.Position);
-                        response = "Test run!";
+                        Npc npc_obj = Npc.FromComponent(___npcs2[int.Parse(arguments.At(1))]);
+                        NavigationNode node = NavigationNode.AllNodes.Where(n => n.Name == name).FirstOrDefault();
+                        if (node == null)
+                        {
+                            response = "Node not found!";
+                            return false;
+                        }
+                        npc_obj.GoTo(node.gameObject.transform.position);
+                        response = "Navigating npc to node!";
                         break;
                     default:
                         response = "Unknown sub-command!";
