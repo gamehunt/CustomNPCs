@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace NPCS.Navigation
@@ -30,6 +31,11 @@ namespace NPCS.Navigation
             {
                 Object.Destroy(navnode);
             }
+        }
+
+        public static NavigationNode Get(string name)
+        {
+            return AllNodes.Where(n => n.Name == name).FirstOrDefault();
         }
 
         private void Awake()

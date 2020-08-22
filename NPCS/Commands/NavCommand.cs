@@ -49,6 +49,11 @@ namespace NPCS.Commands
                             response = "You need to provide node name!";
                             return false;
                         }
+                        if(NavigationNode.Get(arguments.At(1)) != null)
+                        {
+                            response = "Node with this name already exists!";
+                            return false;
+                        }
                         NavigationNode.Create(s.Position, arguments.At(1));
                         response = "Created node!";
                         break;

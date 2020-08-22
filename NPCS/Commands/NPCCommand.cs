@@ -163,7 +163,7 @@ namespace NPCS.Commands
                         string name = arguments.At(2);
                         NPCComponent[] ___npcs2 = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
                         Npc npc_obj = Npc.FromComponent(___npcs2[int.Parse(arguments.At(1))]);
-                        NavigationNode node = NavigationNode.AllNodes.Where(n => n.Name == name).FirstOrDefault();
+                        NavigationNode node = NavigationNode.Get(name);
                         if (node == null)
                         {
                             response = "Node not found!";
