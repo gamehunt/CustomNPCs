@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-
+using Utf8Json.Internal.DoubleConversion;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 
@@ -365,6 +365,19 @@ namespace NPCS
                     ReferenceHub.animationController.Networkspeed = new Vector2(0, 0);
                     break;
             }
+        }
+
+
+        //This won't stop in the point
+        public void GoTo(Vector3 position)
+        {
+            Vector3 heading = (position - Position);
+            Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
+            Player pl = Player.Get(GameObject);
+            float dist = heading.magnitude;
+            Rotation = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
+            Move(MovementDirection.FORWARD);
+            NPCComponent.attached_coroutines.Add(Timing.CallDelayed(0.1f * (dist / (pl.CameraTransform.forward / 10).magnitude), () => Move(MovementDirection.NONE)));
         }
 
         private IEnumerator<float> StartTalkCoroutine(Player p)

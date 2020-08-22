@@ -142,7 +142,16 @@ namespace NPCS.Commands
                         Player.Get(___npcs1[int.Parse(arguments.At(1))].gameObject).IsGodModeEnabled = bool.Parse(arguments.At(2));
                         response = "God-Mode switched";
                         break;
-
+                    case "__test":
+                        if (arguments.Count <= 1)
+                        {
+                            response = "You need to provide npc id and godmode value!";
+                            return false;
+                        }
+                        NPCComponent[] ___npcs2 = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
+                        Npc.FromComponent(___npcs2[int.Parse(arguments.At(1))]).GoTo(s.Position);
+                        response = "Test run!";
+                        break;
                     default:
                         response = "Unknown sub-command!";
                         return false;

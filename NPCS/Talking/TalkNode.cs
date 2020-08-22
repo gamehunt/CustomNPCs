@@ -45,7 +45,7 @@ namespace NPCS.Talking
                     NodeCondition cond = NodeCondition.GetFromToken((string)item.Children[new YamlScalarNode("token")]);
                     if (cond != null)
                     {
-                        Log.Debug($"Recognized token: {cond.Name}",Plugin.Instance.Config.VerboseOutput);
+                        Log.Debug($"Recognized token: {cond.Name}", Plugin.Instance.Config.VerboseOutput);
                         var yml_args = (YamlMappingNode)item.Children[new YamlScalarNode("args")];
                         Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
                         foreach (YamlScalarNode arg in yml_args.Children.Keys)
@@ -146,7 +146,8 @@ namespace NPCS.Talking
                                 flag = false;
                                 break;
                             }
-                        }catch(Exception e)
+                        }
+                        catch (Exception e)
                         {
                             flag = false;
                             Log.Error($"Exception during {cond.Name} condition check: {e}");

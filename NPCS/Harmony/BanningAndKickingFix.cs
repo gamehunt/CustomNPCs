@@ -150,7 +150,7 @@ namespace NPCS.Harmony
             }
             catch (Exception e)
             {
-                Exiled.API.Features.Log.Error($"Exiled.Events.Patches.Events.Player.BanningAndKicking: {e}\n{e.StackTrace}");
+                Exiled.API.Features.Log.Error($"Exiled.Events.Patches.Events.Player.BanningAndKicking (Repatched by CustomNPCs!!!): {e}\n{e.StackTrace}");
 
                 return true;
             }
