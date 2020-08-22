@@ -198,7 +198,19 @@ namespace NPCS.Commands
                         npc_obj.AddNavTarget(node);
                         response = "Navigating npc to node!";
                         break;
-
+                    case "follow":
+                        if (arguments.Count <= 2)
+                        {
+                            response = "You need to provide npc id and player id!";
+                            return false;
+                        }
+                        int pid = int.Parse(arguments.At(2));
+                        Player p = Player.Get(pid);
+                        npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>().ToList();
+                        npc_obj = Npc.FromComponent(npcs[int.Parse(arguments.At(1))]);
+                        npc_obj.Follow(p);
+                        response = "Navigating npc to player!";
+                        break;
                     default:
                         response = "Unknown sub-command!";
                         return false;

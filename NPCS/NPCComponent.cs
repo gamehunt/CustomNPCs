@@ -14,11 +14,14 @@ namespace NPCS
         public Dictionary<Player, TalkNode> talking_states = new Dictionary<Player, TalkNode>();
 
         public List<CoroutineHandle> attached_coroutines = new List<CoroutineHandle>();
+        public List<CoroutineHandle> movement_coroutines = new List<CoroutineHandle>();
 
         public Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>> attached_events = new Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>>(); //Horrible
 
         public Queue<NavigationNode> nav_queue = new Queue<NavigationNode>();
         public NavigationNode nav_current_target = null;
+
+        public Player follow_target = null;
 
         public Npc.MovementDirection curDir;
 
@@ -31,6 +34,7 @@ namespace NPCS
         private void OnDestroy()
         {
             Log.Debug("Destroying NPC component", Plugin.Instance.Config.VerboseOutput);
+            Timing.KillCoroutines(movement_coroutines);
             Timing.KillCoroutines(attached_coroutines);
         }
     }

@@ -272,6 +272,18 @@ namespace NPCS
             }
         }
 
+        public Player FollowTarget
+        {
+            get
+            {
+                return NPCComponent.follow_target;
+            }
+            set
+            {
+                NPCComponent.follow_target = value;
+            }
+        }
+
         public Npc(GameObject obj)
         {
             GameObject = obj;
@@ -284,16 +296,26 @@ namespace NPCS
             Npc npc = Npc.FromComponent(cmp);
             for (; ; )
             {
-                if (npc.NavigationQueue.IsEmpty())
+                if (npc.FollowTarget != null)
                 {
-                    yield return Timing.WaitForSeconds(0.1f);
+                    if (npc.FollowTarget.IsAlive)
+                    {
+                        npc.GoTo(npc.FollowTarget.Position);
+                    }
+                    else
+                    {
+                        npc.FollowTarget = null;
+                    }
                 }
                 else
                 {
-                    npc.CurrentNavTarget = npc.NavigationQueue.Dequeue();
-                    yield return Timing.WaitForSeconds(npc.GoTo(npc.CurrentNavTarget.Position) + 0.1f);
-                    npc.CurrentNavTarget = null;
+                    if (!npc.NavigationQueue.IsEmpty()){
+                        npc.CurrentNavTarget = npc.NavigationQueue.Dequeue();
+                        yield return Timing.WaitForSeconds(npc.GoTo(npc.CurrentNavTarget.Position) + 0.1f);
+                        npc.CurrentNavTarget = null;
+                    }
                 }
+                yield return Timing.WaitForSeconds(0.1f);
             }
         }
 
@@ -483,9 +505,20 @@ namespace NPCS
             NavigationQueue.Enqueue(node);
         }
 
+        public void ClearNavTargets()
+        {
+            NavigationQueue.Clear();
+        }
+
+        public void Follow(Player p)
+        {
+            FollowTarget = p;
+        }
+
         public float GoTo(Vector3 position)
         {
             IsActionLocked = true;
+            Timing.KillCoroutines(NPCComponent.movement_coroutines);
             Vector3 heading = (position - Position);
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
             Player pl = Player.Get(GameObject);
@@ -493,7 +526,7 @@ namespace NPCS
             Rotation = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
             Move(MovementDirection.FORWARD);
             float eta = 0.1f * (dist / (pl.CameraTransform.forward / 10).magnitude);
-            NPCComponent.attached_coroutines.Add(Timing.CallDelayed(eta, () =>
+            NPCComponent.movement_coroutines.Add(Timing.CallDelayed(eta, () =>
             {
                 Move(MovementDirection.NONE);
                 IsActionLocked = false;
