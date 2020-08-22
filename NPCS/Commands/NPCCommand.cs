@@ -198,6 +198,7 @@ namespace NPCS.Commands
                         npc_obj.AddNavTarget(node);
                         response = "Navigating npc to node!";
                         break;
+
                     case "follow":
                         if (arguments.Count <= 2)
                         {
@@ -211,6 +212,7 @@ namespace NPCS.Commands
                         npc_obj.Follow(p);
                         response = "Navigating npc to player!";
                         break;
+
                     default:
                         response = "Unknown sub-command!";
                         return false;

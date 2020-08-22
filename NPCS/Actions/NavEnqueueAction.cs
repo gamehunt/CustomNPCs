@@ -1,13 +1,11 @@
 ﻿using Exiled.API.Features;
 using NPCS.Navigation;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NPCS.Actions
 {
-    class NavEnqueueAction : NodeAction
+    internal class NavEnqueueAction : NodeAction
     {
         public override string Name => "NavEnqueueAction";
 

@@ -309,7 +309,8 @@ namespace NPCS
                 }
                 else
                 {
-                    if (!npc.NavigationQueue.IsEmpty()){
+                    if (!npc.NavigationQueue.IsEmpty())
+                    {
                         npc.CurrentNavTarget = npc.NavigationQueue.Dequeue();
                         yield return Timing.WaitForSeconds(npc.GoTo(npc.CurrentNavTarget.Position) + 0.1f);
                         npc.CurrentNavTarget = null;
