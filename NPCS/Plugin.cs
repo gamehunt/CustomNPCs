@@ -81,6 +81,7 @@ namespace NPCS
 
                 Handlers.Player.Died += EventHandlers.OnDied;
 
+
                 Handlers.Map.ExplodingGrenade += EventHandlers.OnGrenadeExplosion;
                 Handlers.Map.Decontaminating += EventHandlers.OnDecontamination;
 
