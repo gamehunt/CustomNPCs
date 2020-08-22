@@ -371,6 +371,7 @@ namespace NPCS
         //This won't stop in the point
         public void GoTo(Vector3 position)
         {
+            IsActionLocked = true;
             Vector3 heading = (position - Position);
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
             Player pl = Player.Get(GameObject);
@@ -378,6 +379,7 @@ namespace NPCS
             Rotation = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
             Move(MovementDirection.FORWARD);
             NPCComponent.attached_coroutines.Add(Timing.CallDelayed(0.1f * (dist / (pl.CameraTransform.forward / 10).magnitude), () => Move(MovementDirection.NONE)));
+            IsActionLocked = false;
         }
 
         private IEnumerator<float> StartTalkCoroutine(Player p)
