@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using MEC;
+using NPCS.Navigation;
 using NPCS.Talking;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,9 @@ namespace NPCS
         public List<CoroutineHandle> attached_coroutines = new List<CoroutineHandle>();
 
         public Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>> attached_events = new Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>>(); //Horrible
+
+        public Queue<NavigationNode> nav_queue = new Queue<NavigationNode>();
+        public NavigationNode nav_current_target = null;
 
         public Npc.MovementDirection curDir;
 

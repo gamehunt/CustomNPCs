@@ -11,6 +11,18 @@ namespace NPCS.Navigation
 
         public int Order { get; set; } = 0;
 
+        public Vector3 Position
+        {
+            get
+            {
+                return gameObject.transform.position;
+            }
+            set
+            {
+                gameObject.transform.position = value;
+            }
+        }
+
         public string Name { get; set; } = "DefaultNavNode";
 
         private List<NavigationNode> linked_nodes = new List<NavigationNode>();

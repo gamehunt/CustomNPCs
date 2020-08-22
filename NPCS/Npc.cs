@@ -2,6 +2,7 @@
 using MEC;
 using Mirror;
 using NPCS.Events;
+using NPCS.Navigation;
 using NPCS.Talking;
 using RemoteAdmin;
 using System;
@@ -251,9 +252,49 @@ namespace NPCS
             }
         }
 
+        public Queue<NavigationNode> NavigationQueue
+        {
+            get
+            {
+                return NPCComponent.nav_queue;
+            }
+        }
+
+        public NavigationNode CurrentNavTarget
+        {
+            get
+            {
+                return NPCComponent.nav_current_target;
+            }
+            set
+            {
+                NPCComponent.nav_current_target = value;
+            }
+        }
+
         public Npc(GameObject obj)
         {
             GameObject = obj;
+        }
+
+        //------------------------------------------ Coroutines
+
+        private static IEnumerator<float> NavCoroutine(NPCComponent cmp)
+        {
+            Npc npc = Npc.FromComponent(cmp);
+            for (; ; )
+            {
+                if (npc.NavigationQueue.IsEmpty())
+                {
+                    yield return Timing.WaitForSeconds(0.1f);
+                }
+                else
+                {
+                    npc.CurrentNavTarget = npc.NavigationQueue.Dequeue();
+                    yield return Timing.WaitForSeconds(npc.GoTo(npc.CurrentNavTarget.Position) + 0.1f);
+                    npc.CurrentNavTarget = null;
+                }
+            }
         }
 
         private static IEnumerator<float> UpdateTalking(NPCComponent cmp)
@@ -339,50 +380,6 @@ namespace NPCS
             }
         }
 
-        public void Move(MovementDirection dir)
-        {
-            CurMovementDirection = dir;
-            switch (dir)
-            {
-                case MovementDirection.FORWARD:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(1, 0);
-                    break;
-
-                case MovementDirection.BACKWARD:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(-1, 0);
-                    break;
-
-                case MovementDirection.RIGHT:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(0, 1);
-                    break;
-
-                case MovementDirection.LEFT:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(0, -1);
-                    break;
-
-                default:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(0, 0);
-                    break;
-            }
-        }
-
-        //This won't stop in the point
-        public void GoTo(Vector3 position)
-        {
-            IsActionLocked = true;
-            Vector3 heading = (position - Position);
-            Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
-            Player pl = Player.Get(GameObject);
-            float dist = heading.magnitude;
-            Rotation = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
-            Move(MovementDirection.FORWARD);
-            NPCComponent.attached_coroutines.Add(Timing.CallDelayed(0.1f * (dist / (pl.CameraTransform.forward / 10).magnitude), () =>
-            {
-                Move(MovementDirection.NONE);
-                IsActionLocked = false;
-            }));
-        }
-
         private IEnumerator<float> StartTalkCoroutine(Player p)
         {
             IsLocked = true;
@@ -402,11 +399,6 @@ namespace NPCS
                 p.SendConsoleMessage(Name + " ended talk", "yellow");
                 IsLocked = false;
             }
-        }
-
-        public void TalkWith(Player p)
-        {
-            NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(StartTalkCoroutine(p)));
         }
 
         private IEnumerator<float> HandleAnswerCoroutine(Player p, string answer)
@@ -455,6 +447,63 @@ namespace NPCS
             {
                 p.SendConsoleMessage("You aren't talking to this NPC!", "red");
             }
+        }
+
+        //------------------------------------------
+
+        public void Move(MovementDirection dir)
+        {
+            CurMovementDirection = dir;
+            switch (dir)
+            {
+                case MovementDirection.FORWARD:
+                    ReferenceHub.animationController.Networkspeed = new Vector2(1, 0);
+                    break;
+
+                case MovementDirection.BACKWARD:
+                    ReferenceHub.animationController.Networkspeed = new Vector2(-1, 0);
+                    break;
+
+                case MovementDirection.RIGHT:
+                    ReferenceHub.animationController.Networkspeed = new Vector2(0, 1);
+                    break;
+
+                case MovementDirection.LEFT:
+                    ReferenceHub.animationController.Networkspeed = new Vector2(0, -1);
+                    break;
+
+                default:
+                    ReferenceHub.animationController.Networkspeed = new Vector2(0, 0);
+                    break;
+            }
+        }
+
+        public void AddNavTarget(NavigationNode node)
+        {
+            NavigationQueue.Enqueue(node);
+        }
+
+        public float GoTo(Vector3 position)
+        {
+            IsActionLocked = true;
+            Vector3 heading = (position - Position);
+            Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
+            Player pl = Player.Get(GameObject);
+            float dist = heading.magnitude;
+            Rotation = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
+            Move(MovementDirection.FORWARD);
+            float eta = 0.1f * (dist / (pl.CameraTransform.forward / 10).magnitude);
+            NPCComponent.attached_coroutines.Add(Timing.CallDelayed(eta, () =>
+            {
+                Move(MovementDirection.NONE);
+                IsActionLocked = false;
+            }));
+            return eta;
+        }
+
+        public void TalkWith(Player p)
+        {
+            NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(StartTalkCoroutine(p)));
         }
 
         public void HandleAnswer(Player p, string answer)
@@ -518,7 +567,7 @@ namespace NPCS
 
             npcc.attached_coroutines.Add(Timing.RunCoroutine(UpdateTalking(npcc)));
             npcc.attached_coroutines.Add(Timing.RunCoroutine(MoveCoroutine(npcc)));
-
+            npcc.attached_coroutines.Add(Timing.RunCoroutine(NavCoroutine(npcc)));
             npcc.attached_coroutines.Add(Timing.CallDelayed(0.3f, () =>
             {
                 b.ReferenceHub.playerMovementSync.OverridePosition(pos, 0f, true);
