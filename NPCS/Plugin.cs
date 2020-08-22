@@ -40,14 +40,6 @@ namespace NPCS
                     return;
                 }
 
-                //F u c k
-
-                //Exiled.Events.Events.DisabledPatches.Add(typeof(PlayerPositionManager).GetMethod(nameof(PlayerPositionManager.TransmitData)));
-                //Exiled.Events.Events.DisabledPatches.Add(typeof(RoundSummary).GetMethod(nameof(RoundSummary.Start)));
-                //Exiled.Events.Events.DisabledPatches.Add(typeof(ReferenceHub).GetMethod(nameof(ReferenceHub.OnDestroy)));
-                //Exiled.Events.Events.DisabledPatches.Add(typeof(BanPlayer).GetMethod(nameof(BanPlayer.BanUser), new[] { typeof(UnityEngine.GameObject), typeof(int), typeof(string), typeof(string), typeof(bool) }));
-                //Exiled.Events.Events.Instance.ReloadDisabledPatches();
-
                 List<MethodBase> methods = new List<MethodBase>(Evs.Events.Instance.Harmony.GetPatchedMethods());
                 foreach (System.Reflection.MethodBase bas in methods)
                 {
