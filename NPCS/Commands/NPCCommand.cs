@@ -32,6 +32,16 @@ namespace NPCS.Commands
                     response = "Round is not started!";
                     return false;
                 }
+                if (!s.IsAlive)
+                {
+                    response = "You must be alive to use this!";
+                    return false;
+                }
+                if(arguments.Count == 0)
+                {
+                    response = "Available subcommands: [create, list, remove, clean, load, save, god, goto]";
+                    return false;
+                }
                 switch (arguments.At(0))
                 {
                     case "create":

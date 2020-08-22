@@ -26,6 +26,21 @@ namespace NPCS.Commands
                     response = "Access denied!";
                     return false;
                 }
+                if (!Round.IsStarted)
+                {
+                    response = "Round is not started!";
+                    return false;
+                }
+                if (!s.IsAlive)
+                {
+                    response = "You must be alive to use this!";
+                    return false;
+                }
+                if (arguments.Count == 0)
+                {
+                    response = "Available subcommands: [create, list, remove, clean]";
+                    return false;
+                }
                 switch (arguments.At(0))
                 {
                     case "create":
