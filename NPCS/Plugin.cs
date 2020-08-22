@@ -48,12 +48,9 @@ namespace NPCS
                 //Exiled.Events.Events.DisabledPatches.Add(typeof(BanPlayer).GetMethod(nameof(BanPlayer.BanUser), new[] { typeof(UnityEngine.GameObject), typeof(int), typeof(string), typeof(string), typeof(bool) }));
                 //Exiled.Events.Events.Instance.ReloadDisabledPatches();
 
-
-
                 List<MethodBase> methods = new List<MethodBase>(Evs.Events.Instance.Harmony.GetPatchedMethods());
                 foreach (System.Reflection.MethodBase bas in methods)
                 {
-                    var info = HarmonyLib.Harmony.GetPatchInfo(bas);
                     if (bas.Name.Equals("TransmitData"))
                     {
                         Exiled.Events.Events.DisabledPatches.Add(bas);
@@ -71,6 +68,7 @@ namespace NPCS
                         Exiled.Events.Events.DisabledPatches.Add(bas);
                     }
                 }
+
                 Exiled.Events.Events.Instance.ReloadDisabledPatches();
 
                 harmony = new HarmonyLib.Harmony("gamehunt.cnpcs");
