@@ -4,6 +4,7 @@ using Exiled.Permissions.Extensions;
 using NPCS.Navigation;
 using RemoteAdmin;
 using System;
+using System.Collections.Generic;
 
 namespace NPCS.Commands
 {
@@ -60,7 +61,7 @@ namespace NPCS.Commands
 
                     case "list":
                         int id = 0;
-                        foreach (NavigationNode node in NavigationNode.AllNodes)
+                        foreach (NavigationNode node in NavigationNode.AllNodes.Values)
                         {
                             s.RemoteAdminMessage($"{id} - {node.Name} - {node.Priority}");
                         }
@@ -70,17 +71,20 @@ namespace NPCS.Commands
                     case "remove":
                         if (arguments.Count <= 1)
                         {
-                            response = "You need to provide node id!";
+                            response = "You need to provide node name!";
                             return false;
                         }
-                        int nid = int.Parse(arguments.At(1));
-                        if (nid < 0 || nid >= NavigationNode.AllNodes.Count)
+                        try
                         {
-                            response = "Invalid id!";
+                            NavigationNode rnode = NavigationNode.AllNodes[arguments.At(1)];
+                            NavigationNode.AllNodes.Remove(rnode.Name);
+                            UnityEngine.Object.Destroy(rnode);
+                            response = "Node removed";
+                        } catch (KeyNotFoundException e)
+                        {
+                            response = "Node not found!";
                             return false;
                         }
-                        UnityEngine.Object.Destroy(NavigationNode.AllNodes[nid]);
-                        response = "Node removed";
                         break;
 
                     case "clean":

@@ -9,7 +9,7 @@ namespace NPCS.Talking
 
         public abstract bool Check(Player player, Dictionary<string, string> args);
 
-        private static readonly Dictionary<string,NodeCondition> registry = new Dictionary<string, NodeCondition>();
+        private static readonly Dictionary<string, NodeCondition> registry = new Dictionary<string, NodeCondition>();
 
         public static NodeCondition GetFromToken(string token)
         {
@@ -25,7 +25,7 @@ namespace NPCS.Talking
 
         public static void Register(NodeCondition cond)
         {
-            registry.Add(cond.Name,cond);
+            registry.Add(cond.Name, cond);
             Log.Debug($"Registered condition token: {cond.Name}", Plugin.Instance.Config.VerboseOutput);
         }
     }
