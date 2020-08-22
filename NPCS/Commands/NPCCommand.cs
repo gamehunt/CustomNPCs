@@ -80,11 +80,7 @@ namespace NPCS.Commands
                             response = "You need to provide path to file!";
                             return false;
                         }
-                        try
-                        {
-                            Npc.CreateNPC(s.Position, s.Rotations, arguments.At(1));
-                        }
-                        catch (Exception e)
+                        if (Npc.CreateNPC(s.Position, s.Rotations, arguments.At(1)) == null)
                         {
                             response = "Failed to load NPC!";
                             return false;
@@ -223,6 +219,7 @@ namespace NPCS.Commands
                 response = "Only players can use this!";
                 return false;
             }
+
             return true;
         }
     }
