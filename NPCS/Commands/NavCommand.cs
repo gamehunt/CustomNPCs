@@ -80,7 +80,7 @@ namespace NPCS.Commands
                             NavigationNode.AllNodes.Remove(rnode.Name);
                             UnityEngine.Object.Destroy(rnode);
                             response = "Node removed";
-                        } catch (KeyNotFoundException e)
+                        } catch (KeyNotFoundException)
                         {
                             response = "Node not found!";
                             return false;

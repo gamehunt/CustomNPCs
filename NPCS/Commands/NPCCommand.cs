@@ -100,7 +100,7 @@ namespace NPCS.Commands
                         {
                             obj_npc.Serialize(arguments.At(2));
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                             response = "Failed to save NPC!";
                             return false;

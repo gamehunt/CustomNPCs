@@ -17,7 +17,7 @@ namespace NPCS.Talking
             {
                 return registry[token];
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException)
             {
                 return null;
             }

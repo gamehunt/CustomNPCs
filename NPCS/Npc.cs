@@ -371,7 +371,7 @@ namespace NPCS
                                 cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
                             }
                         }
-                        catch (Exception e) { }
+                        catch (Exception) { }
                         break;
 
                     case MovementDirection.BACKWARD:
@@ -382,7 +382,7 @@ namespace NPCS
                                 cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
                             }
                         }
-                        catch (Exception e) { }
+                        catch (Exception) { }
                         break;
 
                     case MovementDirection.LEFT:
@@ -393,7 +393,7 @@ namespace NPCS
                                 cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
                             }
                         }
-                        catch (Exception e) { }
+                        catch (Exception) { }
                         break;
 
                     case MovementDirection.RIGHT:
@@ -404,7 +404,7 @@ namespace NPCS
                                 cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
                             }
                         }
-                        catch (Exception e) { }
+                        catch (Exception) { }
 
                         break;
 
@@ -728,7 +728,7 @@ namespace NPCS
             {
                 ev.FireActions(Events[ev.Name]);
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException)
             {
                 Log.Debug($"Skipping unused event {ev.Name}", Plugin.Instance.Config.VerboseOutput);
             }
