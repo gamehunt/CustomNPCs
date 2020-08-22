@@ -38,6 +38,36 @@ namespace NPCS.Commands
                         response = "Created node!";
                         break;
 
+                    case "list":
+                        int id = 0;
+                        foreach (NavigationNode node in NavigationNode.AllNodes)
+                        {
+                            s.RemoteAdminMessage($"{id} - {node.Name} - {node.Priority}");
+                        }
+                        response = "List end";
+                        break;
+
+                    case "remove":
+                        if (arguments.Count <= 1)
+                        {
+                            response = "You need to provide node id!";
+                            return false;
+                        }
+                        int nid = int.Parse(arguments.At(1));
+                        if (nid < 0 || nid >= NavigationNode.AllNodes.Count)
+                        {
+                            response = "Invalid id!";
+                            return false;
+                        }
+                        UnityEngine.Object.Destroy(NavigationNode.AllNodes[nid]);
+                        response = "Node removed";
+                        break;
+
+                    case "clean":
+                        NavigationNode.Clear();
+                        response = "Removed all nodes!";
+                        break;
+
                     default:
                         response = "Unknown subcommand!";
                         return false;
