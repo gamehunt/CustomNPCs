@@ -19,6 +19,7 @@ namespace NPCS.Actions
                 yield return Timing.WaitForSeconds(0.1f);
             }
             npc.FollowTarget = null;
+            Timing.KillCoroutines(npc.NPCComponent.movement_coroutines);
         }
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
