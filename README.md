@@ -12,3 +12,5 @@ Todo:
 - Add more events
 
 - Better nav system
+
+- API
