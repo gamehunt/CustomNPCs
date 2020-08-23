@@ -466,7 +466,7 @@ namespace NPCS
             AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
             AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
-            Log.Debug($"Constructed NPC", Plugin.Instance.Config.DisplayNPCInPlayerList);
+            Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
         }
     }
 }
