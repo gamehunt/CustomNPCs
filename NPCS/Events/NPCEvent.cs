@@ -40,7 +40,7 @@ namespace NPCS.Events
 
         public void FireActions(Dictionary<NodeAction, Dictionary<string, string>> acts)
         {
-            NPC.NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(RunActions(acts)));
+            NPC.AttachedCoroutines.Add(Timing.RunCoroutine(RunActions(acts)));
         }
 
         public Npc NPC

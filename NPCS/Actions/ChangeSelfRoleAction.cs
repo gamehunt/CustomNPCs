@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using MEC;
 using System.Collections.Generic;
 
 namespace NPCS.Actions
@@ -9,10 +10,13 @@ namespace NPCS.Actions
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
-            npc.Role = (RoleType)int.Parse(args["role"]);
+            npc.NPCPlayer.Role = (RoleType)int.Parse(args["role"]);
             if (!bool.Parse(args["preserve_position"]))
             {
-                npc.Position = (Map.GetRandomSpawnPoint(npc.Role));
+                npc.AttachedCoroutines.Add(Timing.CallDelayed(0.1f, () =>
+                {
+                    npc.NPCPlayer.Position = (Map.GetRandomSpawnPoint(npc.NPCPlayer.Role));
+                }));
             }
         }
     }

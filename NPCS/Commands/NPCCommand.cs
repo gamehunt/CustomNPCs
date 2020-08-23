@@ -43,7 +43,7 @@ namespace NPCS.Commands
                     response = "Available subcommands: [create, list, remove, clean, load, save, god, goto]";
                     return false;
                 }
-                List<NPCComponent> npcs;
+                List<Npc> npcs;
                 Npc obj_npc;
                 NavigationNode node;
                 string name;
@@ -53,23 +53,23 @@ namespace NPCS.Commands
 
                         if (arguments.Count == 1)
                         {
-                            Npc.CreateNPC(s.Position, s.Rotations, "default_npc.yml");
+                            Methods.CreateNPC(s.Position, s.Rotations, "default_npc.yml");
                         }
                         else if (arguments.Count == 2)
                         {
-                            Npc.CreateNPC(s.Position, s.Rotations, RoleType.Scientist, ItemType.None, arguments.At(1));
+                            Methods.CreateNPC(s.Position, s.Rotations, RoleType.Scientist, ItemType.None, arguments.At(1));
                         }
                         else if (arguments.Count == 3)
                         {
-                            Npc.CreateNPC(s.Position, s.Rotations, (RoleType)int.Parse(arguments.At(2)), ItemType.None, arguments.At(1));
+                            Methods.CreateNPC(s.Position, s.Rotations, (RoleType)int.Parse(arguments.At(2)), ItemType.None, arguments.At(1));
                         }
                         else if (arguments.Count == 4)
                         {
-                            Npc.CreateNPC(s.Position, s.Rotations, (RoleType)int.Parse(arguments.At(2)), (ItemType)int.Parse(arguments.At(3)), arguments.At(1));
+                            Methods.CreateNPC(s.Position, s.Rotations, (RoleType)int.Parse(arguments.At(2)), (ItemType)int.Parse(arguments.At(3)), arguments.At(1));
                         }
                         else if (arguments.Count == 5)
                         {
-                            Npc.CreateNPC(s.Position, s.Rotations, (RoleType)int.Parse(arguments.At(2)), (ItemType)int.Parse(arguments.At(3)), arguments.At(1), arguments.At(4));
+                            Methods.CreateNPC(s.Position, s.Rotations, (RoleType)int.Parse(arguments.At(2)), (ItemType)int.Parse(arguments.At(3)), arguments.At(1), arguments.At(4));
                         }
                         response = "NPC created";
                         break;
@@ -80,7 +80,7 @@ namespace NPCS.Commands
                             response = "You need to provide path to file!";
                             return false;
                         }
-                        if (Npc.CreateNPC(s.Position, s.Rotations, arguments.At(1)) == null)
+                        if (Methods.CreateNPC(s.Position, s.Rotations, arguments.At(1)) == null)
                         {
                             response = "Failed to load NPC!";
                             return false;
@@ -94,8 +94,8 @@ namespace NPCS.Commands
                             response = "You need to provide npc id and path to file!";
                             return false;
                         }
-                        npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>().ToList();
-                        obj_npc = Npc.FromComponent(npcs[int.Parse(arguments.At(1))]);
+                        npcs = UnityEngine.Object.FindObjectsOfType<Npc>().ToList();
+                        obj_npc = npcs[int.Parse(arguments.At(1))];
                         try
                         {
                             obj_npc.Serialize(arguments.At(2));
@@ -109,23 +109,21 @@ namespace NPCS.Commands
                         break;
 
                     case "list":
-                        npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>().ToList();
+                        npcs = UnityEngine.Object.FindObjectsOfType<Npc>().ToList();
                         int id = 0;
-                        foreach (NPCComponent npc in npcs)
+                        foreach (Npc npc in npcs)
                         {
-                            obj_npc = Npc.FromComponent(npc);
-                            s.RemoteAdminMessage($"{id} | {obj_npc.Name} | {Path.GetFileName(obj_npc.RootNode.NodeFile)}", true, Plugin.Instance.Name);
+                            s.RemoteAdminMessage($"{id} | {npc.Name} | {Path.GetFileName(npc.RootNode.NodeFile)}", true, Plugin.Instance.Name);
                             id++;
                         }
                         response = "List ended";
                         break;
 
                     case "clean":
-                        npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>().ToList();
-                        foreach (NPCComponent npc in npcs)
+                        npcs = UnityEngine.Object.FindObjectsOfType<Npc>().ToList();
+                        foreach (Npc npc in npcs)
                         {
-                            obj_npc = Npc.FromComponent(npc);
-                            obj_npc.Kill(false);
+                            npc.Kill(false);
                         }
                         response = "NPCs cleaned";
                         break;
@@ -133,8 +131,8 @@ namespace NPCS.Commands
                     case "remove":
                         if (arguments.Count > 1)
                         {
-                            npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>().ToList();
-                            obj_npc = Npc.FromComponent(npcs[int.Parse(arguments.At(1))]);
+                            npcs = UnityEngine.Object.FindObjectsOfType<Npc>().ToList();
+                            obj_npc = npcs[int.Parse(arguments.At(1))];
                             obj_npc.Kill(false);
                             response = "NPC removed!";
                         }
@@ -151,7 +149,7 @@ namespace NPCS.Commands
                             response = "You need to provide npc id and godmode value!";
                             return false;
                         }
-                        npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>().ToList();
+                        npcs = UnityEngine.Object.FindObjectsOfType<Npc>().ToList();
                         Player.Get(npcs[int.Parse(arguments.At(1))].gameObject).IsGodModeEnabled = bool.Parse(arguments.At(2));
                         response = "God-Mode switched";
                         break;
@@ -163,8 +161,8 @@ namespace NPCS.Commands
                             return false;
                         }
                         name = arguments.At(2);
-                        npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>().ToList();
-                        Npc npc_obj = Npc.FromComponent(npcs[int.Parse(arguments.At(1))]);
+                        npcs = UnityEngine.Object.FindObjectsOfType<Npc>().ToList();
+                        Npc npc_obj = npcs[int.Parse(arguments.At(1))];
                         node = NavigationNode.Get(name);
                         if (node == null)
                         {
@@ -183,8 +181,8 @@ namespace NPCS.Commands
                             return false;
                         }
                         name = arguments.At(2);
-                        npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>().ToList();
-                        npc_obj = Npc.FromComponent(npcs[int.Parse(arguments.At(1))]);
+                        npcs = UnityEngine.Object.FindObjectsOfType<Npc>().ToList();
+                        npc_obj = npcs[int.Parse(arguments.At(1))];
                         node = NavigationNode.Get(name);
                         if (node == null)
                         {
@@ -203,8 +201,8 @@ namespace NPCS.Commands
                         }
                         int pid = int.Parse(arguments.At(2));
                         Player p = Player.Get(pid);
-                        npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>().ToList();
-                        npc_obj = Npc.FromComponent(npcs[int.Parse(arguments.At(1))]);
+                        npcs = UnityEngine.Object.FindObjectsOfType<Npc>().ToList();
+                        npc_obj = npcs[int.Parse(arguments.At(1))];
                         npc_obj.Follow(p);
                         response = "Navigating npc to player!";
                         break;

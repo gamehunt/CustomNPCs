@@ -13,13 +13,12 @@ namespace NPCS.Actions
 
         private IEnumerator<float> StopAfterRoomCheck(Npc npc, string rname)
         {
-            Player p = Player.Get(npc.GameObject);
-            while(p.CurrentRoom == null || !p.CurrentRoom.Name.Equals(rname,StringComparison.OrdinalIgnoreCase))
+            while(npc.NPCPlayer.CurrentRoom == null || !npc.NPCPlayer.CurrentRoom.Name.Equals(rname,StringComparison.OrdinalIgnoreCase))
             {
                 yield return Timing.WaitForSeconds(0.1f);
             }
             npc.FollowTarget = null;
-            Timing.KillCoroutines(npc.NPCComponent.movement_coroutines);
+            Timing.KillCoroutines(npc.MovementCoroutines);
         }
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
@@ -30,7 +29,7 @@ namespace NPCS.Actions
             }
             else
             {
-                npc.NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(StopAfterRoomCheck(npc, args["room"])));
+               npc.AttachedCoroutines.Add(Timing.RunCoroutine(StopAfterRoomCheck(npc, args["room"])));
             }
         }
     }

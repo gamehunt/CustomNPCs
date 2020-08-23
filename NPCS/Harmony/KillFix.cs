@@ -59,7 +59,7 @@ namespace NPCS.Harmony
                             if (!referenceHub.isDedicatedServer && referenceHub.isReady)
                             {
                                 global::PlayerStats playerStats = referenceHub.playerStats;
-                                if (__instance.gameObject.GetComponent<NPCComponent>() == null)
+                                if (__instance.gameObject.GetComponent<Npc>() == null)
                                 {
                                     playerStats.TargetSyncHp(__instance.connectionToClient, playerStats.Health);
                                 }
@@ -72,7 +72,7 @@ namespace NPCS.Harmony
                 {
                     if (referenceHub2.characterClassManager != __instance && !referenceHub2.isDedicatedServer)
                     {
-                        if (__instance.gameObject.GetComponent<NPCComponent>() == null)
+                        if (__instance.gameObject.GetComponent<Npc>() == null)
                         {
                             referenceHub2.playerStats.TargetSyncHp(__instance.connectionToClient, -1f);
                         }

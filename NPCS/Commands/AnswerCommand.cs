@@ -22,16 +22,25 @@ namespace NPCS.Commands
                 Player s = Player.Get(player.PlayerId);
                 if (arguments.Count == 1)
                 {
-                    NPCComponent[] npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
-                    foreach (NPCComponent npc in npcs)
+                    Npc[] npcs = UnityEngine.Object.FindObjectsOfType<Npc>();
+                    bool flag = false;
+                    foreach (Npc npc in npcs)
                     {
-                        Npc obj_npc = Npc.FromComponent(npc);
-                        if (Vector3.Distance(npc.transform.position, s.Position) < 3f)
+                        if (Vector3.Distance(npc.NPCPlayer.Position, s.Position) < 3f)
                         {
-                            obj_npc.HandleAnswer(s, arguments.At(0));
+                            npc.HandleAnswer(s, arguments.At(0));
+                            flag = true;
+                            break;
                         }
                     }
-                    response = null;
+                    if (!flag)
+                    {
+                        response = "NPC not found!";
+                    }
+                    else
+                    {
+                        response = null;
+                    }
                 }
                 else
                 {

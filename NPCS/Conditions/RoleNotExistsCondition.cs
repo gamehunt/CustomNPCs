@@ -12,7 +12,7 @@ namespace NPCS.Conditions
         public override bool Check(Player player, Dictionary<string, string> args)
         {
             bool need_npcs = bool.Parse(args["need_npcs"]);
-            return Player.Get((RoleType)int.Parse(args["role"])).Where(p => p.GameObject.GetComponent<NPCComponent>() == null || need_npcs).IsEmpty(); //I hate lambdas...
+            return Player.Get((RoleType)int.Parse(args["role"])).Where(p => p.GameObject.GetComponent<Npc>() == null || need_npcs).IsEmpty(); //I hate lambdas...
         }
     }
 }

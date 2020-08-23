@@ -20,11 +20,10 @@ namespace NPCS
 
         public void OnRoundEnd(RoundEndedEventArgs ev)
         {
-            NPCComponent[] npcs = UnityEngine.Object.FindObjectsOfType<NPCComponent>();
-            foreach (NPCComponent npc in npcs)
+            Npc[] npcs = UnityEngine.Object.FindObjectsOfType<Npc>();
+            foreach (Npc npc in npcs)
             {
-                Npc obj_npc = Npc.FromComponent(npc);
-                obj_npc.Kill(false);
+                npc.Kill(false);
             }
             RoundSummaryFix.__npc_endRequested = false;
             NavigationNode.Clear();
@@ -32,13 +31,12 @@ namespace NPCS
 
         public void OnDied(DiedEventArgs ev)
         {
-            NPCComponent cmp = ev.Target.GameObject.GetComponent<NPCComponent>();
+            Npc cmp = ev.Target.GameObject.GetComponent<Npc>();
             if (cmp != null)
             {
-                Npc npc = Npc.FromComponent(cmp);
-                NPCDiedEvent npc_ev = new NPCDiedEvent(npc, ev.Killer);
-                npc.FireEvent(npc_ev);
-                npc.NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(Utils.CallOnUnlock(() => npc.Kill(false), npc)));
+                NPCDiedEvent npc_ev = new NPCDiedEvent(cmp, ev.Killer);
+                cmp.FireEvent(npc_ev);
+                cmp.AttachedCoroutines.Add(Timing.RunCoroutine(Utils.CallOnUnlock(() => cmp.Kill(false), cmp)));
             }
         }
 
@@ -46,18 +44,17 @@ namespace NPCS
         {
             foreach (Player p in ev.TargetToDamages.Keys)
             {
-                NPCComponent component = p.GameObject.GetComponent<NPCComponent>();
+                Npc component = p.GameObject.GetComponent<Npc>();
                 if (component != null)
                 {
-                    Npc obj_npc = Npc.FromComponent(component);
-                    if (!Player.Get(obj_npc.GameObject).IsGodModeEnabled)
+                    if (!component.NPCPlayer.IsGodModeEnabled)
                     {
                         p.Health -= ev.TargetToDamages[p];
                         if (p.Health <= 0f)
                         {
-                            NPCDiedEvent npc_ev = new NPCDiedEvent(obj_npc, ev.Thrower);
-                            obj_npc.FireEvent(npc_ev);
-                            obj_npc.NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(Utils.CallOnUnlock(() => obj_npc.Kill(true), obj_npc)));
+                            NPCDiedEvent npc_ev = new NPCDiedEvent(component, ev.Thrower);
+                            component.FireEvent(npc_ev);
+                            component.AttachedCoroutines.Add(Timing.RunCoroutine(Utils.CallOnUnlock(() => component.Kill(true), component)));
                         }
                     }
                 }
@@ -67,17 +64,9 @@ namespace NPCS
         public void OnDecontamination(DecontaminatingEventArgs ev)
         {
             Npc intr = null;
-            foreach (NPCComponent component in UnityEngine.Object.FindObjectsOfType<NPCComponent>())
+            foreach (Npc component in UnityEngine.Object.FindObjectsOfType<Npc>())
             {
-                if (intr == null)
-                {
-                    intr = Npc.FromComponent(component);
-                }
-                else
-                {
-                    intr.GameObject = component.gameObject;
-                }
-                intr.FireEvent(new NPCDecontaminationEvent(intr, null));
+                component.FireEvent(new NPCDecontaminationEvent(intr, null));
             }
         }
     }

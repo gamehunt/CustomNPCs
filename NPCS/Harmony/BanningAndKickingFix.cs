@@ -17,7 +17,7 @@ namespace NPCS.Harmony
             {
                 Exiled.API.Features.Player issuerPlayer = Exiled.API.Features.Player.Get(issuer) ?? Exiled.API.Features.Server.Host;
 
-                if (user.GetComponent<NPCComponent>() != null)
+                if (user.GetComponent<Npc>() != null)
                 {
                     issuerPlayer.RemoteAdminMessage("WTF U TRIED TO BAN NPC?", false, Plugin.Instance.Name);
                     issuerPlayer.ClearBroadcasts();

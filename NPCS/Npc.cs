@@ -1,25 +1,44 @@
 ﻿using Exiled.API.Features;
 using MEC;
-using Mirror;
 using NPCS.Events;
 using NPCS.Navigation;
 using NPCS.Talking;
-using RemoteAdmin;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 
 namespace NPCS
 {
-    //This component provides interface to control NPC. It can be created multiple times for NPC. 
-    //TODO MOVE ALL THIS SHIT INTO COMPONENT 
-    internal class Npc
+    internal class Npc : MonoBehaviour
     {
-        //For simpler saving
+        private TalkNode root_node;
+        private Dictionary<Player, TalkNode> talking_states = new Dictionary<Player, TalkNode>();
+
+        private List<CoroutineHandle> attached_coroutines = new List<CoroutineHandle>();
+        private List<CoroutineHandle> movement_coroutines = new List<CoroutineHandle>();
+
+        private Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>> attached_events = new Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>>(); //Horrible
+
+        private Queue<NavigationNode> nav_queue = new Queue<NavigationNode>();
+        private NavigationNode nav_current_target = null;
+
+        private Player follow_target = null;
+
+        private MovementDirection curDir;
+
+        private bool action_locked = false;
+        private Player lock_handler = null;
+        private bool locked = false;
+
+        private bool is_exclusive = false;
+
+        private float speed = 2f;
+
+        private Player player;
+
         private class NPCSerializeInfo
         {
             private readonly Npc parent;
@@ -41,7 +60,7 @@ namespace NPCS
             {
                 get
                 {
-                    return (int)parent.Role;
+                    return (int)parent.player.Role;
                 }
             }
 
@@ -65,7 +84,7 @@ namespace NPCS
             {
                 get
                 {
-                    return Player.Get(parent.GameObject).IsGodModeEnabled;
+                    return parent.NPCPlayer.IsGodModeEnabled;
                 }
             }
 
@@ -87,21 +106,15 @@ namespace NPCS
             RIGHT
         };
 
-        public GameObject GameObject { get; set; }
-
-        public ReferenceHub ReferenceHub
+        public Player NPCPlayer
         {
             get
             {
-                return GameObject.GetComponent<ReferenceHub>();
+                return player;
             }
-        }
-
-        public NPCComponent NPCComponent
-        {
-            get
+            set
             {
-                return GameObject.GetComponent<NPCComponent>();
+                player = value;
             }
         }
 
@@ -109,11 +122,11 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.root_node;
+                return root_node;
             }
             set
             {
-                NPCComponent.root_node = value;
+                root_node = value;
             }
         }
 
@@ -121,11 +134,11 @@ namespace NPCS
         {
             get
             {
-                return GameObject.GetComponent<NicknameSync>().Network_myNickSync;
+                return player.ReferenceHub.nicknameSync.Network_myNickSync;
             }
             set
             {
-                GameObject.GetComponent<NicknameSync>().Network_myNickSync = value;
+                player.ReferenceHub.nicknameSync.Network_myNickSync = value;
             }
         }
 
@@ -133,19 +146,7 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.talking_states;
-            }
-        }
-
-        public RoleType Role
-        {
-            get
-            {
-                return GameObject.GetComponent<CharacterClassManager>().CurClass;
-            }
-            set
-            {
-                GameObject.GetComponent<CharacterClassManager>().CurClass = value;
+                return talking_states;
             }
         }
 
@@ -153,11 +154,11 @@ namespace NPCS
         {
             get
             {
-                return GameObject.GetComponent<Inventory>().curItem;
+                return player.ReferenceHub.inventory.curItem;
             }
             set
             {
-                GameObject.GetComponent<Inventory>().SetCurItem(value);
+                player.ReferenceHub.inventory.SetCurItem(value);
             }
         }
 
@@ -165,35 +166,11 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.curDir;
+                return curDir;
             }
             set
             {
-                NPCComponent.curDir = value;
-            }
-        }
-
-        public Vector3 Position
-        {
-            get
-            {
-                return GameObject.GetComponent<PlayerMovementSync>().RealModelPosition;
-            }
-            set
-            {
-                GameObject.GetComponent<PlayerMovementSync>().OverridePosition(value, 0f, false);
-            }
-        }
-
-        public Vector2 Rotation
-        {
-            get
-            {
-                return GameObject.GetComponent<PlayerMovementSync>().RotationSync;
-            }
-            set
-            {
-                GameObject.GetComponent<PlayerMovementSync>().RotationSync = value;
+                curDir = value;
             }
         }
 
@@ -201,11 +178,11 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.locked;
+                return locked;
             }
             set
             {
-                NPCComponent.locked = value;
+                locked = value;
             }
         }
 
@@ -213,11 +190,11 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.lock_handler;
+                return lock_handler;
             }
             set
             {
-                NPCComponent.lock_handler = value;
+                lock_handler = value;
             }
         }
 
@@ -225,11 +202,11 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.action_locked;
+                return action_locked;
             }
             set
             {
-                NPCComponent.action_locked = value;
+                action_locked = value;
             }
         }
 
@@ -237,11 +214,11 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.is_exclusive;
+                return is_exclusive;
             }
             set
             {
-                NPCComponent.is_exclusive = value;
+                is_exclusive = value;
             }
         }
 
@@ -249,7 +226,7 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.attached_events;
+                return attached_events;
             }
         }
 
@@ -257,7 +234,7 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.nav_queue;
+                return nav_queue;
             }
         }
 
@@ -265,11 +242,11 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.nav_current_target;
+                return nav_current_target;
             }
             set
             {
-                NPCComponent.nav_current_target = value;
+                nav_current_target = value;
             }
         }
 
@@ -277,11 +254,11 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.follow_target;
+                return follow_target;
             }
             set
             {
-                NPCComponent.follow_target = value;
+                follow_target = value;
             }
         }
 
@@ -289,56 +266,66 @@ namespace NPCS
         {
             get
             {
-                return NPCComponent.speed;
+                return speed;
             }
             set
             {
-                NPCComponent.speed = value;
+                speed = value;
             }
         }
 
-        public Npc(GameObject obj)
+        public List<CoroutineHandle> AttachedCoroutines
         {
-            GameObject = obj;
+            get
+            {
+                return attached_coroutines;
+            }
+        }
+
+        public List<CoroutineHandle> MovementCoroutines
+        {
+            get
+            {
+                return movement_coroutines;
+            }
         }
 
         //------------------------------------------ Coroutines
 
-        private static IEnumerator<float> NavCoroutine(NPCComponent cmp)
+        private IEnumerator<float> NavCoroutine()
         {
-            Npc npc = Npc.FromComponent(cmp);
             for (; ; )
             {
-                if (npc.FollowTarget != null)
+                if (FollowTarget != null)
                 {
-                    if (npc.FollowTarget.IsAlive)
+                    if (FollowTarget.IsAlive)
                     {
-                        npc.GoTo(npc.FollowTarget.Position);
+                        GoTo(FollowTarget.Position);
                     }
                     else
                     {
-                        npc.FollowTarget = null;
+                        FollowTarget = null;
                     }
                 }
                 else
                 {
-                    if (!npc.NavigationQueue.IsEmpty())
+                    if (!NavigationQueue.IsEmpty())
                     {
-                        npc.CurrentNavTarget = npc.NavigationQueue.Dequeue();
-                        yield return Timing.WaitForSeconds(npc.GoTo(npc.CurrentNavTarget.Position) + 0.1f);
-                        npc.CurrentNavTarget = null;
+                        CurrentNavTarget = NavigationQueue.Dequeue();
+                        yield return Timing.WaitForSeconds(GoTo(CurrentNavTarget.Position) + 0.1f);
+                        CurrentNavTarget = null;
                     }
                 }
                 yield return Timing.WaitForSeconds(0.1f);
             }
         }
 
-        private static IEnumerator<float> UpdateTalking(NPCComponent cmp)
+        private IEnumerator<float> UpdateTalking()
         {
             for (; ; )
             {
                 List<Player> invalid_players = new List<Player>();
-                foreach (Player p in cmp.talking_states.Keys)
+                foreach (Player p in talking_states.Keys)
                 {
                     if (!p.IsAlive || !Player.List.Contains(p))
                     {
@@ -347,29 +334,29 @@ namespace NPCS
                 }
                 foreach (Player p in invalid_players)
                 {
-                    cmp.talking_states.Remove(p);
-                    if (p == cmp.lock_handler)
+                    talking_states.Remove(p);
+                    if (p == lock_handler)
                     {
-                        cmp.lock_handler = null;
-                        cmp.locked = false;
+                        lock_handler = null;
+                        locked = false;
                     }
                 }
                 yield return Timing.WaitForSeconds(0.5f);
             }
         }
 
-        private static IEnumerator<float> MoveCoroutine(NPCComponent cmp)
+        private IEnumerator<float> MoveCoroutine()
         {
             for (; ; )
             {
-                switch (cmp.curDir)
+                switch (curDir)
                 {
                     case MovementDirection.FORWARD:
                         try
                         {
-                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
+                            if (!Physics.Linecast(player.Position, player.Position + player.CameraTransform.forward / 10 * speed, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
+                                player.Position += player.CameraTransform.forward / 10 * speed;
                             }
                         }
                         catch (Exception) { }
@@ -378,9 +365,9 @@ namespace NPCS
                     case MovementDirection.BACKWARD:
                         try
                         {
-                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
+                            if (!Physics.Linecast(player.Position, gameObject.transform.position - player.CameraTransform.forward / 10 * speed, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
+                                player.Position -= player.CameraTransform.forward / 10 * speed;
                             }
                         }
                         catch (Exception) { }
@@ -389,9 +376,9 @@ namespace NPCS
                     case MovementDirection.LEFT:
                         try
                         {
-                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
+                            if (!Physics.Linecast(player.Position, player.Position + Quaternion.AngleAxis(90, Vector3.up) * player.CameraTransform.forward / 10 * speed, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position + Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
+                                player.Position +=  Quaternion.AngleAxis(90, Vector3.up) * player.CameraTransform.forward / 10 * speed;
                             }
                         }
                         catch (Exception) { }
@@ -400,9 +387,9 @@ namespace NPCS
                     case MovementDirection.RIGHT:
                         try
                         {
-                            if (!Physics.Linecast(cmp.transform.position, cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.GetComponent<PlayerMovementSync>().CollidableSurfaces))
+                            if (!Physics.Linecast(player.Position, player.Position - Quaternion.AngleAxis(90, Vector3.up) * player.CameraTransform.forward / 10 * speed, player.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                cmp.GetComponent<PlayerMovementSync>().OverridePosition(cmp.transform.position - Quaternion.AngleAxis(90, Vector3.up) * cmp.GetComponent<ReferenceHub>().PlayerCameraReference.forward / 10 * cmp.speed, cmp.transform.rotation.y, true);
+                                player.Position -= Quaternion.AngleAxis(90, Vector3.up) * player.CameraTransform.forward / 10 * speed;
                             }
                         }
                         catch (Exception) { }
@@ -493,23 +480,23 @@ namespace NPCS
             switch (dir)
             {
                 case MovementDirection.FORWARD:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(MovementSpeed, 0);
+                    player.ReferenceHub.animationController.Networkspeed = new Vector2(MovementSpeed, 0);
                     break;
 
                 case MovementDirection.BACKWARD:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(-MovementSpeed, 0);
+                    player.ReferenceHub.animationController.Networkspeed = new Vector2(-MovementSpeed, 0);
                     break;
 
                 case MovementDirection.RIGHT:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(0, MovementSpeed);
+                    player.ReferenceHub.animationController.Networkspeed = new Vector2(0, MovementSpeed);
                     break;
 
                 case MovementDirection.LEFT:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(0, -MovementSpeed);
+                    player.ReferenceHub.animationController.Networkspeed = new Vector2(0, -MovementSpeed);
                     break;
 
                 default:
-                    ReferenceHub.animationController.Networkspeed = new Vector2(0, 0);
+                    player.ReferenceHub.animationController.Networkspeed = new Vector2(0, 0);
                     break;
             }
         }
@@ -532,15 +519,14 @@ namespace NPCS
         public float GoTo(Vector3 position)
         {
             IsActionLocked = true;
-            Timing.KillCoroutines(NPCComponent.movement_coroutines);
-            Vector3 heading = (position - Position);
+            Timing.KillCoroutines(movement_coroutines);
+            Vector3 heading = (position - player.Position);
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
-            Player pl = Player.Get(GameObject);
             float dist = heading.magnitude;
-            Rotation = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
+            player.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
             Move(MovementDirection.FORWARD);
-            float eta = 0.1f * (dist / (pl.CameraTransform.forward / 10 * MovementSpeed).magnitude);
-            NPCComponent.movement_coroutines.Add(Timing.CallDelayed(eta, () =>
+            float eta = 0.1f * (dist / (player.CameraTransform.forward / 10 * MovementSpeed).magnitude);
+            movement_coroutines.Add(Timing.CallDelayed(eta, () =>
             {
                 Move(MovementDirection.NONE);
                 IsActionLocked = false;
@@ -550,14 +536,14 @@ namespace NPCS
 
         public void TalkWith(Player p)
         {
-            NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(StartTalkCoroutine(p)));
+            attached_coroutines.Add(Timing.RunCoroutine(StartTalkCoroutine(p)));
         }
 
         public void HandleAnswer(Player p, string answer)
         {
             if (!IsActionLocked)
             {
-                NPCComponent.attached_coroutines.Add(Timing.RunCoroutine(HandleAnswerCoroutine(p, answer)));
+                attached_coroutines.Add(Timing.RunCoroutine(HandleAnswerCoroutine(p, answer)));
             }
             else
             {
@@ -565,143 +551,13 @@ namespace NPCS
             }
         }
 
-        public static Npc CreateNPC(Vector3 pos, Vector2 rot, RoleType type = RoleType.ClassD, ItemType itemHeld = ItemType.None, string name = "(EMPTY)", string root_node = "default_node.yml")
-        {
-            GameObject obj =
-                UnityEngine.Object.Instantiate(
-                    NetworkManager.singleton.spawnPrefabs.FirstOrDefault(p => p.gameObject.name == "Player"));
-            CharacterClassManager ccm = obj.GetComponent<CharacterClassManager>();
-
-            NPCComponent npcc = obj.AddComponent<NPCComponent>();
-
-            obj.transform.localScale = Vector3.one;
-            obj.transform.position = pos;
-
-            obj.GetComponent<QueryProcessor>().NetworkPlayerId = QueryProcessor._idIterator++;
-            obj.GetComponent<QueryProcessor>()._ipAddress = "127.0.0.WAN";
-
-            if (Plugin.Instance.Config.DisplayNPCInPlayerList)
-            {
-                ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
-            }
-
-            ccm.CurClass = type;
-            obj.GetComponent<PlayerStats>().SetHPAmount(ccm.Classes.SafeGet(type).maxHP);
-
-            obj.GetComponent<NicknameSync>().Network_myNickSync = name;
-
-            obj.GetComponent<ServerRoles>().MyText = "NPC";
-            obj.GetComponent<ServerRoles>().MyColor = "red";
-
-            NetworkServer.Spawn(obj);
-            PlayerManager.AddPlayer(obj); //I'm not sure if I need this
-
-            Player ply_obj = new Player(obj);
-            Player.Dictionary.Add(obj, ply_obj);
-
-            Player.IdsCache.Add(ply_obj.Id, ply_obj);
-
-            if (Plugin.Instance.Config.DisplayNPCInPlayerList)
-            {
-                Player.UserIdsCache.Add(ccm._privUserId, ply_obj);
-            }
-
-            Npc b = new Npc(obj)
-            {
-                RootNode = (TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node))),
-                ItemHeld = (itemHeld)
-            };
-
-            npcc.attached_coroutines.Add(Timing.RunCoroutine(UpdateTalking(npcc)));
-            npcc.attached_coroutines.Add(Timing.RunCoroutine(MoveCoroutine(npcc)));
-            npcc.attached_coroutines.Add(Timing.RunCoroutine(NavCoroutine(npcc)));
-            npcc.attached_coroutines.Add(Timing.CallDelayed(0.3f, () =>
-            {
-                b.ReferenceHub.playerMovementSync.OverridePosition(pos, 0f, true);
-                b.Rotation = rot;
-            }));
-
-            return b;
-        }
-
-        //NPC format
-        //name: SomeName
-        //role: 6
-        //item_held: 24
-        //root_node: default_node.yml
-        //god_mode: false
-        //is_exclusive: true
-        //events: []
-        public static Npc CreateNPC(Vector3 pos, Vector2 rot, string path)
-        {
-            try
-            {
-                var input = new StringReader(File.ReadAllText(Path.Combine(Config.NPCs_root_path, path)));
-
-                var yaml = new YamlStream();
-                yaml.Load(input);
-
-                var mapping =
-                    (YamlMappingNode)yaml.Documents[0].RootNode;
-
-                Npc n = CreateNPC(pos, rot, (RoleType)int.Parse((string)mapping.Children[new YamlScalarNode("role")]), (ItemType)int.Parse((string)mapping.Children[new YamlScalarNode("item_held")]), (string)mapping.Children[new YamlScalarNode("name")], (string)mapping.Children[new YamlScalarNode("root_node")]);
-                if (bool.Parse((string)mapping.Children[new YamlScalarNode("god_mode")]))
-                {
-                    Player pl = Player.Get(n.GameObject);
-                    pl.IsGodModeEnabled = true;
-                }
-                n.IsExclusive = bool.Parse((string)mapping.Children[new YamlScalarNode("is_exclusive")]);
-
-                Log.Info("Parsing events...");
-
-                YamlSequenceNode events = (YamlSequenceNode)mapping.Children[new YamlScalarNode("events")];
-
-                foreach (YamlMappingNode event_node in events.Children)
-                {
-                    var actions = (YamlSequenceNode)event_node.Children[new YamlScalarNode("actions")];
-                    Dictionary<NodeAction, Dictionary<string, string>> actions_mapping = new Dictionary<NodeAction, Dictionary<string, string>>();
-                    foreach (YamlMappingNode action_node in actions)
-                    {
-                        NodeAction act = NodeAction.GetFromToken((string)action_node.Children[new YamlScalarNode("token")]);
-                        if (act != null)
-                        {
-                            Log.Debug($"Recognized action: {act.Name}", Plugin.Instance.Config.VerboseOutput);
-                            var yml_args = (YamlMappingNode)action_node.Children[new YamlScalarNode("args")];
-                            Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
-                            foreach (YamlScalarNode arg in yml_args.Children.Keys)
-                            {
-                                arg_bindings.Add((string)arg.Value, (string)yml_args.Children[arg]);
-                            }
-                            actions_mapping.Add(act, arg_bindings);
-                        }
-                        else
-                        {
-                            Log.Error($"Failed to parse action: {(string)action_node.Children[new YamlScalarNode("token")]} (invalid token)");
-                        }
-                    }
-                    n.Events.Add((string)event_node.Children[new YamlScalarNode("token")], actions_mapping);
-                }
-                return n;
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed to load NPC from {path}: {e}");
-                return null;
-            }
-        }
-
-        public static Npc FromComponent(NPCComponent npc)
-        {
-            return new Npc(npc.gameObject);
-        }
-
         public void Kill(bool spawn_ragdoll)
         {
             if (spawn_ragdoll)
             {
-                GameObject.GetComponent<RagdollManager>().SpawnRagdoll(GameObject.transform.position, GameObject.transform.rotation, Vector3.zero, (int)ReferenceHub.characterClassManager.CurClass, new PlayerStats.HitInfo(), false, "", Name, 9999);
+                gameObject.GetComponent<RagdollManager>().SpawnRagdoll(gameObject.transform.position, gameObject.transform.rotation, Vector3.zero, (int)player.Role, new PlayerStats.HitInfo(), false, "", Name, 9999);
             }
-            UnityEngine.Object.Destroy(GameObject);
+            UnityEngine.Object.Destroy(this);
         }
 
         public void Serialize(string path)
@@ -733,6 +589,22 @@ namespace NPCS
             {
                 Log.Debug($"Skipping unused event {ev.Name}", Plugin.Instance.Config.VerboseOutput);
             }
+        }
+
+        private void OnDestroy()
+        {
+            Log.Debug("Destroying NPC component", Plugin.Instance.Config.VerboseOutput);
+            Timing.KillCoroutines(movement_coroutines);
+            Timing.KillCoroutines(attached_coroutines);
+        }
+
+        private void Awake()
+        {
+            player = Player.Get(gameObject);
+            attached_coroutines.Add(Timing.RunCoroutine(UpdateTalking()));
+            attached_coroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
+            attached_coroutines.Add(Timing.RunCoroutine(NavCoroutine()));
+            Log.Debug($"Constructed NPC",Plugin.Instance.Config.DisplayNPCInPlayerList);
         }
     }
 }

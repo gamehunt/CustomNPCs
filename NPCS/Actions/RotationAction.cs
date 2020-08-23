@@ -12,11 +12,11 @@ namespace NPCS.Actions
         {
             if (bool.Parse(args["absolute"]))
             {
-                npc.Rotation = new UnityEngine.Vector2(float.Parse(args["x"]), float.Parse(args["y"]));
+                npc.NPCPlayer.Rotations = new UnityEngine.Vector2(float.Parse(args["x"]), float.Parse(args["y"]));
             }
             else
             {
-                npc.Rotation += new UnityEngine.Vector2(float.Parse(args["x"]), float.Parse(args["y"]));
+                npc.NPCPlayer.Rotations += new UnityEngine.Vector2(float.Parse(args["x"]), float.Parse(args["y"]));
             }
         }
     }

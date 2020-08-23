@@ -33,7 +33,7 @@ namespace NPCS.Harmony
                 foreach (GameObject gameObject in players)
                 {
 
-                    if(gameObject.GetComponent<NPCComponent>() != null)
+                    if(gameObject.GetComponent<Npc>() != null)
                     {
                         continue;
                     }
