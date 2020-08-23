@@ -1,17 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Exiled.Events.EventArgs;
+using Exiled.Events.Handlers;
+using GameCore;
+using HarmonyLib;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-
-using Exiled.Events.EventArgs;
-using Exiled.Events.Handlers;
-
-using GameCore;
-
-using HarmonyLib;
-
 using UnityEngine;
-
-using System.Linq;
 
 namespace NPCS.Harmony
 {
@@ -99,7 +94,7 @@ namespace NPCS.Harmony
                     }
                 }
 
-                var endingRoundEventArgs = new EndingRoundEventArgs(Exiled.API.Enums.LeadingTeam.Draw,newList, roundSummary._roundEnded);
+                var endingRoundEventArgs = new EndingRoundEventArgs(Exiled.API.Enums.LeadingTeam.Draw, newList, roundSummary._roundEnded);
 
                 if (num1 > 0)
                 {

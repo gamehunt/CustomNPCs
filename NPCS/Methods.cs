@@ -1,15 +1,14 @@
 ﻿using Exiled.API.Features;
 using MEC;
 using Mirror;
+using NPCS.Talking;
 using RemoteAdmin;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using YamlDotNet.RepresentationModel;
-
-using NPCS.Talking;
 
 namespace NPCS
 {
@@ -57,7 +56,7 @@ namespace NPCS
             Npc npcc = obj.AddComponent<Npc>();
 
             npcc.ItemHeld = itemHeld;
-            npcc.RootNode = TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path,root_node));
+            npcc.RootNode = TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node));
 
             npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.3f, () =>
             {

@@ -3,17 +3,16 @@ using MEC;
 using NPCS.Talking;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NPCS.Actions
 {
-    class StopFollowAction : NodeAction
+    internal class StopFollowAction : NodeAction
     {
         public override string Name => "StopFollowAction";
 
         private IEnumerator<float> StopAfterRoomCheck(Npc npc, string rname)
         {
-            while(npc.NPCPlayer.CurrentRoom == null || !npc.NPCPlayer.CurrentRoom.Name.Equals(rname,StringComparison.OrdinalIgnoreCase))
+            while (npc.NPCPlayer.CurrentRoom == null || !npc.NPCPlayer.CurrentRoom.Name.Equals(rname, StringComparison.OrdinalIgnoreCase))
             {
                 yield return Timing.WaitForSeconds(0.1f);
             }
@@ -29,7 +28,7 @@ namespace NPCS.Actions
             }
             else
             {
-               npc.AttachedCoroutines.Add(Timing.RunCoroutine(StopAfterRoomCheck(npc, args["room"])));
+                npc.AttachedCoroutines.Add(Timing.RunCoroutine(StopAfterRoomCheck(npc, args["room"])));
             }
         }
     }

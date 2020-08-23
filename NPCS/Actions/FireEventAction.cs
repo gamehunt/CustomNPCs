@@ -1,14 +1,11 @@
 ﻿using Exiled.API.Features;
-using NPCS.Talking;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using NPCS.Events;
+using NPCS.Talking;
+using System.Collections.Generic;
 
 namespace NPCS.Actions
 {
-    class FireEventAction : NodeAction
+    internal class FireEventAction : NodeAction
     {
         public override string Name => "FireEventAction";
 

@@ -15,6 +15,7 @@ namespace NPCS
     internal class Npc : MonoBehaviour
     {
         #region Serialization
+
         private class NPCSerializeInfo
         {
             private readonly Npc parent;
@@ -92,7 +93,7 @@ namespace NPCS
             }
         }
 
-        #endregion
+        #endregion Serialization
 
         #region Properties
 
@@ -159,7 +160,7 @@ namespace NPCS
 
         public List<CoroutineHandle> MovementCoroutines { get; } = new List<CoroutineHandle>();
 
-        #endregion
+        #endregion Properties
 
         #region Coroutines
 
@@ -172,6 +173,10 @@ namespace NPCS
                     if (FollowTarget.IsAlive)
                     {
                         GoTo(FollowTarget.Position);
+                        if(Vector3.Distance(FollowTarget.Position,NPCPlayer.Position) >= 15f)
+                        {
+                            NPCPlayer.Position = FollowTarget.Position;
+                        }
                     }
                     else
                     {
@@ -249,7 +254,7 @@ namespace NPCS
                         {
                             if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position + Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.Position +=  Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed;
+                                NPCPlayer.Position += Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed;
                             }
                         }
                         catch (Exception) { }
@@ -343,7 +348,7 @@ namespace NPCS
             }
         }
 
-        #endregion
+        #endregion Coroutines
 
         #region Movement
 
@@ -407,7 +412,7 @@ namespace NPCS
             return eta;
         }
 
-        #endregion
+        #endregion Movement
 
         public void TalkWith(Player p)
         {
@@ -435,8 +440,6 @@ namespace NPCS
             UnityEngine.Object.Destroy(this);
         }
 
-
-
         public void FireEvent(NPCEvent ev)
         {
             try
@@ -451,9 +454,9 @@ namespace NPCS
 
         private void OnDestroy()
         {
-            Log.Debug("Destroying NPC component", Plugin.Instance.Config.VerboseOutput);
             Timing.KillCoroutines(MovementCoroutines);
             Timing.KillCoroutines(AttachedCoroutines);
+            Log.Debug("Destroyed NPC component", Plugin.Instance.Config.VerboseOutput);
         }
 
         private void Awake()
@@ -462,7 +465,7 @@ namespace NPCS
             AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
             AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
-            Log.Debug($"Constructed NPC",Plugin.Instance.Config.DisplayNPCInPlayerList);
+            Log.Debug($"Constructed NPC", Plugin.Instance.Config.DisplayNPCInPlayerList);
         }
     }
 }

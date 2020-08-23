@@ -2,7 +2,6 @@
 using Exiled.API.Features;
 using HarmonyLib;
 using Mirror;
-using PlayableScps;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,8 +31,7 @@ namespace NPCS.Harmony
 
                 foreach (GameObject gameObject in players)
                 {
-
-                    if(gameObject.GetComponent<Npc>() != null)
+                    if (gameObject.GetComponent<Npc>() != null)
                     {
                         continue;
                     }
@@ -115,6 +113,7 @@ namespace NPCS.Harmony
                                     case RoleType.Scp173 when !Exiled.Events.Events.Instance.Config.CanTutorialBlockScp173 && currentTarget.Role == RoleType.Tutorial:
                                         shouldRotate = true;
                                         break;
+
                                     case RoleType.Scp096 when !Exiled.Events.Events.Instance.Config.CanTutorialTriggerScp096 && currentTarget.Role == RoleType.Tutorial:
                                         shouldRotate = true;
                                         break;

@@ -1,12 +1,10 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NPCS.Actions
 {
-    class FollowAction : NodeAction
+    internal class FollowAction : NodeAction
     {
         public override string Name => "FollowAction";
 

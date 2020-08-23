@@ -27,7 +27,7 @@ namespace NPCS.Navigation
 
         private List<NavigationNode> linked_nodes = new List<NavigationNode>();
 
-        public static Dictionary<string,NavigationNode> AllNodes = new Dictionary<string, NavigationNode>();
+        public static Dictionary<string, NavigationNode> AllNodes = new Dictionary<string, NavigationNode>();
 
         public static void Create(Vector3 pos, string name = "DefaultNavNode")
         {
@@ -46,7 +46,6 @@ namespace NPCS.Navigation
             {
                 Object.Destroy(navnode);
             }
-
         }
 
         public static NavigationNode Get(string name)
