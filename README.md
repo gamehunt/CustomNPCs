@@ -9,8 +9,6 @@ Known Issues:
 
 Todo:
 
-- **Merge Npc and NPCComponent**
-
 - Add more events
 
 - Better nav system
