@@ -75,10 +75,9 @@ namespace NPCS
 
         public void OnDecontamination(DecontaminatingEventArgs ev)
         {
-            Npc intr = null;
             foreach (Npc component in UnityEngine.Object.FindObjectsOfType<Npc>())
             {
-                component.FireEvent(new NPCDecontaminationEvent(intr, null));
+                component.FireEvent(new NPCDecontaminationEvent(component, null));
             }
         }
     }
