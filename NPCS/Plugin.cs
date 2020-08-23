@@ -72,6 +72,7 @@ namespace NPCS
                 Handlers.Server.RoundEnded += EventHandlers.OnRoundEnd;
 
                 Handlers.Player.Died += EventHandlers.OnDied;
+                Handlers.Player.EnteringPocketDimension += EventHandlers.OnEnteringPocketDim;
 
                 Handlers.Map.ExplodingGrenade += EventHandlers.OnGrenadeExplosion;
                 Handlers.Map.Decontaminating += EventHandlers.OnDecontamination;
@@ -158,6 +159,7 @@ namespace NPCS
             Handlers.Server.RoundEnded -= EventHandlers.OnRoundEnd;
 
             Handlers.Player.Died -= EventHandlers.OnDied;
+            Handlers.Player.EnteringPocketDimension -= EventHandlers.OnEnteringPocketDim;
 
             Handlers.Map.ExplodingGrenade -= EventHandlers.OnGrenadeExplosion;
             Handlers.Map.Decontaminating -= EventHandlers.OnDecontamination;

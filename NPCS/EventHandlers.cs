@@ -61,6 +61,18 @@ namespace NPCS
             }
         }
 
+        public void OnEnteringPocketDim(EnteringPocketDimensionEventArgs ev)
+        {
+            Npc npc = ev.Player.GameObject.GetComponent<Npc>();
+            if (npc != null)
+            {
+                if (npc.NPCPlayer.IsGodModeEnabled)
+                {
+                    ev.IsAllowed = false;
+                }
+            }
+        }
+
         public void OnDecontamination(DecontaminatingEventArgs ev)
         {
             Npc intr = null;

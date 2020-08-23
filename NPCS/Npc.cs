@@ -180,6 +180,7 @@ namespace NPCS
                     }
                     else
                     {
+                        FireEvent(new NPCFollowTargetDiedEvent(this,FollowTarget));
                         FollowTarget = null;
                     }
                 }
