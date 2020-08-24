@@ -21,13 +21,11 @@ namespace NPCS.Commands
             {
                 Player s = Player.Get(player.PlayerId);
                 bool flag = false;
-                Npc[] npcs = UnityEngine.Object.FindObjectsOfType<Npc>();
-                foreach (Npc npc in npcs)
+                foreach (Npc obj_npc in Npc.List)
                 {
-                    Npc obj_npc = npc;
                     if (!obj_npc.IsActionLocked && !(obj_npc.IsExclusive && obj_npc.IsLocked))
                     {
-                        if (Vector3.Distance(npc.NPCPlayer.Position, s.Position) < 3f)
+                        if (Vector3.Distance(obj_npc.NPCPlayer.Position, s.Position) < 3f)
                         {
                             obj_npc.TalkWith(s);
                             flag = true;

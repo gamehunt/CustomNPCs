@@ -106,6 +106,8 @@ namespace NPCS
             RIGHT
         };
 
+        public static List<Npc> List { get; } = new List<Npc>();
+
         public Player NPCPlayer { get; set; }
 
         public TalkNode RootNode { get; set; }
@@ -438,7 +440,7 @@ namespace NPCS
             {
                 gameObject.GetComponent<RagdollManager>().SpawnRagdoll(gameObject.transform.position, gameObject.transform.rotation, Vector3.zero, (int)NPCPlayer.Role, new PlayerStats.HitInfo(), false, "", Name, 9999);
             }
-            UnityEngine.Object.Destroy(this);
+            UnityEngine.Object.Destroy(NPCPlayer.GameObject);
         }
 
         public void FireEvent(NPCEvent ev)
@@ -455,6 +457,7 @@ namespace NPCS
 
         private void OnDestroy()
         {
+            List.Remove(this);
             Timing.KillCoroutines(MovementCoroutines);
             Timing.KillCoroutines(AttachedCoroutines);
             Log.Debug("Destroyed NPC component", Plugin.Instance.Config.VerboseOutput);
@@ -466,6 +469,7 @@ namespace NPCS
             AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
             AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
+            List.Add(this);
             Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
         }
     }

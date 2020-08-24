@@ -22,9 +22,8 @@ namespace NPCS.Commands
                 Player s = Player.Get(player.PlayerId);
                 if (arguments.Count == 1)
                 {
-                    Npc[] npcs = UnityEngine.Object.FindObjectsOfType<Npc>();
                     bool flag = false;
-                    foreach (Npc npc in npcs)
+                    foreach (Npc npc in Npc.List)
                     {
                         if (Vector3.Distance(npc.NPCPlayer.Position, s.Position) < 3f)
                         {

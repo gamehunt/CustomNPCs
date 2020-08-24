@@ -4,6 +4,7 @@ using MEC;
 using NPCS.Events;
 using NPCS.Harmony;
 using NPCS.Navigation;
+using System.Collections.Generic;
 
 namespace NPCS
 {
@@ -20,8 +21,8 @@ namespace NPCS
 
         public void OnRoundEnd(RoundEndedEventArgs ev)
         {
-            Npc[] npcs = UnityEngine.Object.FindObjectsOfType<Npc>();
-            foreach (Npc npc in npcs)
+            List<Npc> list = Npc.List;
+            foreach (Npc npc in list)
             {
                 npc.Kill(false);
             }
@@ -75,7 +76,7 @@ namespace NPCS
 
         public void OnDecontamination(DecontaminatingEventArgs ev)
         {
-            foreach (Npc component in UnityEngine.Object.FindObjectsOfType<Npc>())
+            foreach (Npc component in Npc.List)
             {
                 component.FireEvent(new NPCDecontaminationEvent(component, null));
             }
