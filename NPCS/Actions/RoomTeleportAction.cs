@@ -2,13 +2,12 @@
 using NPCS.Talking;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 using System.Linq;
 
 namespace NPCS.Actions
 {
-    class RoomTeleportAction: NodeAction
+    internal class RoomTeleportAction : NodeAction
     {
         public override string Name => "RoomTeleportAction";
 

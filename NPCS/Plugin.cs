@@ -58,7 +58,8 @@ namespace NPCS
                     else if (bas.Name.Equals("BanUser"))
                     {
                         Exiled.Events.Events.DisabledPatches.Add(bas);
-                    }else if (bas.Name.Equals("CallCmdShoot"))
+                    }
+                    else if (bas.Name.Equals("CallCmdShoot"))
                     {
                         Exiled.Events.Events.DisabledPatches.Add(bas);
                     }
@@ -139,6 +140,8 @@ namespace NPCS
                 NodeAction.Register(new Actions.RotationAction());
                 NodeAction.Register(new Actions.RoundEndAction());
                 NodeAction.Register(new Actions.CassieAction());
+                NodeAction.Register(new Actions.RoomTeleportAction());
+                NodeAction.Register(new Actions.RoomSelfTeleportAction());
                 NodeAction.Register(new Actions.DropItemAction());
                 NodeAction.Register(new Actions.NavEnqueueAction());
                 NodeAction.Register(new Actions.NavClearAction());

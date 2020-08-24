@@ -16,7 +16,6 @@ namespace NPCS
         public bool DisplayNpcInPlayerList { get; set; } = false;
 
         [Description("If false NPCs will be cleaned if they are alone on server")]
-
         public bool AllowAloneNpcs { get; set; } = true;
 
         public static string NPCs_root_path = Path.Combine(Paths.Configs, "npcs");

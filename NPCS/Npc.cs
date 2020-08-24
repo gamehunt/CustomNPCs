@@ -284,22 +284,29 @@ namespace NPCS
 
         private IEnumerator<float> StartTalkCoroutine(Player p)
         {
-            IsLocked = true;
-            LockHandler = p;
-            TalkingStates.Add(p, RootNode);
-            bool end = RootNode.Send(Name, p);
-            IsActionLocked = true;
-            foreach (NodeAction action in RootNode.Actions.Keys)
+            if (TalkingStates.ContainsKey(p))
             {
-                action.Process(this, p, RootNode.Actions[action]);
-                yield return Timing.WaitForSeconds(float.Parse(RootNode.Actions[action]["next_action_delay"].Replace('.', ',')));
+                p.SendConsoleMessage($"[{Name}] We are already talking!", "yellow");
             }
-            IsActionLocked = false;
-            if (end)
+            else
             {
-                TalkingStates.Remove(p);
-                p.SendConsoleMessage(Name + " ended talk", "yellow");
-                IsLocked = false;
+                IsLocked = true;
+                LockHandler = p;
+                TalkingStates.Add(p, RootNode);
+                bool end = RootNode.Send(Name, p);
+                IsActionLocked = true;
+                foreach (NodeAction action in RootNode.Actions.Keys)
+                {
+                    action.Process(this, p, RootNode.Actions[action]);
+                    yield return Timing.WaitForSeconds(float.Parse(RootNode.Actions[action]["next_action_delay"].Replace('.', ',')));
+                }
+                IsActionLocked = false;
+                if (end)
+                {
+                    TalkingStates.Remove(p);
+                    p.SendConsoleMessage(Name + " ended talk", "yellow");
+                    IsLocked = false;
+                }
             }
         }
 
