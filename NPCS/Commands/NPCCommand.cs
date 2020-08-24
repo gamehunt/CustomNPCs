@@ -54,13 +54,7 @@ namespace NPCS.Commands
 
                         if (arguments.Count == 1)
                         {
-                            Npc npc = Methods.CreateNPC(s.Position, s.Rotations, "default_npc.yml");
-                            Timing.CallDelayed(0.5f, () =>
-                            {
-                                npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(s.GameObject, "HEAD", npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, s.Position);
-                                npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(s.GameObject, "HEAD", npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, s.Position);
-                                npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(s.GameObject, "HEAD", npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, s.Position);
-                            });
+                            Methods.CreateNPC(s.Position, s.Rotations, "default_npc.yml");
                         }
                         else if (arguments.Count == 2)
                         {
