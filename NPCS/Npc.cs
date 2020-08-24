@@ -128,11 +128,11 @@ namespace NPCS
         {
             get
             {
-                return NPCPlayer.ReferenceHub.inventory.curItem;
+                return NPCPlayer.Inventory.curItem;
             }
             set
             {
-                NPCPlayer.ReferenceHub.inventory.SetCurItem(value);
+                NPCPlayer.Inventory.curItem = value;
             }
         }
 
@@ -173,14 +173,14 @@ namespace NPCS
                     if (FollowTarget.IsAlive)
                     {
                         GoTo(FollowTarget.Position);
-                        if(Vector3.Distance(FollowTarget.Position,NPCPlayer.Position) >= 15f)
+                        if (Vector3.Distance(FollowTarget.Position, NPCPlayer.Position) >= 15f)
                         {
                             NPCPlayer.Position = FollowTarget.Position;
                         }
                     }
                     else
                     {
-                        FireEvent(new NPCFollowTargetDiedEvent(this,FollowTarget));
+                        FireEvent(new NPCFollowTargetDiedEvent(this, FollowTarget));
                         FollowTarget = null;
                     }
                 }
