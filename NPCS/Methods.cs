@@ -27,7 +27,7 @@ namespace NPCS
             obj.GetComponent<QueryProcessor>().NetworkPlayerId = QueryProcessor._idIterator++;
             obj.GetComponent<QueryProcessor>()._ipAddress = "127.0.0.WAN";
 
-            if (Plugin.Instance.Config.DisplayNPCInPlayerList)
+            if (Plugin.Instance.Config.DisplayNpcInPlayerList)
             {
                 ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
             }
@@ -48,7 +48,7 @@ namespace NPCS
 
             Player.IdsCache.Add(ply_obj.Id, ply_obj);
 
-            if (Plugin.Instance.Config.DisplayNPCInPlayerList)
+            if (Plugin.Instance.Config.DisplayNpcInPlayerList)
             {
                 Player.UserIdsCache.Add(ccm._privUserId, ply_obj);
             }

@@ -40,7 +40,14 @@ namespace NPCS.Harmony
 
                 if (Vector3.Distance(__instance.camera.transform.position, sourcePos) > 6.5)
                 {
-                    __instance.GetComponent<CharacterClassManager>().TargetConsolePrint(__instance.connectionToClient, "Shot rejected - Code 2.2 (difference between real source position and provided source position is too big)", "gray");
+                    if (!is_npc)
+                    {
+                        __instance.GetComponent<CharacterClassManager>().TargetConsolePrint(__instance.connectionToClient, "Shot rejected - Code 2.2 (difference between real source position and provided source position is too big)", "gray");
+                    }
+                    else
+                    {
+                        Log.Debug("NPC Shot rejected - Code 2.2 (difference between real source position and provided source position is too big)", Plugin.Instance.Config.VerboseOutput);
+                    }
                 }
                 else
                 {

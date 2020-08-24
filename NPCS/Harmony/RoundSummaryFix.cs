@@ -22,9 +22,24 @@ namespace NPCS.Harmony
             RoundSummary roundSummary = instance;
             while (roundSummary != null)
             {
-                int count = PlayerManager.players.Count(p => p.GetComponent<Npc>() == null);
+                int count = PlayerManager.players.Count - Npc.List.Count;
                 while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || ((roundSummary._keepRoundOnOne && count < 2) && !__npc_endRequested))
+                {
+                    if (!Plugin.Instance.Config.AllowAloneNpcs)
+                    {
+                        //Exiled.API.Features.Log.Debug($"Trying to clean up NPCs: {count} real player count, {Npc.List.Count} - npcs count", Plugin.Instance.Config.VerboseOutput);
+                        if (count == 0 && Npc.List.Count > 0)
+                        {
+                            List<Npc> list = Npc.List;
+                            foreach (Npc n in list)
+                            {
+                                n.Kill(false);
+                            }
+                        }
+                    }
+                    count = PlayerManager.players.Count - Npc.List.Count;
                     yield return 0.0f;
+                }
                 yield return 0.0f;
                 RoundSummary.SumInfo_ClassList newList = default;
                 foreach (GameObject player in PlayerManager.players)
