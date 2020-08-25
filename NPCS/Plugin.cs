@@ -163,6 +163,9 @@ namespace NPCS
         {
             harmony.UnpatchAll();
 
+            NodeCondition.Clear();
+            NodeAction.Clear();
+
             Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Handlers.Server.RoundEnded -= EventHandlers.OnRoundEnd;
             Handlers.Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
@@ -178,6 +181,8 @@ namespace NPCS
 
         public override void OnReloaded()
         {
+            NodeCondition.Clear();
+            NodeAction.Clear();
         }
     }
 }

@@ -9,8 +9,6 @@ namespace NPCS.Navigation
     {
         public int Priority { get; set; } = 100;
 
-        public int Order { get; set; } = 0;
-
         public Vector3 Position
         {
             get

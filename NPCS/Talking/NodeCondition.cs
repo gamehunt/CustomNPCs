@@ -28,5 +28,11 @@ namespace NPCS.Talking
             registry.Add(cond.Name, cond);
             Log.Debug($"Registered condition token: {cond.Name}", Plugin.Instance.Config.VerboseOutput);
         }
+
+        public static void Clear()
+        {
+            Log.Debug($"Clearing condition registries...", Plugin.Instance.Config.VerboseOutput);
+            registry.Clear();
+        }
     }
 }
