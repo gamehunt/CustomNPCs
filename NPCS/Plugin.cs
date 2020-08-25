@@ -70,10 +70,11 @@ namespace NPCS
                 harmony = new HarmonyLib.Harmony("gamehunt.cnpcs");
                 harmony.PatchAll();
 
-                EventHandlers = new EventHandlers(this);
+                EventHandlers = new EventHandlers();
 
                 Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
                 Handlers.Server.RoundEnded += EventHandlers.OnRoundEnd;
+                Handlers.Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
 
                 Handlers.Player.Died += EventHandlers.OnDied;
                 Handlers.Player.EnteringPocketDimension += EventHandlers.OnEnteringPocketDim;
@@ -164,6 +165,7 @@ namespace NPCS
 
             Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Handlers.Server.RoundEnded -= EventHandlers.OnRoundEnd;
+            Handlers.Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
 
             Handlers.Player.Died -= EventHandlers.OnDied;
             Handlers.Player.EnteringPocketDimension -= EventHandlers.OnEnteringPocketDim;

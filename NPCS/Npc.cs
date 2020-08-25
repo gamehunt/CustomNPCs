@@ -150,7 +150,7 @@ namespace NPCS
 
         public Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>> Events { get; } = new Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>>();
 
-        public Queue<NavigationNode> NavigationQueue { get; } = new Queue<NavigationNode>();
+        public Queue<NavigationNode> NavigationQueue { get; private set; } = new Queue<NavigationNode>();
 
         public NavigationNode CurrentNavTarget { get; set; } = null;
 
@@ -423,6 +423,99 @@ namespace NPCS
         }
 
         #endregion Movement
+
+        #region Navigation
+
+        private bool TryProcessNode(NavigationNode target, NavigationNode current, ref Stack<NavigationNode> queue, ref HashSet<NavigationNode> visited_nodes)
+        {
+            queue.Push(current);
+            visited_nodes.Add(current);
+            //Log.Debug($"Way builder: in node {current.Name}");
+            foreach (NavigationNode node in current.LinkedNodes)
+            {
+                if (node == target)
+                {
+                    queue.Push(node);
+                    return true;
+                }
+                if(visited_nodes.Contains(node))
+                {
+                    continue;
+                }
+                else if (node.LinkedNodes.Count > 0)
+                {
+                    if (TryProcessNode(target, node, ref queue, ref visited_nodes))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    Log.Debug($"No links on node: {node.Name}");
+                }
+            }
+            queue.Pop();
+            return false;
+        }
+
+        public void GotoRoom(Room r)
+        {
+            NavigationNode target_node = NavigationNode.FromRoom(r);
+            if (target_node != null)
+            {
+                NavigationNode nearest_node = null;
+                float min_dist = float.MaxValue;
+                foreach (NavigationNode node in NavigationNode.AllNodes.Values)
+                {
+                    if (node.LinkedNodes.Count > 0)
+                    {
+                        float new_dist = Vector3.Distance(NPCPlayer.Position, node.Position);
+                        if (new_dist < min_dist)
+                        {
+                            min_dist = new_dist;
+                            nearest_node = node;
+                        }
+                    }
+                }
+                if (nearest_node != null)
+                {
+                    Log.Info($"Selected nearest node: {nearest_node.Name}");
+                    if (nearest_node == target_node)
+                    {
+                        GoTo(target_node.Position);
+                    }
+                    else
+                    {
+                        Stack<NavigationNode> new_nav_queue = new Stack<NavigationNode>();
+                        HashSet<NavigationNode> visited = new HashSet<NavigationNode>();
+                        if (!TryProcessNode(target_node, nearest_node, ref new_nav_queue, ref visited))
+                        {
+                            Log.Error("[NAV] Failed to build way");
+                        }
+                        else
+                        {
+                            Log.Debug("Built way:",Plugin.Instance.Config.VerboseOutput);
+                            NavigationQueue.Clear();
+                            List<NavigationNode> reversed_stack = new_nav_queue.Reverse().ToList();
+                            foreach(NavigationNode node in reversed_stack){
+                                Log.Debug(node.Name, Plugin.Instance.Config.VerboseOutput);
+                                NavigationQueue.Enqueue(node);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Log.Error("[NAV] Failed to find nearest navnode");
+                }
+            }
+            else
+            {
+                Log.Error("[NAV] Specified room has null navnode");
+            }
+        }
+
+        #endregion Navigation
 
         public void TalkWith(Player p)
         {
