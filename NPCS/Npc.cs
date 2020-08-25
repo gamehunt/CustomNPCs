@@ -192,6 +192,10 @@ namespace NPCS
                     {
                         CurrentNavTarget = NavigationQueue.Dequeue();
                         yield return Timing.WaitForSeconds(GoTo(CurrentNavTarget.Position) + 0.1f);
+                        if(NPCPlayer.Position != CurrentNavTarget.Position)
+                        {
+                            NPCPlayer.Position = CurrentNavTarget.Position;
+                        }
                         CurrentNavTarget = null;
                     }
                 }
@@ -482,7 +486,7 @@ namespace NPCS
                     Log.Info($"Selected nearest node: {nearest_node.Name}");
                     if (nearest_node == target_node)
                     {
-                        GoTo(target_node.Position);
+                        NavigationQueue.Enqueue(target_node);
                     }
                     else
                     {
