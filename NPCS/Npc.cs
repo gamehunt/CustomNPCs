@@ -500,7 +500,7 @@ namespace NPCS
                         {
                             Log.Debug("Built way:",Plugin.Instance.Config.VerboseOutput);
                             NavigationQueue.Clear();
-                            List<NavigationNode> reversed_stack = new_nav_queue.Reverse().ToList();
+                            IEnumerable<NavigationNode> reversed_stack = new_nav_queue.Reverse();
                             foreach(NavigationNode node in reversed_stack){
                                 Log.Debug(node.Name, Plugin.Instance.Config.VerboseOutput);
                                 NavigationQueue.Enqueue(node);
