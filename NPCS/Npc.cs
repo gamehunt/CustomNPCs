@@ -191,11 +191,17 @@ namespace NPCS
                     if (!NavigationQueue.IsEmpty())
                     {
                         CurrentNavTarget = NavigationQueue.Dequeue();
-                        yield return Timing.WaitForSeconds(GoTo(CurrentNavTarget.Position) + 0.1f);
-                        if(NPCPlayer.Position != CurrentNavTarget.Position)
+                        if(CurrentNavTarget.AttachedDoor != null)
                         {
-                            NPCPlayer.Position = CurrentNavTarget.Position;
+                            yield return Timing.WaitForSeconds(GoTo(CurrentNavTarget.Position) - 0.5f);
+                            CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
+                            yield return Timing.WaitForSeconds(0.6f);
                         }
+                        else
+                        {
+                            yield return Timing.WaitForSeconds(GoTo(CurrentNavTarget.Position) + 0.1f);
+                        }
+
                         CurrentNavTarget = null;
                     }
                 }
@@ -442,7 +448,7 @@ namespace NPCS
                     queue.Push(node);
                     return true;
                 }
-                if(visited_nodes.Contains(node))
+                if (visited_nodes.Contains(node))
                 {
                     continue;
                 }
@@ -498,10 +504,11 @@ namespace NPCS
                         }
                         else
                         {
-                            Log.Debug("Built way:",Plugin.Instance.Config.VerboseOutput);
+                            Log.Debug("Built way:", Plugin.Instance.Config.VerboseOutput);
                             NavigationQueue.Clear();
                             IEnumerable<NavigationNode> reversed_stack = new_nav_queue.Reverse();
-                            foreach(NavigationNode node in reversed_stack){
+                            foreach (NavigationNode node in reversed_stack)
+                            {
                                 Log.Debug(node.Name, Plugin.Instance.Config.VerboseOutput);
                                 NavigationQueue.Enqueue(node);
                             }

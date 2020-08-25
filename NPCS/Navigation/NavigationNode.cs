@@ -27,6 +27,8 @@ namespace NPCS.Navigation
 
         public List<NavigationNode> LinkedNodes = new List<NavigationNode>();
 
+        public Door AttachedDoor { get; set; }
+
         public static Dictionary<string, NavigationNode> AllNodes = new Dictionary<string, NavigationNode>();
 
         public static NavigationNode Create(Vector3 pos, string name = "DefaultNavNode")
