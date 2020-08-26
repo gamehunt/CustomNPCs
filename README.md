@@ -5,7 +5,7 @@ For usage instructions see https://github.com/gamehunt/CustomNPCs/wiki/Get-start
 
 Known Issues:
 
- - Navigation is really stupid. Botz can't go in servers, they dont known about any stairs
+ - Navigation is really stupid. Botz can't go in servers, they dont know about any stairs
 
 Todo:
 
