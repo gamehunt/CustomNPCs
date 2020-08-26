@@ -116,11 +116,7 @@ namespace NPCS
         {
             get
             {
-                return NPCPlayer.ReferenceHub.nicknameSync.Network_myNickSync;
-            }
-            set
-            {
-                NPCPlayer.ReferenceHub.nicknameSync.Network_myNickSync = value;
+                return NPCPlayer.Nickname;
             }
         }
 
