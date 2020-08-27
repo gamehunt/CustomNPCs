@@ -559,6 +559,7 @@ namespace NPCS
             try
             {
                 ev.FireActions(Events[ev.Name]);
+                ev.OnFired(this);
             }
             catch (KeyNotFoundException)
             {

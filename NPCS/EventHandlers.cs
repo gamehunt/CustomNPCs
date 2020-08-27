@@ -55,6 +55,26 @@ namespace NPCS
             NavigationNode.Clear();
         }
 
+        public void OnWarheadStart(StartingEventArgs ev)
+        {
+            List<Npc> list = Npc.List;
+            foreach (Npc npc in list)
+            {
+                NPCWarheadStartedEvent nev = new NPCWarheadStartedEvent(npc, ev.Player);
+                npc.AttachedCoroutines.Add(Timing.CallDelayed(0.1f , () => npc.FireEvent(nev)));
+            }
+        }
+
+        public void OnTeamRespawning(RespawningTeamEventArgs ev)
+        {
+            List<Npc> list = Npc.List;
+            foreach (Npc npc in list)
+            {
+                NPCTeamRespawnEvent nev = new NPCTeamRespawnEvent(npc, null, ev.NextKnownTeam);
+                npc.FireEvent(nev);
+            }
+        }
+
         public void OnDied(DiedEventArgs ev)
         {
             Npc cmp = ev.Target.GameObject.GetComponent<Npc>();

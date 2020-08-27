@@ -75,12 +75,15 @@ namespace NPCS
                 Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
                 Handlers.Server.RoundEnded += EventHandlers.OnRoundEnd;
                 Handlers.Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
+                Handlers.Server.RespawningTeam += EventHandlers.OnTeamRespawning;
 
                 Handlers.Player.Died += EventHandlers.OnDied;
                 Handlers.Player.EnteringPocketDimension += EventHandlers.OnEnteringPocketDim;
 
                 Handlers.Map.ExplodingGrenade += EventHandlers.OnGrenadeExplosion;
                 Handlers.Map.Decontaminating += EventHandlers.OnDecontamination;
+
+                Handlers.Warhead.Starting += EventHandlers.OnWarheadStart;
 
                 if (!Directory.Exists(Config.NPCs_root_path))
                 {
@@ -151,6 +154,7 @@ namespace NPCS
                 NodeAction.Register(new Actions.FireEventAction());
                 NodeAction.Register(new Actions.ShootAction());
                 NodeAction.Register(new Actions.GoToRoomAction());
+                NodeAction.Register(new Actions.ControlDoorAction());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }
@@ -170,12 +174,15 @@ namespace NPCS
             Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Handlers.Server.RoundEnded -= EventHandlers.OnRoundEnd;
             Handlers.Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
+            Handlers.Server.RespawningTeam -= EventHandlers.OnTeamRespawning;
 
             Handlers.Player.Died -= EventHandlers.OnDied;
             Handlers.Player.EnteringPocketDimension -= EventHandlers.OnEnteringPocketDim;
 
             Handlers.Map.ExplodingGrenade -= EventHandlers.OnGrenadeExplosion;
             Handlers.Map.Decontaminating -= EventHandlers.OnDecontamination;
+
+            Handlers.Warhead.Starting -= EventHandlers.OnWarheadStart;
 
             EventHandlers = null;
         }
