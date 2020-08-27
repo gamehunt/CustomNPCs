@@ -86,6 +86,15 @@ namespace NPCS
             }
         }
 
+        public void OnHurt(HurtingEventArgs ev)
+        {
+            Npc npc = ev.Target.GameObject.GetComponent<Npc>();
+            if (npc != null)
+            {
+                npc.FireEvent(new NPCHurtEvent(npc, ev.Attacker));
+            }
+        }
+
         public void OnGrenadeExplosion(ExplodingGrenadeEventArgs ev)
         {
             foreach (Player p in ev.TargetToDamages.Keys)
@@ -96,6 +105,7 @@ namespace NPCS
                     if (!component.NPCPlayer.IsGodModeEnabled)
                     {
                         p.Health -= ev.TargetToDamages[p];
+                        component.FireEvent(new NPCHurtEvent(component, ev.Thrower));
                         if (p.Health <= 0f)
                         {
                             NPCDiedEvent npc_ev = new NPCDiedEvent(component, ev.Thrower);

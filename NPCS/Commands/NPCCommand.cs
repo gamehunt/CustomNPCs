@@ -198,15 +198,17 @@ namespace NPCS.Commands
                         npc_obj.Follow(p);
                         response = "Navigating npc to player!";
                         break;
+
                     case "room":
                         npc_obj = Npc.List[int.Parse(arguments.At(1))];
                         Room r = Map.Rooms.Where(rm => rm.Name.Equals(arguments.At(2), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                        if(r != null)
+                        if (r != null)
                         {
                             npc_obj.GotoRoom(r);
                         }
                         response = "Tested it out!";
                         break;
+
                     default:
                         response = "Unknown sub-command!";
                         return false;
