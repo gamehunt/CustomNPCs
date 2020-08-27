@@ -171,7 +171,7 @@ namespace NPCS
                     if (FollowTarget.IsAlive)
                     {
                         GoTo(FollowTarget.Position);
-                        if (Vector3.Distance(FollowTarget.Position, NPCPlayer.Position) >= 15f)
+                        if (Vector3.Distance(FollowTarget.Position, NPCPlayer.Position) >= Plugin.Instance.Config.MaxFollowDistance)
                         {
                             NPCPlayer.Position = FollowTarget.Position;
                         }

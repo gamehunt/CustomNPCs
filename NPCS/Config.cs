@@ -18,6 +18,9 @@ namespace NPCS
         [Description("If false NPCs will be cleaned if they are alone on server")]
         public bool AllowAloneNpcs { get; set; } = true;
 
+        [Description("Maximum distance between NPC and follow target. If it's reached NPC will tp to target")]
+        public float MaxFollowDistance { get; set; } = 15f;
+
         public static string NPCs_root_path = Path.Combine(Paths.Configs, "npcs");
 
         public static string NPCs_nodes_path = Path.Combine(NPCs_root_path, "nodes");
