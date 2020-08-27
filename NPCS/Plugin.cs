@@ -122,6 +122,7 @@ namespace NPCS
                 NodeCondition.Register(new HeldItemCondition());
                 NodeCondition.Register(new RoleExistsCondition());
                 NodeCondition.Register(new RoleNotExistsCondition());
+                NodeCondition.Register(new RandomCondition());
 
                 Log.Info("Registering actions...");
 
