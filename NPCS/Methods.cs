@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Features;
 using MEC;
 using Mirror;
+using NPCS.Events;
 using NPCS.Talking;
 using RemoteAdmin;
 using System;
@@ -63,6 +64,12 @@ namespace NPCS
                 npcc.NPCPlayer.Position = pos;
                 npcc.NPCPlayer.Rotations = rot;
             }));
+
+            npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.4f, () =>
+            {
+                npcc.FireEvent(new NPCOnCreatedEvent(npcc, null));
+            }));
+
 
             return npcc;
         }
