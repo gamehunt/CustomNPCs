@@ -187,7 +187,7 @@ namespace NPCS
                     if (!NavigationQueue.IsEmpty())
                     {
                         CurrentNavTarget = NavigationQueue.Dequeue();
-                        if(CurrentNavTarget.AttachedDoor != null)
+                        if (CurrentNavTarget.AttachedDoor != null)
                         {
                             yield return Timing.WaitForSeconds(GoTo(CurrentNavTarget.Position) - 0.5f);
                             CurrentNavTarget.AttachedDoor.NetworkisOpen = true;

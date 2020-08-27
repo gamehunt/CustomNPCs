@@ -70,7 +70,6 @@ namespace NPCS
                 npcc.FireEvent(new NPCOnCreatedEvent(npcc, null));
             }));
 
-
             return npcc;
         }
 

@@ -44,7 +44,9 @@ namespace NPCS.Events
             NPC.IsActionLocked = false;
         }
 
-        public virtual void OnFired(Npc npc) { }
+        public virtual void OnFired(Npc npc)
+        {
+        }
 
         public void FireActions(Dictionary<NodeAction, Dictionary<string, string>> acts)
         {

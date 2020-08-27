@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace NPCS.Actions
 {
-    class ControlDoorAction : Talking.NodeAction
+    internal class ControlDoorAction : Talking.NodeAction
     {
         public override string Name => "ControlDoorAction";
 
@@ -20,18 +19,23 @@ namespace NPCS.Actions
                     case "lock":
                         d.Networklocked = true;
                         break;
+
                     case "ulock":
-                        d.Networklocked =false;
+                        d.Networklocked = false;
                         break;
+
                     case "open":
                         d.NetworkisOpen = true;
                         break;
+
                     case "close":
                         d.NetworkisOpen = false;
                         break;
+
                     case "destroy":
                         d.Networkdestroyed = true;
                         break;
+
                     default:
                         Log.Error($"Unknown door ctrl action {args["type"]}!");
                         break;

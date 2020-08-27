@@ -24,7 +24,7 @@ namespace NPCS
                 NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
                 foreach (Door d in r.GetDoors())
                 {
-                    if(d.gameObject.transform.position == Vector3.zero)
+                    if (d.gameObject.transform.position == Vector3.zero)
                     {
                         continue;
                     }
@@ -61,7 +61,7 @@ namespace NPCS
             foreach (Npc npc in list)
             {
                 NPCWarheadStartedEvent nev = new NPCWarheadStartedEvent(npc, ev.Player);
-                npc.AttachedCoroutines.Add(Timing.CallDelayed(0.1f , () => npc.FireEvent(nev)));
+                npc.AttachedCoroutines.Add(Timing.CallDelayed(0.1f, () => npc.FireEvent(nev)));
             }
         }
 
