@@ -75,6 +75,7 @@ namespace NPCS
 
         //NPC format
         //name: SomeName
+        //health: -1
         //role: 6
         //item_held: 24
         //root_node: default_node.yml
@@ -99,6 +100,14 @@ namespace NPCS
                     n.NPCPlayer.IsGodModeEnabled = true;
                 }
                 n.IsExclusive = bool.Parse((string)mapping.Children[new YamlScalarNode("is_exclusive")]);
+
+                int health = int.Parse((string)mapping.Children[new YamlScalarNode("health")]);
+
+                if (health > 0)
+                {
+                    n.NPCPlayer.MaxHealth = health;
+                    n.NPCPlayer.Health = health;
+                }
 
                 Log.Info("Parsing events...");
 
