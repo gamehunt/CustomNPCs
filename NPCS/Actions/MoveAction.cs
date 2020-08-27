@@ -38,7 +38,7 @@ namespace NPCS.Actions
                     npc.Move(Npc.MovementDirection.NONE);
                     break;
             }
-            npc.AttachedCoroutines.Add(Timing.CallDelayed(float.Parse(args["duration"].Replace('.', ',')), () => npc.Move(Npc.MovementDirection.NONE)));
+            npc.MovementCoroutines.Add(Timing.CallDelayed(float.Parse(args["duration"].Replace('.', ',')), () => npc.Move(Npc.MovementDirection.NONE)));
         }
     }
 }
