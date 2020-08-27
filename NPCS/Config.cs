@@ -37,6 +37,7 @@ next_nodes: []";
 @"---
 name: DEFAULT
 role: 6
+health: -1
 item_held: 24
 root_node: default_node.yml
 god_mode: true
