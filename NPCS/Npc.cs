@@ -304,7 +304,13 @@ namespace NPCS
                 foreach (NodeAction action in RootNode.Actions.Keys)
                 {
                     action.Process(this, p, RootNode.Actions[action]);
-                    yield return Timing.WaitForSeconds(float.Parse(RootNode.Actions[action]["next_action_delay"].Replace('.', ',')));
+                    float dur = 0;
+                    try
+                    {
+                        dur = float.Parse(RootNode.Actions[action]["next_action_delay"].Replace('.', ','));
+                    }
+                    catch (Exception) { }
+                    yield return Timing.WaitForSeconds(dur);
                 }
                 IsActionLocked = false;
                 if (end)
@@ -338,7 +344,13 @@ namespace NPCS
                             {
                                 Log.Error($"Exception during processing action {action.Name}: {e}");
                             }
-                            yield return Timing.WaitForSeconds(float.Parse(new_node.Actions[action]["next_action_delay"].Replace('.', ',')));
+                            float dur = 0;
+                            try
+                            {
+                                dur = float.Parse(new_node.Actions[action]["next_action_delay"].Replace('.', ','));
+                            }
+                            catch (Exception) { }
+                            yield return Timing.WaitForSeconds(dur);
                         }
                         IsActionLocked = false;
                         if (end)

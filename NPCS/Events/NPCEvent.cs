@@ -33,7 +33,13 @@ namespace NPCS.Events
                 {
                     Log.Error($"Exception during processing action {act.Name}: {e}");
                 }
-                yield return Timing.WaitForSeconds(float.Parse(acts[act]["next_action_delay"].Replace('.', ',')));
+                float dur = 0;
+                try
+                {
+                    dur = float.Parse(acts[act]["next_action_delay"].Replace('.', ','));
+                }
+                catch (Exception) { }
+                yield return Timing.WaitForSeconds(dur);
             }
             NPC.IsActionLocked = false;
         }
