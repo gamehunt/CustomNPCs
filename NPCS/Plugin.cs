@@ -164,6 +164,7 @@ namespace NPCS
                 AITarget.Register(new AITestTarget());
                 AITarget.Register(new AIFindTarget());
                 AITarget.Register(new AIShootTarget());
+                AITarget.Register(new AINavigateToRoom());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }
@@ -179,6 +180,7 @@ namespace NPCS
 
             NodeCondition.Clear();
             NodeAction.Clear();
+            AITarget.Clear();
 
             Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Handlers.Server.RoundEnded -= EventHandlers.OnRoundEnd;
@@ -201,6 +203,7 @@ namespace NPCS
         {
             NodeCondition.Clear();
             NodeAction.Clear();
+            AITarget.Clear();
         }
     }
 }

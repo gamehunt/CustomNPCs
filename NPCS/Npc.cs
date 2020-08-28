@@ -167,6 +167,8 @@ namespace NPCS
 
         public Player CurrentAIPlayerTarget { get; set; } = null;
 
+        public Room CurrentAIRoomTarget { get; set; } = null;
+
         #endregion Properties
 
         #region Coroutines
@@ -518,7 +520,7 @@ namespace NPCS
             return false;
         }
 
-        public void GotoNode(NavigationNode target_node)
+        public bool GotoNode(NavigationNode target_node)
         {
             NavigationNode nearest_node = null;
             float min_dist = float.MaxValue;
@@ -540,6 +542,7 @@ namespace NPCS
                 if (nearest_node == target_node)
                 {
                     NavigationQueue.Enqueue(target_node);
+                    return true;
                 }
                 else
                 {
@@ -548,6 +551,7 @@ namespace NPCS
                     if (!TryProcessNode(target_node, nearest_node, ref new_nav_queue, ref visited))
                     {
                         Log.Error("[NAV] Failed to build way");
+                        return false;
                     }
                     else
                     {
@@ -559,25 +563,28 @@ namespace NPCS
                             Log.Debug(node.Name, Plugin.Instance.Config.VerboseOutput);
                             NavigationQueue.Enqueue(node);
                         }
+                        return true;
                     }
                 }
             }
             else
             {
                 Log.Error("[NAV] Failed to find nearest navnode");
+                return false;
             }
         }
 
-        public void GotoRoom(Room r)
+        public bool GotoRoom(Room r)
         {
             NavigationNode target_node = NavigationNode.FromRoom(r);
             if (target_node != null)
             {
-                GotoNode(target_node);
+                return GotoNode(target_node);
             }
             else
             {
                 Log.Error("[NAV] Specified room has null navnode");
+                return false;
             }
         }
 
