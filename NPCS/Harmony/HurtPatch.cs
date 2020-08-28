@@ -11,7 +11,8 @@ namespace NPCS.Harmony
         private static bool Prefix(PlayerStats __instance, ref bool __result, global::PlayerStats.HitInfo info, GameObject go, bool noTeamDamage = false)
         {
             bool is_npc = __instance.GetComponent<Npc>() != null;
-            if (!is_npc)
+            bool is_shooter_npc = go.GetComponent<Npc>() != null;
+            if (!is_npc && !is_shooter_npc)
             {
                 return true;
             }
@@ -253,7 +254,10 @@ namespace NPCS.Harmony
                         component2.OverridePosition(Vector3.down * 1998.5f, 0f, true);
                     }
                 }
-                __instance.TargetBloodEffect(go.GetComponent<NetworkIdentity>().connectionToClient, pos, Mathf.Clamp01(info.Amount / num3));
+                if (!is_shooter_npc)
+                {
+                    __instance.TargetBloodEffect(go.GetComponent<NetworkIdentity>().connectionToClient, pos, Mathf.Clamp01(info.Amount / num3));
+                }
             }
             Respawning.RespawnTickets singleton = Respawning.RespawnTickets.Singleton;
             global::Team team = characterClassManager.CurRole.team;

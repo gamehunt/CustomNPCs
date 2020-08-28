@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using MEC;
+using NPCS.AI;
 using NPCS.Events;
 using NPCS.Navigation;
 using NPCS.Talking;
@@ -158,9 +159,51 @@ namespace NPCS
 
         public List<CoroutineHandle> MovementCoroutines { get; } = new List<CoroutineHandle>();
 
+        public bool AIEnabled { get; set; } = false;
+
+        public LinkedList<AITarget> AIQueue { get; private set; } = new LinkedList<AITarget>();
+
+        public AITarget CurrentAITarget { get; set; } = null;
+
+        public Player CurrentAIPlayerTarget { get; set; } = null;
+
         #endregion Properties
 
         #region Coroutines
+
+        private IEnumerator<float> AICoroutine()
+        {
+            for (; ; )
+            {
+                while (!AIEnabled)
+                {
+                    yield return 0f;
+                }
+                if (CurrentAITarget != null)
+                {
+                    if (CurrentAITarget.Check(this))
+                    {
+                        IsActionLocked = true;
+                        yield return Timing.WaitForSeconds(CurrentAITarget.Process(this));
+                        if (CurrentAITarget.IsFinished)
+                        {
+                            CurrentAITarget = null;
+                        }
+                        IsActionLocked = false;
+                    }
+                    else
+                    {
+                        CurrentAITarget = null;
+                    }
+                }
+                else if (!AIQueue.IsEmpty())
+                {
+                    CurrentAITarget = AIQueue.First.Value;
+                    AIQueue.RemoveFirst();
+                    AIQueue.AddLast(CurrentAITarget);
+                }
+            }
+        }
 
         private IEnumerator<float> NavCoroutine()
         {
@@ -593,6 +636,7 @@ namespace NPCS
             AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
             AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
+            AttachedCoroutines.Add(Timing.RunCoroutine(AICoroutine()));
             List.Add(this);
             Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
         }

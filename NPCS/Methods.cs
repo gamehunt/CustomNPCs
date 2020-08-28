@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Features;
 using MEC;
 using Mirror;
+using NPCS.AI;
 using NPCS.Events;
 using NPCS.Talking;
 using RemoteAdmin;
@@ -82,6 +83,8 @@ namespace NPCS
         //god_mode: false
         //is_exclusive: true
         //events: []
+        //ai_enabled: false
+        //ai: []
         public static Npc CreateNPC(Vector3 pos, Vector2 rot, string path)
         {
             try
@@ -137,6 +140,30 @@ namespace NPCS
                         }
                     }
                     n.Events.Add((string)event_node.Children[new YamlScalarNode("token")], actions_mapping);
+                }
+
+                n.AIEnabled = bool.Parse((string)mapping.Children[new YamlScalarNode("ai_enabled")]);
+
+                YamlSequenceNode ai_targets = (YamlSequenceNode)mapping.Children[new YamlScalarNode("ai")];
+
+                foreach (YamlMappingNode ai_node in ai_targets.Children)
+                {
+                    AI.AITarget act = AITarget.GetFromToken((string)ai_node.Children[new YamlScalarNode("token")]);
+                    if (act != null)
+                    {
+                        Log.Debug($"Recognized ai target: {act.Name}", Plugin.Instance.Config.VerboseOutput);
+                        var yml_args = (YamlMappingNode)ai_node.Children[new YamlScalarNode("args")];
+                        Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
+                        foreach (YamlScalarNode arg in yml_args.Children.Keys)
+                        {
+                            act.Arguments.Add((string)arg.Value, (string)yml_args.Children[arg]);
+                        }
+                        n.AIQueue.AddLast(act);
+                    }
+                    else
+                    {
+                        Log.Error($"Failed to parse ai node: {(string)ai_node.Children[new YamlScalarNode("token")]} (invalid token)");
+                    }
                 }
                 return n;
             }

@@ -1,5 +1,6 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
+using NPCS.AI;
 using NPCS.Conditions;
 using NPCS.Talking;
 using System;
@@ -157,6 +158,12 @@ namespace NPCS
                 NodeAction.Register(new Actions.ShootAction());
                 NodeAction.Register(new Actions.GoToRoomAction());
                 NodeAction.Register(new Actions.ControlDoorAction());
+
+                Log.Info("Registering AI targets...");
+
+                AITarget.Register(new AITestTarget());
+                AITarget.Register(new AIFindTarget());
+                AITarget.Register(new AIShootTarget());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }

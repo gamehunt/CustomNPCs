@@ -18,10 +18,6 @@ namespace NPCS.Events
 
         private IEnumerator<float> RunActions(Dictionary<NodeAction, Dictionary<string, string>> acts)
         {
-            while (NPC.IsActionLocked)
-            {
-                yield return 0f;
-            }
             NPC.IsActionLocked = true;
             foreach (NodeAction act in acts.Keys)
             {
@@ -50,7 +46,10 @@ namespace NPCS.Events
 
         public void FireActions(Dictionary<NodeAction, Dictionary<string, string>> acts)
         {
-            NPC.AttachedCoroutines.Add(Timing.RunCoroutine(RunActions(acts)));
+            if (!NPC.IsActionLocked)
+            {
+                NPC.AttachedCoroutines.Add(Timing.RunCoroutine(RunActions(acts)));
+            }
         }
 
         public Npc NPC

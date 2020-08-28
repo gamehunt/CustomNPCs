@@ -1,0 +1,33 @@
+﻿using UnityEngine;
+
+namespace NPCS.AI
+{
+    class AIShootTarget : AITarget
+    {
+        public override string Name => "AIShootTarget";
+
+        public override bool Check(Npc npc)
+        {
+            return npc.CurrentAIPlayerTarget != null && npc.CurrentAIPlayerTarget.IsAlive;
+        }
+
+        public override float Process(Npc npc)
+        {
+            if(npc.CurrentAIPlayerTarget == null || !npc.CurrentAIPlayerTarget.IsAlive || Physics.Linecast(npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+            {
+                IsFinished = true;
+                return 0f;
+            }
+            Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
+            Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
+            npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
+            npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(npc.CurrentAIPlayerTarget.GameObject, "HEAD", npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
+            return npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
+        }
+
+        protected override AITarget CreateInstance()
+        {
+            return new AIShootTarget();
+        }
+    }
+}

@@ -82,7 +82,7 @@ namespace NPCS
             {
                 NPCDiedEvent npc_ev = new NPCDiedEvent(cmp, ev.Killer);
                 cmp.FireEvent(npc_ev);
-                cmp.AttachedCoroutines.Add(Timing.RunCoroutine(Utils.CallOnUnlock(() => cmp.Kill(false), cmp)));
+                cmp.Kill(false);
             }
         }
 
@@ -92,6 +92,13 @@ namespace NPCS
             if (npc != null)
             {
                 npc.FireEvent(new NPCHurtEvent(npc, ev.Attacker));
+                npc.NPCPlayer.Health -= ev.Amount;
+                if (npc.NPCPlayer.Health <= 0f)
+                {
+                    NPCDiedEvent npc_ev = new NPCDiedEvent(npc, ev.Attacker);
+                    npc.FireEvent(npc_ev);
+                    npc.Kill(true);
+                }
             }
         }
 
@@ -110,7 +117,7 @@ namespace NPCS
                         {
                             NPCDiedEvent npc_ev = new NPCDiedEvent(component, ev.Thrower);
                             component.FireEvent(npc_ev);
-                            component.AttachedCoroutines.Add(Timing.RunCoroutine(Utils.CallOnUnlock(() => component.Kill(true), component)));
+                            component.Kill(true);
                         }
                     }
                 }
