@@ -257,7 +257,7 @@ namespace NPCS
                 List<Player> invalid_players = new List<Player>();
                 foreach (Player p in TalkingStates.Keys)
                 {
-                    if (!p.IsAlive || !Player.List.Contains(p))
+                    if (!p.IsAlive || !Player.Dictionary.ContainsKey(p.GameObject))
                     {
                         invalid_players.Add(p);
                     }

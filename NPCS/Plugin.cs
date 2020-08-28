@@ -165,6 +165,7 @@ namespace NPCS
                 AITarget.Register(new AIFindTarget());
                 AITarget.Register(new AIShootTarget());
                 AITarget.Register(new AINavigateToRoom());
+                AITarget.Register(new AIFollowTarget());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }
