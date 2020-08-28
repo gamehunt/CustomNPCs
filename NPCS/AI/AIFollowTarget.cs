@@ -2,7 +2,7 @@
 
 namespace NPCS.AI
 {
-    class AIFollowTarget : AITarget
+    internal class AIFollowTarget : AITarget
     {
         public override string Name => "AIFollowTarget";
 

@@ -1,17 +1,13 @@
 ﻿using Exiled.API.Features;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NPCS.AI
 {
-    class AITestTarget : AITarget
+    internal class AITestTarget : AITarget
     {
         public override string Name => "AITestTarget";
 
         public override bool Check(Npc npc)
         {
-
             return true;
         }
 

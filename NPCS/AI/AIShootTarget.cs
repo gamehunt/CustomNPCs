@@ -1,10 +1,9 @@
 ﻿using Exiled.API.Features;
-using System.Linq;
 using UnityEngine;
 
 namespace NPCS.AI
 {
-    class AIShootTarget : AITarget
+    internal class AIShootTarget : AITarget
     {
         public override string Name => "AIShootTarget";
 

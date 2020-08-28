@@ -1,13 +1,10 @@
 ﻿using Exiled.API.Features;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace NPCS.AI
 {
-    class AIFindTarget : AITarget
+    internal class AIFindTarget : AITarget
     {
         public override string Name => "AIFindTarget";
 
@@ -23,7 +20,7 @@ namespace NPCS.AI
             bool enemy = bool.Parse(Arguments["enemy"].Replace(".", ","));
             foreach (Player p in Player.List.Where(pl => (pl.Side != npc.NPCPlayer.Side || !enemy)))
             {
-                if(Vector3.Distance(p.Position,npc.NPCPlayer.Position) < range && !Physics.Linecast(npc.NPCPlayer.Position, p.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                if (Vector3.Distance(p.Position, npc.NPCPlayer.Position) < range && !Physics.Linecast(npc.NPCPlayer.Position, p.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                 {
                     npc.CurrentAIPlayerTarget = p;
                     return 0f;

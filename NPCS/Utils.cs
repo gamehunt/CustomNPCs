@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace NPCS
+﻿namespace NPCS
 {
     internal class Utils
     {
-
     }
 }
