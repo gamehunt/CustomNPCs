@@ -8,16 +8,11 @@ namespace NPCS.AI
 
         public override bool Check(Npc npc)
         {
-            return npc.CurrentAIPlayerTarget != null && npc.CurrentAIPlayerTarget.IsAlive;
+            return npc.CurrentAIPlayerTarget != null && npc.CurrentAIPlayerTarget.IsAlive && !Physics.Linecast(npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces);
         }
 
         public override float Process(Npc npc)
         {
-            if(npc.CurrentAIPlayerTarget == null || !npc.CurrentAIPlayerTarget.IsAlive || Physics.Linecast(npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
-            {
-                IsFinished = true;
-                return 0f;
-            }
             Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
             npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
