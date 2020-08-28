@@ -21,7 +21,7 @@ namespace NPCS.Harmony
                 {
                     issuerPlayer.RemoteAdminMessage("WTF U TRIED TO BAN NPC?", false, Plugin.Instance.Name);
                     issuerPlayer.ClearBroadcasts();
-                    issuerPlayer.Broadcast(2, "<color=red>DONT BAN OR KICK NPCs</color>");
+                    issuerPlayer.Broadcast(2, Plugin.Instance.Config.TranslationBanBroadcast);
                     return false;
                 }
 

@@ -36,11 +36,11 @@ namespace NPCS.Commands
                     {
                         if (obj_npc.IsLocked && obj_npc.LockHandler == s)
                         {
-                            s.SendConsoleMessage($"[{obj_npc.Name}] We are already talking!", "yellow");
+                            s.SendConsoleMessage($"[{obj_npc.Name}] {Plugin.Instance.Config.TranslationAlreadyTalking}", "yellow");
                         }
                         else
                         {
-                            s.SendConsoleMessage($"[{obj_npc.Name}] I'm busy, wait a second!", "yellow");
+                            s.SendConsoleMessage($"[{obj_npc.Name}] {Plugin.Instance.Config.TranslationNpcBusy}", "yellow");
                         }
                         response = null;
 
@@ -49,14 +49,14 @@ namespace NPCS.Commands
                 }
                 if (!flag)
                 {
-                    response = "NPCs not found!";
+                    response = Plugin.Instance.Config.TranslationNpcNotFound;
                     return false;
                 }
                 response = null;
             }
             else
             {
-                response = "Only players can use this!";
+                response = Plugin.Instance.Config.TranslationOnlyPlayers;
                 return false;
             }
 

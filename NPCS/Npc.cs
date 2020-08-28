@@ -292,7 +292,7 @@ namespace NPCS
         {
             if (TalkingStates.ContainsKey(p))
             {
-                p.SendConsoleMessage($"[{Name}] We are already talking!", "yellow");
+                p.SendConsoleMessage($"[{Name}] {Plugin.Instance.Config.TranslationAlreadyTalking}", "yellow");
             }
             else
             {
@@ -316,7 +316,7 @@ namespace NPCS
                 if (end)
                 {
                     TalkingStates.Remove(p);
-                    p.SendConsoleMessage(Name + " ended talk", "yellow");
+                    p.SendConsoleMessage(Name + $" {Plugin.Instance.Config.TranslationTalkEnd}", "yellow");
                     IsLocked = false;
                 }
             }
@@ -356,23 +356,23 @@ namespace NPCS
                         if (end)
                         {
                             TalkingStates.Remove(p);
-                            p.SendConsoleMessage(Name + " ended talk", "yellow");
+                            p.SendConsoleMessage(Name + $" {Plugin.Instance.Config.TranslationTalkEnd}", "yellow");
                             IsLocked = false;
                         }
                     }
                     else
                     {
-                        p.SendConsoleMessage("Invalid answer!", "red");
+                        p.SendConsoleMessage(Plugin.Instance.Config.TranslationInvalidAnswer, "red");
                     }
                 }
                 else
                 {
-                    p.SendConsoleMessage("Incorrect answer format!", "red");
+                    p.SendConsoleMessage(Plugin.Instance.Config.TranslationIncorrectFormat, "red");
                 }
             }
             else
             {
-                p.SendConsoleMessage("You aren't talking to this NPC!", "red");
+                p.SendConsoleMessage(Plugin.Instance.Config.TranslationNotTalking, "red");
             }
         }
 
@@ -553,7 +553,7 @@ namespace NPCS
             }
             else
             {
-                p.SendConsoleMessage($"[{Name}] I'm busy now, wait a second", "yellow");
+                p.SendConsoleMessage($"[{Name}] {Plugin.Instance.Config.TranslationNpcBusy}", "yellow");
             }
         }
 

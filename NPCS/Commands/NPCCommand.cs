@@ -206,7 +206,7 @@ namespace NPCS.Commands
                         {
                             npc_obj.GotoRoom(r);
                         }
-                        response = "Tested it out!";
+                        response = "Navigating npc to room!";
                         break;
 
                     default:

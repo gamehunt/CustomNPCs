@@ -34,7 +34,7 @@ namespace NPCS.Commands
                     }
                     if (!flag)
                     {
-                        response = "NPC not found!";
+                        response = Plugin.Instance.Config.TranslationNpcNotFound;
                     }
                     else
                     {
@@ -43,13 +43,13 @@ namespace NPCS.Commands
                 }
                 else
                 {
-                    response = "You must provide answer number!";
+                    response = Plugin.Instance.Config.TranslationAnswerNumber;
                     return false;
                 }
             }
             else
             {
-                response = "Only players can use this!";
+                response = Plugin.Instance.Config.TranslationOnlyPlayers;
                 return false;
             }
             return true;

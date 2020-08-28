@@ -21,9 +21,26 @@ namespace NPCS
         [Description("Maximum distance between NPC and follow target. If it's reached NPC will tp to target")]
         public float MaxFollowDistance { get; set; } = 15f;
 
+        //TRANSLATIONS
+
+        [Description("Localizations")]
+
+        public string TranslationAlreadyTalking { get; set; } = "We are already talking!";
+        public string TranslationNpcBusy { get; set; } = "I'm busy now, wait a second";
+        public string TranslationTalkEnd { get; set; } = "ended talk";
+        public string TranslationInvalidAnswer { get; set; } = "Invalid answer!";
+        public string TranslationIncorrectFormat { get; set; } = "Incorrect answer format!";
+        public string TranslationNotTalking { get; set; } = "You aren't talking to this NPC!";
+        public string TranslationNpcNotFound { get; set; } = "NPC not found!";
+        public string TranslationAnswerNumber { get; set; } = "You must provide answer number!";
+        public string TranslationOnlyPlayers { get; set; } = "Only players can use this!";
+        public string TranslationBanBroadcast { get; set; } = "<color=red>DONT BAN OR KICK NPCs</color>";
+
+
         public static string NPCs_root_path = Path.Combine(Paths.Configs, "npcs");
 
         public static string NPCs_nodes_path = Path.Combine(NPCs_root_path, "nodes");
+
 
         public static string DefaultNodeContents =
 @"---
