@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Exiled.API.Features;
+using System.Linq;
+using UnityEngine;
 
 namespace NPCS.AI
 {
@@ -8,7 +10,7 @@ namespace NPCS.AI
 
         public override bool Check(Npc npc)
         {
-            return npc.CurrentAIPlayerTarget != null && npc.CurrentAIPlayerTarget.IsAlive && !Physics.Linecast(npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces);
+            return npc.CurrentAIPlayerTarget != null && Player.List.Contains(npc.CurrentAIPlayerTarget) && npc.CurrentAIPlayerTarget.IsAlive && !Physics.Linecast(npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces);
         }
 
         public override float Process(Npc npc)

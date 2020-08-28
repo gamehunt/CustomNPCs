@@ -92,13 +92,6 @@ namespace NPCS
             if (npc != null)
             {
                 npc.FireEvent(new NPCHurtEvent(npc, ev.Attacker));
-                npc.NPCPlayer.Health -= ev.Amount;
-                if (npc.NPCPlayer.Health <= 0f)
-                {
-                    NPCDiedEvent npc_ev = new NPCDiedEvent(npc, ev.Attacker);
-                    npc.FireEvent(npc_ev);
-                    npc.Kill(true);
-                }
             }
         }
 
