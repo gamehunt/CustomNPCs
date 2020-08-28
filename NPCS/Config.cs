@@ -58,6 +58,8 @@ root_node: default_node.yml
 god_mode: true
 is_exclusive: true
 events: []
+ai_enabled: false
+ai: []
 ";
     }
 }

@@ -1,11 +1,10 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
 
 namespace NPCS.Conditions
 {
-    class RandomCondition : NodeCondition
+    internal class RandomCondition : NodeCondition
     {
         public override string Name => "RandomCondition";
 
