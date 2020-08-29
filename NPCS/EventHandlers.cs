@@ -75,7 +75,7 @@ namespace NPCS
             }
         }
 
-        public void OnDied(DiedEventArgs ev)
+        public void OnDying(DyingEventArgs ev)
         {
             Npc cmp = ev.Target.GameObject.GetComponent<Npc>();
             if (cmp != null)
@@ -83,6 +83,7 @@ namespace NPCS
                 NPCDiedEvent npc_ev = new NPCDiedEvent(cmp, ev.Killer);
                 cmp.FireEvent(npc_ev);
                 cmp.Kill(true);
+                ev.IsAllowed = false;
             }
         }
 

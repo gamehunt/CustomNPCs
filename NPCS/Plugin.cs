@@ -78,7 +78,7 @@ namespace NPCS
                 Handlers.Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
                 Handlers.Server.RespawningTeam += EventHandlers.OnTeamRespawning;
 
-                Handlers.Player.Died += EventHandlers.OnDied;
+                Handlers.Player.Dying += EventHandlers.OnDying;
                 Handlers.Player.EnteringPocketDimension += EventHandlers.OnEnteringPocketDim;
                 Handlers.Player.Hurting += EventHandlers.OnHurt;
 
@@ -188,7 +188,7 @@ namespace NPCS
             Handlers.Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
             Handlers.Server.RespawningTeam -= EventHandlers.OnTeamRespawning;
 
-            Handlers.Player.Died -= EventHandlers.OnDied;
+            Handlers.Player.Dying -= EventHandlers.OnDying;
             Handlers.Player.EnteringPocketDimension -= EventHandlers.OnEnteringPocketDim;
             Handlers.Player.Hurting -= EventHandlers.OnHurt;
 

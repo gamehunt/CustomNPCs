@@ -177,33 +177,33 @@ namespace NPCS
         {
             for (; ; )
             {
-                while (!AIEnabled)
+                if (AIEnabled)
                 {
-                    yield return 0f;
-                }
-                if (CurrentAITarget != null)
-                {
-                    if (CurrentAITarget.Check(this))
+                    if (CurrentAITarget != null)
                     {
-                        IsActionLocked = true;
-                        yield return Timing.WaitForSeconds(CurrentAITarget.Process(this));
-                        if (CurrentAITarget.IsFinished)
+                        if (CurrentAITarget.Check(this))
+                        {
+                            IsActionLocked = true;
+                            yield return Timing.WaitForSeconds(CurrentAITarget.Process(this));
+                            if (CurrentAITarget.IsFinished)
+                            {
+                                CurrentAITarget = null;
+                            }
+                            IsActionLocked = false;
+                        }
+                        else
                         {
                             CurrentAITarget = null;
                         }
-                        IsActionLocked = false;
                     }
-                    else
+                    else if (!AIQueue.IsEmpty())
                     {
-                        CurrentAITarget = null;
+                        CurrentAITarget = AIQueue.First.Value;
+                        AIQueue.RemoveFirst();
+                        AIQueue.AddLast(CurrentAITarget);
                     }
                 }
-                else if (!AIQueue.IsEmpty())
-                {
-                    CurrentAITarget = AIQueue.First.Value;
-                    AIQueue.RemoveFirst();
-                    AIQueue.AddLast(CurrentAITarget);
-                }
+                yield return Timing.WaitForSeconds(0.3f);
             }
         }
 
@@ -609,6 +609,7 @@ namespace NPCS
 
         public void Kill(bool spawn_ragdoll)
         {
+            Log.Debug($"kill() called in NPC {Name}",Plugin.Instance.Config.VerboseOutput);
             if (spawn_ragdoll)
             {
                 gameObject.GetComponent<RagdollManager>().SpawnRagdoll(gameObject.transform.position, gameObject.transform.rotation, Vector3.zero, (int)NPCPlayer.Role, new PlayerStats.HitInfo(), false, "", Name, 9999);
