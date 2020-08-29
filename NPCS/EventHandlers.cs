@@ -82,7 +82,7 @@ namespace NPCS
             {
                 NPCDiedEvent npc_ev = new NPCDiedEvent(cmp, ev.Killer);
                 cmp.FireEvent(npc_ev);
-                cmp.Kill(true);
+                cmp.Kill(ev.HitInformation.GetDamageType() != DamageTypes.RagdollLess);
                 ev.IsAllowed = false;
             }
         }
