@@ -197,13 +197,20 @@ namespace NPCS
                             yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                         }
                     }
-                    else if (!AIQueue.IsEmpty())
+                    else
                     {
-                        CurrentAITarget = AIQueue.First.Value;
-                        AIQueue.RemoveFirst();
-                        AIQueue.AddLast(CurrentAITarget);
+                        if (!AIQueue.IsEmpty())
+                        {
+                            CurrentAITarget = AIQueue.First.Value;
+                            AIQueue.RemoveFirst();
+                            AIQueue.AddLast(CurrentAITarget);
+                        }
                         yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                     }
+                }
+                else
+                {
+                    yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                 }
             }
         }
@@ -503,27 +510,19 @@ namespace NPCS
         {
             queue.Push(current);
             visited_nodes.Add(current);
+            if (current == target)
+            {
+                return true;
+            }
             foreach (NavigationNode node in current.LinkedNodes)
             {
-                if (node == target)
-                {
-                    queue.Push(node);
-                    return true;
-                }
                 if (visited_nodes.Contains(node))
                 {
                     continue;
                 }
-                else if (node.LinkedNodes.Count > 0)
+                if (TryProcessNode(target, node, ref queue, ref visited_nodes))
                 {
-                    if (TryProcessNode(target, node, ref queue, ref visited_nodes))
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    Log.Warn($"[NAV] No links on node: {node.Name}");
+                    return true;
                 }
             }
             queue.Pop();
@@ -532,6 +531,7 @@ namespace NPCS
 
         public bool GotoNode(NavigationNode target_node)
         {
+            Log.Info("Navigating to node");
             NavigationNode nearest_node = null;
             float min_dist = float.MaxValue;
             foreach (NavigationNode node in NavigationNode.AllNodes.Values)
@@ -549,32 +549,25 @@ namespace NPCS
             if (nearest_node != null)
             {
                 Log.Info($"[NAV] Selected nearest node: {nearest_node.Name}");
-                if (nearest_node == target_node)
+
+                Stack<NavigationNode> new_nav_queue = new Stack<NavigationNode>();
+                HashSet<NavigationNode> visited = new HashSet<NavigationNode>();
+                if (!TryProcessNode(target_node, nearest_node, ref new_nav_queue, ref visited))
                 {
-                    NavigationQueue.Enqueue(target_node);
-                    return true;
+                    Log.Error("[NAV] Failed to build way");
+                    return false;
                 }
                 else
                 {
-                    Stack<NavigationNode> new_nav_queue = new Stack<NavigationNode>();
-                    HashSet<NavigationNode> visited = new HashSet<NavigationNode>();
-                    if (!TryProcessNode(target_node, nearest_node, ref new_nav_queue, ref visited))
+                    Log.Debug("[NAV] Built way:", Plugin.Instance.Config.VerboseOutput);
+                    NavigationQueue.Clear();
+                    IEnumerable<NavigationNode> reversed_stack = new_nav_queue.Reverse();
+                    foreach (NavigationNode node in reversed_stack)
                     {
-                        Log.Error("[NAV] Failed to build way");
-                        return false;
+                        Log.Debug(node.Name, Plugin.Instance.Config.VerboseOutput);
+                        NavigationQueue.Enqueue(node);
                     }
-                    else
-                    {
-                        Log.Debug("[NAV] Built way:", Plugin.Instance.Config.VerboseOutput);
-                        NavigationQueue.Clear();
-                        IEnumerable<NavigationNode> reversed_stack = new_nav_queue.Reverse();
-                        foreach (NavigationNode node in reversed_stack)
-                        {
-                            Log.Debug(node.Name, Plugin.Instance.Config.VerboseOutput);
-                            NavigationQueue.Enqueue(node);
-                        }
-                        return true;
-                    }
+                    return true;
                 }
             }
             else
@@ -619,7 +612,7 @@ namespace NPCS
 
         public void Kill(bool spawn_ragdoll)
         {
-            Log.Debug($"kill() called in NPC {Name}",Plugin.Instance.Config.VerboseOutput);
+            Log.Debug($"kill() called in NPC {Name}", Plugin.Instance.Config.VerboseOutput);
             if (spawn_ragdoll)
             {
                 gameObject.GetComponent<RagdollManager>().SpawnRagdoll(gameObject.transform.position, gameObject.transform.rotation, Vector3.zero, (int)NPCPlayer.Role, new PlayerStats.HitInfo(), false, "", Name, 9999);
