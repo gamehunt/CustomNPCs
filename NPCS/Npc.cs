@@ -334,6 +334,14 @@ namespace NPCS
             }
         }
 
+        public void Stop()
+        {
+            ClearNavTargets();
+            FollowTarget = null;
+            Timing.KillCoroutines(MovementCoroutines);
+            Move(MovementDirection.NONE);
+        }
+
         private IEnumerator<float> StartTalkCoroutine(Player p)
         {
             if (TalkingStates.ContainsKey(p))
@@ -461,6 +469,7 @@ namespace NPCS
         public void ClearNavTargets()
         {
             NavigationQueue.Clear();
+            CurrentNavTarget = null;
         }
 
         public void Follow(Player p)

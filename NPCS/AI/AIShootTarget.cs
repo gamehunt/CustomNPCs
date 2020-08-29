@@ -16,9 +16,7 @@ namespace NPCS.AI
         public override float Process(Npc npc)
         {
             npc.CurrentAIRoomTarget = null;
-            npc.ClearNavTargets();
-            Timing.KillCoroutines(npc.MovementCoroutines);
-            npc.Move(Npc.MovementDirection.NONE);
+            npc.Stop();
             Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
             npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
