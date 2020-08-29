@@ -158,6 +158,7 @@ namespace NPCS
                 NodeAction.Register(new Actions.ShootAction());
                 NodeAction.Register(new Actions.GoToRoomAction());
                 NodeAction.Register(new Actions.ControlDoorAction());
+                NodeAction.Register(new Actions.ToggleAIAction());
 
                 Log.Info("Registering AI targets...");
 
