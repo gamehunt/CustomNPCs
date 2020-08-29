@@ -36,6 +36,12 @@ namespace NPCS
         public string TranslationOnlyPlayers { get; set; } = "Only players can use this!";
         public string TranslationBanBroadcast { get; set; } = "<color=red>DONT BAN OR KICK NPCs</color>";
 
+        //Frequencies
+        [Description("Update frequencies")]
+        public float AIIdleUpdateFrequency { get; set; } = 0.3f;
+        public float MovementUpdateFrequency { get; set; } = 0.1f;
+        public float NavUpdateFrequency { get; set; } = 0.1f;
+
         public static string NPCs_root_path = Path.Combine(Paths.Configs, "npcs");
 
         public static string NPCs_nodes_path = Path.Combine(NPCs_root_path, "nodes");

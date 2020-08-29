@@ -194,6 +194,7 @@ namespace NPCS
                         else
                         {
                             CurrentAITarget = null;
+                            yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                         }
                     }
                     else if (!AIQueue.IsEmpty())
@@ -201,9 +202,9 @@ namespace NPCS
                         CurrentAITarget = AIQueue.First.Value;
                         AIQueue.RemoveFirst();
                         AIQueue.AddLast(CurrentAITarget);
+                        yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                     }
                 }
-                yield return Timing.WaitForSeconds(0.3f);
             }
         }
 
@@ -246,7 +247,7 @@ namespace NPCS
                         CurrentNavTarget = null;
                     }
                 }
-                yield return Timing.WaitForSeconds(0.1f);
+                yield return Timing.WaitForSeconds(Plugin.Instance.Config.NavUpdateFrequency);
             }
         }
 
@@ -329,7 +330,7 @@ namespace NPCS
                     default:
                         break;
                 }
-                yield return Timing.WaitForSeconds(0.1f);
+                yield return Timing.WaitForSeconds(Plugin.Instance.Config.MovementUpdateFrequency);
             }
         }
 

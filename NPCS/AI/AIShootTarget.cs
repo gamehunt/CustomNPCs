@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using MEC;
 using UnityEngine;
 
 namespace NPCS.AI
@@ -16,6 +17,8 @@ namespace NPCS.AI
         {
             npc.CurrentAIRoomTarget = null;
             npc.ClearNavTargets();
+            Timing.KillCoroutines(npc.MovementCoroutines);
+            npc.Move(Npc.MovementDirection.NONE);
             Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
             npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
