@@ -183,13 +183,11 @@ namespace NPCS
                     {
                         if (CurrentAITarget.Check(this))
                         {
-                            IsActionLocked = true;
                             yield return Timing.WaitForSeconds(CurrentAITarget.Process(this));
                             if (CurrentAITarget.IsFinished)
                             {
                                 CurrentAITarget = null;
                             }
-                            IsActionLocked = false;
                         }
                         else
                         {
@@ -531,7 +529,6 @@ namespace NPCS
 
         public bool GotoNode(NavigationNode target_node)
         {
-            Log.Info("Navigating to node");
             NavigationNode nearest_node = null;
             float min_dist = float.MaxValue;
             foreach (NavigationNode node in NavigationNode.AllNodes.Values)
@@ -548,7 +545,7 @@ namespace NPCS
             }
             if (nearest_node != null)
             {
-                Log.Info($"[NAV] Selected nearest node: {nearest_node.Name}");
+                Log.Debug($"[NAV] Selected nearest node: {nearest_node.Name}",Plugin.Instance.Config.VerboseOutput);
 
                 Stack<NavigationNode> new_nav_queue = new Stack<NavigationNode>();
                 HashSet<NavigationNode> visited = new HashSet<NavigationNode>();
@@ -600,7 +597,7 @@ namespace NPCS
 
         public void HandleAnswer(Player p, string answer)
         {
-            if (!IsActionLocked)
+            if (!AIEnabled && !IsActionLocked)
             {
                 AttachedCoroutines.Add(Timing.RunCoroutine(HandleAnswerCoroutine(p, answer)));
             }
