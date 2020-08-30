@@ -48,7 +48,7 @@ namespace NPCS
 
         public static string NPCs_root_path = Path.Combine(Paths.Configs, "npcs");
 
-        public static string NPCs_mappings_path = Path.Combine(Paths.Configs, "mappings");
+        public static string NPCs_mappings_path = Path.Combine(NPCs_root_path, "mappings");
 
         public static string NPCs_nodes_path = Path.Combine(NPCs_root_path, "nodes");
 
