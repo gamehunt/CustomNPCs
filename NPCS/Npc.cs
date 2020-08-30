@@ -75,6 +75,151 @@ namespace NPCS
             }
         }
 
+        //Megabruh
+        private class NPCMappingInfo
+        {
+            private Npc parent;
+
+            public class SerializableVector2
+            {
+
+                public SerializableVector2()
+                {
+
+                }
+
+                public SerializableVector2(Vector2 vec)
+                {
+                    x = vec.x;
+                    y = vec.y;
+                }
+
+                public float x { get; set; }
+                public float y { get; set; }
+
+                public Vector2 ToVector2()
+                {
+                    return new Vector2(x, y);
+                }
+            }
+
+            public class SerializableVector3
+            {
+
+                public SerializableVector3()
+                {
+
+                }
+
+                public SerializableVector3(Vector3 vec)
+                {
+                    x = vec.x;
+                    y = vec.y;
+                    z = vec.z;
+                }
+
+                public float x { get; set; }
+                public float y { get; set; }
+                public float z { get; set; }
+
+                public Vector3 ToVector3()
+                {
+                    return new Vector3(x, y, z);
+                }
+            }
+
+            private string deserializedRoom;
+            private float deserializedRoomRotation;
+            private SerializableVector3 deserializedRelative;
+            private SerializableVector2 deserializedRotations;
+            private string deserializedFile;
+
+            public NPCMappingInfo(Npc which)
+            {
+                parent = which;
+            }
+
+            public NPCMappingInfo()
+            {
+            }
+
+            public string Room
+            {
+                get
+                {
+                    return parent?.NPCPlayer.CurrentRoom.Name ?? deserializedRoom;
+                }
+                set
+                {
+                    deserializedRoom = value;
+                }
+            }
+
+            public float RoomRotation
+            {
+                get
+                {
+                    return parent?.NPCPlayer.CurrentRoom.Transform.localRotation.eulerAngles.y ?? deserializedRoomRotation;
+                }
+                set
+                {
+                    deserializedRoomRotation = value;
+                }
+            }
+
+            public SerializableVector3 Relative
+            {
+                get
+                {
+                    Vector3? source = parent?.NPCPlayer.Position - parent?.NPCPlayer.CurrentRoom.Position;
+                    if(source == null)
+                    {
+                        return deserializedRelative;
+                    }
+                    else
+                    {
+                        return new SerializableVector3(source.Value);
+                    }
+                }
+                set
+                {
+                    deserializedRelative = value;
+                }
+            }
+
+            public SerializableVector2 Rotation
+            {
+                get
+                {
+                    Vector2? source = parent?.NPCPlayer.Rotations;
+                    if (source == null)
+                    {
+                        return deserializedRotations;
+                    }
+                    else
+                    {
+                        return new SerializableVector2(source.Value);
+                    }
+                }
+                set
+                {
+                    deserializedRotations = value;
+                }
+            }
+
+            public string File
+            {
+                get
+                {
+                    return parent?.SaveFile ?? deserializedFile;
+                }
+                set
+                {
+                    deserializedFile = value;
+                }
+            }
+        }
+
         public void Serialize(string path)
         {
             path = Path.Combine(Config.NPCs_root_path, path);
@@ -112,6 +257,8 @@ namespace NPCS
         public Player NPCPlayer { get; set; }
 
         public TalkNode RootNode { get; set; }
+
+        public string SaveFile { get; set; } = null;
 
         public string Name
         {
@@ -545,7 +692,7 @@ namespace NPCS
             }
             if (nearest_node != null)
             {
-                Log.Debug($"[NAV] Selected nearest node: {nearest_node.Name}",Plugin.Instance.Config.VerboseOutput);
+                Log.Debug($"[NAV] Selected nearest node: {nearest_node.Name}", Plugin.Instance.Config.VerboseOutput);
 
                 Stack<NavigationNode> new_nav_queue = new Stack<NavigationNode>();
                 HashSet<NavigationNode> visited = new HashSet<NavigationNode>();
@@ -647,6 +794,63 @@ namespace NPCS
             AttachedCoroutines.Add(Timing.RunCoroutine(AICoroutine()));
             List.Add(this);
             Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
+        }
+
+        public static void SaveNPCMappings(string path)
+        {
+            path = Path.Combine(Config.NPCs_mappings_path, path);
+            StreamWriter sw;
+            if (!File.Exists(path))
+            {
+                sw = File.CreateText(path);
+                var serializer = new SerializerBuilder().Build();
+                List<NPCMappingInfo> infos = new List<NPCMappingInfo>();
+                foreach (Npc n in Npc.List)
+                {
+                    if (n.SaveFile != null)
+                    {
+                        infos.Add(new NPCMappingInfo(n));
+                    }
+                }
+                var yaml = serializer.Serialize(infos);
+                sw.Write(yaml);
+                sw.Close();
+            }
+            else
+            {
+                Log.Error("Failed to save npc mappings: File exists!");
+            }
+        }
+
+        public static void LoadNPCMappings(string path)
+        {
+            path = Path.Combine(Config.NPCs_mappings_path, path);
+            StreamReader sr;
+            if (File.Exists(path))
+            {
+                sr = File.OpenText(path);
+                var deserializer = new DeserializerBuilder().Build();
+                List<NPCMappingInfo> infos = deserializer.Deserialize<List<NPCMappingInfo>>(sr);
+                sr.Close();
+                if (infos != null)
+                {
+                    foreach (NPCMappingInfo info in infos)
+                    {
+                        Room rm = Map.Rooms.Where(r => r.Name.Equals(info.Room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                        if (rm != null) {
+                            Npc n = Methods.CreateNPC(rm.Position + Quaternion.Euler(0,rm.Transform.localRotation.eulerAngles.y - info.RoomRotation, 0) * info.Relative.ToVector3(), info.Rotation.ToVector2() + new Vector2(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation), info.File);
+                        }
+                    }
+                }
+                else
+                {
+                    Log.Error("Failed to load npc mappings: Format error!");
+                }
+            }
+            else
+            {
+                Log.Error("Failed to load npc mappings: File not exists!");
+            }
         }
     }
 }

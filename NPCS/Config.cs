@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Features;
 using Exiled.API.Interfaces;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.IO;
 
 namespace NPCS
@@ -42,7 +43,12 @@ namespace NPCS
         public float MovementUpdateFrequency { get; set; } = 0.1f;
         public float NavUpdateFrequency { get; set; } = 0.1f;
 
+        [Description("Mappings listed there will be loaded on round start")]
+        public List<string> InitialMappings { get; set; } = new List<string>();
+
         public static string NPCs_root_path = Path.Combine(Paths.Configs, "npcs");
+
+        public static string NPCs_mappings_path = Path.Combine(Paths.Configs, "mappings");
 
         public static string NPCs_nodes_path = Path.Combine(NPCs_root_path, "nodes");
 

@@ -1,5 +1,6 @@
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using LiteNetLib4Mirror.Open.Nat;
 using MEC;
 using NPCS.Events;
 using NPCS.Harmony;
@@ -14,34 +15,18 @@ namespace NPCS
         public void OnRoundStart()
         {
             RoundSummaryFix.__npc_endRequested = false;
+            Timing.CallDelayed(0.5f, () =>
+            {
+                foreach(string mapping in Plugin.Instance.Config.InitialMappings)
+                {
+                    Npc.LoadNPCMappings(mapping);
+                }
+            });
         }
 
         public void OnWaitingForPlayers()
         {
-            Log.Info("[NAV] Generating navigation graph...");
-            foreach (Room r in Map.Rooms)
-            {
-                NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
-                foreach (Door d in r.GetDoors())
-                {
-                    if (d.gameObject.transform.position == Vector3.zero)
-                    {
-                        continue;
-                    }
-                    NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
-                    if (new_node == null)
-                    {
-                        new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
-                    }
-                    else
-                    {
-                        new_node.AttachedDoor = d;
-                    }
-                    node.LinkedNodes.Add(new_node);
-                    new_node.LinkedNodes.Add(node);
-                    Log.Debug($"[NAV] Linked door {new_node.Name} node to room {r.Name}", Plugin.Instance.Config.VerboseOutput);
-                }
-            }
+            Methods.GenerateNavGraph();
         }
 
         public void OnRoundEnd(RoundEndedEventArgs ev)

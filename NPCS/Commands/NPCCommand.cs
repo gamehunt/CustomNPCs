@@ -209,6 +209,31 @@ namespace NPCS.Commands
                         response = "Navigating npc to room!";
                         break;
 
+                    case "sav_mappings":
+
+                        if (arguments.Count <= 1)
+                        {
+                            response = "You need to provide file name!";
+                            return false;
+                        }
+
+                        Npc.SaveNPCMappings(arguments.At(1));
+                        response = "Mappings saved!";
+                        break;
+
+                    case "load_mappings":
+
+                        if (arguments.Count <= 1)
+                        {
+                            response = "You need to provide file name!";
+                            return false;
+                        }
+
+                        Npc.LoadNPCMappings(arguments.At(1));
+                        response = "Mappings loaded!";
+
+                        break;
+
                     default:
                         response = "Unknown sub-command!";
                         return false;

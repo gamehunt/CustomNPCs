@@ -92,7 +92,11 @@ namespace NPCS.Commands
                         NavigationNode.Clear();
                         response = "Removed all nodes!";
                         break;
-
+                    case "rebuild":
+                        NavigationNode.Clear();
+                        Methods.GenerateNavGraph();
+                        response = "Rebuilt navigation graph";
+                        break;
                     default:
                         response = "Unknown subcommand!";
                         return false;

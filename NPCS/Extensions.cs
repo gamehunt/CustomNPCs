@@ -10,9 +10,13 @@ namespace NPCS
             List<Door> list2 = new List<Door>();
             foreach (global::Scp079Interactable scp079Interactable2 in global::Interface079.singleton.allInteractables)
             {
+                if(scp079Interactable2 == null)
+                {
+                    continue;
+                }
                 foreach (global::Scp079Interactable.ZoneAndRoom zoneAndRoom in scp079Interactable2.currentZonesAndRooms)
                 {
-                    if (zoneAndRoom.currentRoom == room.Name && zoneAndRoom.currentZone == room.Transform.parent.name)
+                    if (zoneAndRoom.currentRoom == room.Name && zoneAndRoom.currentZone == room?.Transform?.parent?.name)
                     {
                         if (scp079Interactable2.type == Scp079Interactable.InteractableType.Door)
                         {

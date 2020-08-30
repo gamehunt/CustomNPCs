@@ -4,6 +4,7 @@ using Mirror;
 using NPCS.AI;
 using NPCS.Events;
 using NPCS.Talking;
+using NPCS.Navigation;
 using RemoteAdmin;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using YamlDotNet.RepresentationModel;
+using YamlDotNet.Serialization;
 
 namespace NPCS
 {
@@ -106,6 +108,8 @@ namespace NPCS
 
                 int health = int.Parse((string)mapping.Children[new YamlScalarNode("health")]);
 
+                n.SaveFile = path;
+
                 if (health > 0)
                 {
                     n.NPCPlayer.MaxHealth = health;
@@ -173,5 +177,36 @@ namespace NPCS
                 return null;
             }
         }
+
+        public static void GenerateNavGraph()
+        {
+            Log.Info("[NAV] Generating navigation graph...");
+            foreach (Room r in Map.Rooms)
+            {
+                NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
+                foreach (Door d in r.GetDoors())
+                {
+                    //Log.Info("HERE");
+                    if (d.gameObject.transform.position == Vector3.zero)
+                    {
+                        continue;
+                    }
+                    NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
+                    if (new_node == null)
+                    {
+                        new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
+                    }
+                    else
+                    {
+                        new_node.AttachedDoor = d;
+                    }
+                    node.LinkedNodes.Add(new_node);
+                    new_node.LinkedNodes.Add(node);
+                    //Log.Debug($"[NAV] Linked door {new_node.Name} node to room {r.Name}", Plugin.Instance.Config.VerboseOutput);
+                }
+            }
+        }
+
+
     }
 }

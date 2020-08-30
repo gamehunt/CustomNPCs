@@ -95,6 +95,10 @@ namespace NPCS
                 {
                     Directory.CreateDirectory(Config.NPCs_nodes_path);
                 }
+                if (!Directory.Exists(Config.NPCs_mappings_path))
+                {
+                    Directory.CreateDirectory(Config.NPCs_mappings_path);
+                }
                 if (!File.Exists(Path.Combine(Config.NPCs_nodes_path, "default_node.yml")))
                 {
                     StreamWriter sw = File.CreateText(Path.Combine(Config.NPCs_nodes_path, "default_node.yml"));
