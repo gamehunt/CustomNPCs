@@ -1,12 +1,10 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NPCS.Actions
 {
-    class ToggleAIAction : NodeAction
+    internal class ToggleAIAction : NodeAction
     {
         public override string Name => "ToggleAIAction";
 

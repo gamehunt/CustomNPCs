@@ -1,12 +1,10 @@
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
-using LiteNetLib4Mirror.Open.Nat;
 using MEC;
 using NPCS.Events;
 using NPCS.Harmony;
 using NPCS.Navigation;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace NPCS
 {
@@ -17,7 +15,7 @@ namespace NPCS
             RoundSummaryFix.__npc_endRequested = false;
             Timing.CallDelayed(0.5f, () =>
             {
-                foreach(string mapping in Plugin.Instance.Config.InitialMappings)
+                foreach (string mapping in Plugin.Instance.Config.InitialMappings)
                 {
                     Npc.LoadNPCMappings(mapping);
                 }

@@ -1,5 +1,4 @@
 ﻿using Exiled.API.Features;
-using IESLights;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +36,7 @@ namespace NPCS.Navigation
 
         public static Dictionary<string, NavigationNode> AllNodes = new Dictionary<string, NavigationNode>();
 
-        public static NavigationNode Create(Vector3 pos, string name = "DefaultNavNode",string room = "")
+        public static NavigationNode Create(Vector3 pos, string name = "DefaultNavNode", string room = "")
         {
             if (AllNodes.ContainsKey(name))
             {
@@ -48,7 +47,8 @@ namespace NPCS.Navigation
             node.Name = name;
             node.Room = room;
             Room r = Map.Rooms.Where(rm => rm.Name.Equals(room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-            if (r != null) {
+            if (r != null)
+            {
                 node.SInfo = new NavNodeSerializationInfo
                 {
                     Relative = new Utils.SerializableVector3(pos - r.Position),
@@ -60,7 +60,8 @@ namespace NPCS.Navigation
             Log.Debug($"Node created: {name}", Plugin.Instance.Config.VerboseOutput);
             return node;
         }
-        public static NavigationNode Create(NavNodeSerializationInfo info, string name = "DefaultNavNode",string room="")
+
+        public static NavigationNode Create(NavNodeSerializationInfo info, string name = "DefaultNavNode", string room = "")
         {
             if (AllNodes.ContainsKey(name))
             {
