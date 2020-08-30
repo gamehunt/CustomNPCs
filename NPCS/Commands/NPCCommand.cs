@@ -163,8 +163,7 @@ namespace NPCS.Commands
                             response = "Node not found!";
                             return false;
                         }
-                        npc_obj.CurrentNavTarget = node;
-                        npc_obj.GoTo(node.Position);
+                        npc_obj.GotoNode(node);
                         response = "Navigating npc to node!";
                         break;
 

@@ -99,6 +99,12 @@ namespace NPCS
                 {
                     Directory.CreateDirectory(Config.NPCs_mappings_path);
                 }
+                if (!File.Exists(Config.NPCs_nav_mappings_path))
+                {
+                    StreamWriter sw = File.CreateText(Config.NPCs_nav_mappings_path);
+                    sw.Write(Config.DefaultNavMappings);
+                    sw.Close();
+                }
                 if (!File.Exists(Path.Combine(Config.NPCs_nodes_path, "default_node.yml")))
                 {
                     StreamWriter sw = File.CreateText(Path.Combine(Config.NPCs_nodes_path, "default_node.yml"));

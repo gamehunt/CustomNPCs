@@ -3,8 +3,8 @@ using MEC;
 using Mirror;
 using NPCS.AI;
 using NPCS.Events;
-using NPCS.Talking;
 using NPCS.Navigation;
+using NPCS.Talking;
 using RemoteAdmin;
 using System;
 using System.Collections.Generic;
@@ -181,32 +181,95 @@ namespace NPCS
         public static void GenerateNavGraph()
         {
             Log.Info("[NAV] Generating navigation graph...");
+            StreamReader sr = File.OpenText(Config.NPCs_nav_mappings_path);
+            var deserializer = new DeserializerBuilder().Build();
+            Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>> manual_mappings = deserializer.Deserialize<Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>>>(sr);
+            sr.Close();
             foreach (Room r in Map.Rooms)
             {
-                NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
-                foreach (Door d in r.GetDoors())
+                if (!manual_mappings.ContainsKey(r.Name))
                 {
-                    //Log.Info("HERE");
-                    if (d.gameObject.transform.position == Vector3.zero)
+                    NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
+                    foreach (Door d in r.GetDoors())
                     {
-                        continue;
+                        //Log.Info("HERE");
+                        if (d.gameObject.transform.position == Vector3.zero)
+                        {
+                            continue;
+                        }
+                        NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
+                        if (new_node == null)
+                        {
+                            new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
+                        }
+                        else
+                        {
+                            new_node.AttachedDoor = d;
+                        }
+                        node.LinkedNodes.Add(new_node);
+                        new_node.LinkedNodes.Add(node);
+                        //Log.Debug($"[NAV] Linked door {new_node.Name} node to room {r.Name}", Plugin.Instance.Config.VerboseOutput);
                     }
-                    NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
-                    if (new_node == null)
+                }
+                else
+                {
+                    Log.Info($"Loading manual mappings for room {r.Name}");
+                    List<NavigationNode.NavNodeSerializationInfo> nodes = manual_mappings[r.Name];
+                    NavigationNode prev = null;
+                    NavigationNode first = null;
+                    int i = 0;
+                    foreach (NavigationNode.NavNodeSerializationInfo info in nodes)
                     {
-                        new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
+                        NavigationNode node = NavigationNode.Create(info, $"MANUAL_Room_{r.Name}_{i}", r.Name);
+                        if (i == 0)
+                        {
+                            first = node;
+                        }
+                        if (prev != null)
+                        {
+                            prev.LinkedNodes.Add(node);
+                            node.LinkedNodes.Add(prev);
+                        }
+                        prev = node;
+                        i++;
                     }
-                    else
+                    NavigationNode in_node = null;
+                    NavigationNode out_node = null;
+                    float in_dist = float.MaxValue;
+                    float out_dist = float.MaxValue;
+                    foreach (Door d in r.GetDoors())
                     {
-                        new_node.AttachedDoor = d;
+                        if (d.gameObject.transform.position == Vector3.zero)
+                        {
+                            continue;
+                        }
+                        NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
+                        if (new_node == null)
+                        {
+                            new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
+                        }
+                        else
+                        {
+                            new_node.AttachedDoor = d;
+                        }
+                        float dist = Vector3.Distance(new_node.Position, first.Position);
+                        if (dist < in_dist)
+                        {
+                            in_dist = dist;
+                            in_node = new_node;
+                        }
+                        else if (dist < out_dist)
+                        {
+                            out_dist = dist;
+                            out_node = new_node;
+                        }
                     }
-                    node.LinkedNodes.Add(new_node);
-                    new_node.LinkedNodes.Add(node);
-                    //Log.Debug($"[NAV] Linked door {new_node.Name} node to room {r.Name}", Plugin.Instance.Config.VerboseOutput);
+                    in_node.LinkedNodes.Add(first);
+                    first.LinkedNodes.Add(in_node);
+                    out_node.LinkedNodes.Add(prev);
+                    prev.LinkedNodes.Add(out_node);
                 }
             }
         }
-
-
     }
 }

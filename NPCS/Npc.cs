@@ -80,58 +80,10 @@ namespace NPCS
         {
             private Npc parent;
 
-            public class SerializableVector2
-            {
-
-                public SerializableVector2()
-                {
-
-                }
-
-                public SerializableVector2(Vector2 vec)
-                {
-                    x = vec.x;
-                    y = vec.y;
-                }
-
-                public float x { get; set; }
-                public float y { get; set; }
-
-                public Vector2 ToVector2()
-                {
-                    return new Vector2(x, y);
-                }
-            }
-
-            public class SerializableVector3
-            {
-
-                public SerializableVector3()
-                {
-
-                }
-
-                public SerializableVector3(Vector3 vec)
-                {
-                    x = vec.x;
-                    y = vec.y;
-                    z = vec.z;
-                }
-
-                public float x { get; set; }
-                public float y { get; set; }
-                public float z { get; set; }
-
-                public Vector3 ToVector3()
-                {
-                    return new Vector3(x, y, z);
-                }
-            }
-
             private string deserializedRoom;
             private float deserializedRoomRotation;
-            private SerializableVector3 deserializedRelative;
-            private SerializableVector2 deserializedRotations;
+            private Utils.SerializableVector3 deserializedRelative;
+            private Utils.SerializableVector2 deserializedRotations;
             private string deserializedFile;
 
             public NPCMappingInfo(Npc which)
@@ -167,18 +119,18 @@ namespace NPCS
                 }
             }
 
-            public SerializableVector3 Relative
+            public Utils.SerializableVector3 Relative
             {
                 get
                 {
                     Vector3? source = parent?.NPCPlayer.Position - parent?.NPCPlayer.CurrentRoom.Position;
-                    if(source == null)
+                    if (source == null)
                     {
                         return deserializedRelative;
                     }
                     else
                     {
-                        return new SerializableVector3(source.Value);
+                        return new Utils.SerializableVector3(source.Value);
                     }
                 }
                 set
@@ -187,7 +139,7 @@ namespace NPCS
                 }
             }
 
-            public SerializableVector2 Rotation
+            public Utils.SerializableVector2 Rotation
             {
                 get
                 {
@@ -198,7 +150,7 @@ namespace NPCS
                     }
                     else
                     {
-                        return new SerializableVector2(source.Value);
+                        return new Utils.SerializableVector2(source.Value);
                     }
                 }
                 set
@@ -439,7 +391,7 @@ namespace NPCS
                         {
                             if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position + NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.Position += NPCPlayer.CameraTransform.forward / 10 * MovementSpeed;
+                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position + NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -450,7 +402,7 @@ namespace NPCS
                         {
                             if (!Physics.Linecast(NPCPlayer.Position, gameObject.transform.position - NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.Position -= NPCPlayer.CameraTransform.forward / 10 * MovementSpeed;
+                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position - NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -461,7 +413,7 @@ namespace NPCS
                         {
                             if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position + Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.Position += Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed;
+                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position + Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -472,7 +424,7 @@ namespace NPCS
                         {
                             if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position - Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.Position -= Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed;
+                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position - Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -634,6 +586,7 @@ namespace NPCS
             IsActionLocked = true;
             Timing.KillCoroutines(MovementCoroutines);
             Vector3 heading = (position - NPCPlayer.Position);
+            heading.y = 0;
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
             float dist = heading.magnitude;
             NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
@@ -837,8 +790,9 @@ namespace NPCS
                     foreach (NPCMappingInfo info in infos)
                     {
                         Room rm = Map.Rooms.Where(r => r.Name.Equals(info.Room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                        if (rm != null) {
-                            Npc n = Methods.CreateNPC(rm.Position + Quaternion.Euler(0,rm.Transform.localRotation.eulerAngles.y - info.RoomRotation, 0) * info.Relative.ToVector3(), info.Rotation.ToVector2() + new Vector2(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation), info.File);
+                        if (rm != null)
+                        {
+                            Npc n = Methods.CreateNPC(rm.Position + Quaternion.Euler(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation, 0) * info.Relative.ToVector3(), info.Rotation.ToVector2() + new Vector2(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation), info.File);
                         }
                     }
                 }

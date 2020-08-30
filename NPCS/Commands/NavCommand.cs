@@ -5,6 +5,9 @@ using NPCS.Navigation;
 using RemoteAdmin;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using YamlDotNet.Serialization;
 
 namespace NPCS.Commands
 {
@@ -55,7 +58,7 @@ namespace NPCS.Commands
                             response = "Node with this name already exists!";
                             return false;
                         }
-                        NavigationNode.Create(s.Position, arguments.At(1));
+                        NavigationNode.Create(s.Position, arguments.At(1), s.CurrentRoom.Name);
                         response = "Created node!";
                         break;
 
@@ -92,11 +95,38 @@ namespace NPCS.Commands
                         NavigationNode.Clear();
                         response = "Removed all nodes!";
                         break;
+
                     case "rebuild":
                         NavigationNode.Clear();
                         Methods.GenerateNavGraph();
                         response = "Rebuilt navigation graph";
                         break;
+
+                    case "sav":
+                        Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>> manual_mappings = new Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>>();
+                        IEnumerable<NavigationNode> to_serialize = NavigationNode.AllNodes.Values.Where(n => n.SInfo != null);
+                        foreach (NavigationNode node in to_serialize)
+                        {
+                            if (!manual_mappings.ContainsKey(node.Room))
+                            {
+                                List<NavigationNode.NavNodeSerializationInfo> nodes = new List<NavigationNode.NavNodeSerializationInfo>();
+                                nodes.Add(node.SInfo);
+                                manual_mappings.Add(node.Room, nodes);
+                            }
+                            else
+                            {
+                                manual_mappings[node.Room].Add(node.SInfo);
+                            }
+                        }
+                        FileStream fs = File.Open(Config.NPCs_nav_mappings_path, FileMode.Truncate, FileAccess.Write);
+                        StreamWriter sw = new StreamWriter(fs);
+                        var serializer = new SerializerBuilder().Build();
+                        var yaml = serializer.Serialize(manual_mappings);
+                        sw.Write(yaml);
+                        sw.Close();
+                        response = "Saved manual navigation mappings!";
+                        break;
+
                     default:
                         response = "Unknown subcommand!";
                         return false;
