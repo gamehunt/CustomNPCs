@@ -242,7 +242,7 @@ namespace NPCS
                             prev.LinkedNodes.Add(node);
                             node.LinkedNodes.Add(prev);
                         }
-                        foreach (NavigationNode d in near_doors.Keys.Where(nd => Vector3.Distance(nd.Position, node.Position) < 3f))
+                        foreach (NavigationNode d in near_doors.Keys.Where(nd => Vector3.Distance(nd.Position, node.Position) < 2f))
                         {
                             node.LinkedNodes.Add(d);
                             d.LinkedNodes.Add(node);
