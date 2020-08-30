@@ -178,6 +178,7 @@ namespace NPCS
             }
         }
 
+        //Oh... More shitcode!
         public static void GenerateNavGraph()
         {
             Log.Info("[NAV] Generating navigation graph...");
@@ -192,7 +193,6 @@ namespace NPCS
                     NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
                     foreach (Door d in r.GetDoors())
                     {
-                        //Log.Info("HERE");
                         if (d.gameObject.transform.position == Vector3.zero)
                         {
                             continue;
@@ -208,7 +208,6 @@ namespace NPCS
                         }
                         node.LinkedNodes.Add(new_node);
                         new_node.LinkedNodes.Add(node);
-                        //Log.Debug($"[NAV] Linked door {new_node.Name} node to room {r.Name}", Plugin.Instance.Config.VerboseOutput);
                     }
                 }
                 else
@@ -216,27 +215,8 @@ namespace NPCS
                     Log.Info($"Loading manual mappings for room {r.Name}");
                     List<NavigationNode.NavNodeSerializationInfo> nodes = manual_mappings[r.Name];
                     NavigationNode prev = null;
-                    NavigationNode first = null;
                     int i = 0;
-                    foreach (NavigationNode.NavNodeSerializationInfo info in nodes)
-                    {
-                        NavigationNode node = NavigationNode.Create(info, $"MANUAL_Room_{r.Name}_{i}", r.Name);
-                        if (i == 0)
-                        {
-                            first = node;
-                        }
-                        if (prev != null)
-                        {
-                            prev.LinkedNodes.Add(node);
-                            node.LinkedNodes.Add(prev);
-                        }
-                        prev = node;
-                        i++;
-                    }
-                    NavigationNode in_node = null;
-                    NavigationNode out_node = null;
-                    float in_dist = float.MaxValue;
-                    float out_dist = float.MaxValue;
+                    Dictionary<NavigationNode, Door> near_doors = new Dictionary<NavigationNode, Door>();
                     foreach (Door d in r.GetDoors())
                     {
                         if (d.gameObject.transform.position == Vector3.zero)
@@ -244,30 +224,33 @@ namespace NPCS
                             continue;
                         }
                         NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
-                        if (new_node == null)
-                        {
-                            new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
-                        }
-                        else
+                        if (new_node != null)
                         {
                             new_node.AttachedDoor = d;
                         }
-                        float dist = Vector3.Distance(new_node.Position, first.Position);
-                        if (dist < in_dist)
+                        else
                         {
-                            in_dist = dist;
-                            in_node = new_node;
+                            new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
                         }
-                        else if (dist < out_dist)
-                        {
-                            out_dist = dist;
-                            out_node = new_node;
-                        }
+                        near_doors.Add(new_node, d);
                     }
-                    in_node.LinkedNodes.Add(first);
-                    first.LinkedNodes.Add(in_node);
-                    out_node.LinkedNodes.Add(prev);
-                    prev.LinkedNodes.Add(out_node);
+                    foreach (NavigationNode.NavNodeSerializationInfo info in nodes)
+                    {
+                        NavigationNode node = NavigationNode.Create(info, $"MANUAL_Room_{r.Name}_{i}", r.Name);
+                        if (prev != null)
+                        {
+                            prev.LinkedNodes.Add(node);
+                            node.LinkedNodes.Add(prev);
+                        }
+                        foreach (NavigationNode d in near_doors.Keys.Where(nd => Vector3.Distance(nd.Position, node.Position) < 3f))
+                        {
+                            node.LinkedNodes.Add(d);
+                            d.LinkedNodes.Add(node);
+                            node.AttachedDoor = near_doors[d];
+                        }
+                        prev = node;
+                        i++;
+                    }
                 }
             }
         }

@@ -30,7 +30,7 @@ namespace NPCS.Navigation
 
         public string Name { get; private set; } = "DefaultNavNode";
 
-        public List<NavigationNode> LinkedNodes = new List<NavigationNode>();
+        public HashSet<NavigationNode> LinkedNodes = new HashSet<NavigationNode>();
 
         public Door AttachedDoor { get; set; }
 
