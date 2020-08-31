@@ -79,6 +79,128 @@ ai: []
 
         public static string DefaultNavMappings =
 @"---
+HCZ_Room3ar:
+- Relative:
+    x: 9.64225769
+    y: 1.33001709
+    z: 0.171562195
+  RoomRotation: 180
+- Relative:
+    x: 4.34938049
+    y: 1.33001709
+    z: -0.0225715637
+  RoomRotation: 180
+- Relative:
+    x: -0.253387451
+    y: 1.33001709
+    z: 5.84685898
+  RoomRotation: 180
+- Relative:
+    x: -0.0796127319
+    y: 1.33001709
+    z: 9.6912117
+  RoomRotation: 180
+- Relative:
+    x: -0.0617141724
+    y: 1.32995605
+    z: 9.70713806
+  RoomRotation: 90
+- Relative:
+    x: 0.0109405518
+    y: 1.33001709
+    z: 5.05988312
+  RoomRotation: 90
+- Relative:
+    x: -5.83143616
+    y: 1.32995605
+    z: -0.0288848877
+  RoomRotation: 90
+- Relative:
+    x: -9.57893372
+    y: 1.32995605
+    z: 0.0152130127
+  RoomRotation: 90
+- Relative:
+    x: 5.3494873
+    y: 1.33001709
+    z: -0.121322632
+  RoomRotation: 90
+- Relative:
+    x: 9.65637207
+    y: 1.33001709
+    z: -0.0269927979
+  RoomRotation: 90
+- Relative:
+    x: 0.119373322
+    y: 1.33001709
+    z: 9.63119507
+  RoomRotation: 90
+- Relative:
+    x: -0.00559234619
+    y: 1.33001709
+    z: 4.79691315
+  RoomRotation: 90
+- Relative:
+    x: -6.2363739
+    y: 1.33001709
+    z: -0.0487976074
+  RoomRotation: 90
+- Relative:
+    x: -9.66663742
+    y: 1.33001709
+    z: -0.085067749
+  RoomRotation: 90
+- Relative:
+    x: -5.23825455
+    y: 1.33001709
+    z: 0.0444259644
+  RoomRotation: 90
+- Relative:
+    x: 0.132129669
+    y: 1.33001709
+    z: 5.01822662
+  RoomRotation: 90
+- Relative:
+    x: 5.83706665
+    y: 1.32995605
+    z: -0.0788116455
+  RoomRotation: 90
+- Relative:
+    x: 9.69130325
+    y: 1.33001709
+    z: -0.0573120117
+  RoomRotation: 90
+HCZ_Testroom:
+- Relative:
+    x: -0.368598938
+    y: 1.33001709
+    z: -9.59996796
+  RoomRotation: 90
+- Relative:
+    x: 8.1031723
+    y: 1.33001709
+    z: -8.9469223
+  RoomRotation: 90
+- Relative:
+    x: 9.27785492
+    y: 1.33001709
+    z: -6.43737793
+  RoomRotation: 90
+- Relative:
+    x: 8.72302246
+    y: 1.33001709
+    z: 8.34698486
+  RoomRotation: 90
+- Relative:
+    x: 6.74073792
+    y: 1.33001709
+    z: 9.22762299
+  RoomRotation: 90
+- Relative:
+    x: -0.293174744
+    y: 1.32995605
+    z: 9.68888092
+  RoomRotation: 90
 HCZ_Servers:
 - Relative:
     x: 8.13702393
@@ -120,68 +242,6 @@ HCZ_Servers:
     y: 1.32977295
     z: -0.355278015
   RoomRotation: 0
-HCZ_Room3ar:
-- Relative:
-    x: 9.26677704
-    y: 1.33001709
-    z: -0.032409668
-  RoomRotation: 180
-- Relative:
-    x: 4.97044373
-    y: 1.32995605
-    z: 0.00384521484
-  RoomRotation: 180
-- Relative:
-    x: -0.468917847
-    y: 1.33001709
-    z: -6.13801575
-  RoomRotation: 180
-- Relative:
-    x: -0.105560303
-    y: 1.33001709
-    z: -9.36857605
-  RoomRotation: 180
-- Relative:
-    x: -0.205101013
-    y: 1.33001709
-    z: 6.18539429
-  RoomRotation: 180
-- Relative:
-    x: -0.0422515869
-    y: 1.33001709
-    z: 9.69107819
-  RoomRotation: 180
-HCZ_Testroom:
-- Relative:
-    x: -0.368598938
-    y: 1.33001709
-    z: -9.59996796
-  RoomRotation: 90
-- Relative:
-    x: 8.1031723
-    y: 1.33001709
-    z: -8.9469223
-  RoomRotation: 90
-- Relative:
-    x: 9.27785492
-    y: 1.33001709
-    z: -6.43737793
-  RoomRotation: 90
-- Relative:
-    x: 8.72302246
-    y: 1.33001709
-    z: 8.34698486
-  RoomRotation: 90
-- Relative:
-    x: 6.74073792
-    y: 1.33001709
-    z: 9.22762299
-  RoomRotation: 90
-- Relative:
-    x: -0.293174744
-    y: 1.32995605
-    z: 9.68888092
-  RoomRotation: 90
 ";
     }
 }

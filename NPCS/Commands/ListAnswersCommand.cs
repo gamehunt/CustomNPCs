@@ -9,11 +9,11 @@ namespace NPCS.Commands
     [CommandHandler(typeof(CommandSystem.ClientCommandHandler))]
     internal class ListAnswersCommand : ICommand
     {
-        public string Command => "lasnsw";
+        public string Command => "lansw";
 
         public string[] Aliases => new string[] { "lsa" };
 
-        public string Description => "Command which allows u to get anwers from NPCs";
+        public string Description => "Command which allows u to get answers from NPCs";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {

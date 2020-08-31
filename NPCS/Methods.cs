@@ -100,10 +100,9 @@ namespace NPCS
                     (YamlMappingNode)yaml.Documents[0].RootNode;
 
                 Npc n = CreateNPC(pos, rot, (RoleType)int.Parse((string)mapping.Children[new YamlScalarNode("role")]), (ItemType)int.Parse((string)mapping.Children[new YamlScalarNode("item_held")]), (string)mapping.Children[new YamlScalarNode("name")], (string)mapping.Children[new YamlScalarNode("root_node")]);
-                if (bool.Parse((string)mapping.Children[new YamlScalarNode("god_mode")]))
-                {
-                    n.NPCPlayer.IsGodModeEnabled = true;
-                }
+
+                n.NPCPlayer.IsGodModeEnabled = bool.Parse((string)mapping.Children[new YamlScalarNode("god_mode")]);
+
                 n.IsExclusive = bool.Parse((string)mapping.Children[new YamlScalarNode("is_exclusive")]);
 
                 int health = int.Parse((string)mapping.Children[new YamlScalarNode("health")]);
@@ -247,6 +246,7 @@ namespace NPCS
                             node.LinkedNodes.Add(d);
                             d.LinkedNodes.Add(node);
                             node.AttachedDoor = near_doors[d];
+                            Log.Info($"Attached nearest door {d.Name}");
                         }
                         prev = node;
                         i++;
