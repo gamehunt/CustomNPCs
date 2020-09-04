@@ -31,10 +31,14 @@ namespace NPCS
 
         public static Random Random { get; private set; }
 
+        private int reloads = 0;
+
         public override void OnEnabled()
         {
             try
             {
+                Log.Info("Started plugin initialization...");
+
                 Instance = this;
 
                 Random = new Random();
@@ -66,7 +70,9 @@ namespace NPCS
 
                 Exiled.Events.Events.Instance.ReloadDisabledPatches();
 
-                Harmony = new HarmonyLib.Harmony("gamehunt.cnpcs");
+                Harmony = new HarmonyLib.Harmony($"gamehunt.cnpcs.{reloads}");
+                reloads++;
+
                 Harmony.PatchAll();
 
                 EventHandlers = new EventHandlers();
@@ -186,6 +192,12 @@ namespace NPCS
 
         public override void OnDisabled()
         {
+            List<Npc> list = Npc.List;
+            foreach (Npc npc in list)
+            {
+                npc.Kill(false);
+            }
+
             Harmony.UnpatchAll();
 
             NodeCondition.Clear();
@@ -207,6 +219,9 @@ namespace NPCS
             Handlers.Warhead.Starting -= EventHandlers.OnWarheadStart;
 
             EventHandlers = null;
+            Random = null;
+            Harmony = null;
+            Instance = null;
         }
 
         public override void OnReloaded()
