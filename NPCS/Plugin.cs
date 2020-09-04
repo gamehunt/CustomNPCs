@@ -29,11 +29,15 @@ namespace NPCS
 
         public static Plugin Instance { get; private set; }
 
+        public static Random Random { get; private set; }
+
         public override void OnEnabled()
         {
             try
             {
                 Instance = this;
+
+                Random = new Random();
 
                 if (!Config.IsEnabled)
                 {
