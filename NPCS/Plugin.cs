@@ -25,7 +25,7 @@ namespace NPCS
 
         public override PluginPriority Priority => PluginPriority.Last;
 
-        public HarmonyLib.Harmony harmony;
+        public HarmonyLib.Harmony Harmony { get; private set; }
 
         public static Plugin Instance { get; private set; }
 
@@ -72,8 +72,8 @@ namespace NPCS
 
                 Exiled.Events.Events.Instance.ReloadDisabledPatches();
 
-                harmony = new HarmonyLib.Harmony("gamehunt.cnpcs");
-                harmony.PatchAll();
+                Harmony = new HarmonyLib.Harmony("gamehunt.cnpcs");
+                Harmony.PatchAll();
 
                 EventHandlers = new EventHandlers();
 
@@ -192,7 +192,7 @@ namespace NPCS
 
         public override void OnDisabled()
         {
-            harmony.UnpatchAll();
+            Harmony.UnpatchAll();
 
             NodeCondition.Clear();
             NodeAction.Clear();
