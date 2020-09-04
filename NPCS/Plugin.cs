@@ -39,12 +39,6 @@ namespace NPCS
 
                 Random = new Random();
 
-                if (!Config.IsEnabled)
-                {
-                    Log.Info("CustomNPCs is disabled");
-                    return;
-                }
-
                 List<MethodBase> methods = new List<MethodBase>(Evs.Events.Instance.Harmony.GetPatchedMethods());
                 foreach (System.Reflection.MethodBase bas in methods)
                 {
