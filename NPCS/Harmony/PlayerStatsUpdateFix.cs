@@ -20,7 +20,7 @@ namespace NPCS.Harmony
             foreach (GameObject gameObject in global::PlayerManager.players)
             {
                 global::CharacterClassManager component = gameObject.GetComponent<global::CharacterClassManager>();
-                if (component.CurClass == global::RoleType.Spectator && component.IsVerified && !Npc.Dictionary.ContainsKey(gameObject))
+                if (component.CurClass == global::RoleType.Spectator && component.IsVerified && !Npc.Dictionary.ContainsKey(component.gameObject))
                 {
                     __instance.TargetSyncHp(component.connectionToClient, __instance._health);
                 }
