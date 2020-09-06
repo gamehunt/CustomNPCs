@@ -20,7 +20,7 @@ namespace NPCS
         public override string Author { get; } = "gamehunt";
         public override string Name { get; } = "CustomNPCs";
         public override string Prefix { get; } = "CNPCS";
-        public override Version Version { get; } = new Version(1, 4, 0);
+        public override Version Version { get; } = new Version(1, 4, 1);
         public override Version RequiredExiledVersion { get; } = new Version(2, 1, 2);
 
         public override PluginPriority Priority => PluginPriority.Last;
