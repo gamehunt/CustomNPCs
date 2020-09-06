@@ -192,8 +192,7 @@ namespace NPCS
 
         public override void OnDisabled()
         {
-            List<Npc> list = Npc.List;
-            foreach (Npc npc in list)
+            foreach (Npc npc in Npc.List)
             {
                 npc.Kill(false);
             }

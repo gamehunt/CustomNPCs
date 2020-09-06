@@ -204,7 +204,14 @@ namespace NPCS
             RIGHT
         };
 
-        public static List<Npc> List { get; } = new List<Npc>();
+        public static IEnumerable<Npc> List
+        {
+            get
+            {
+                return Dictionary.Values;
+            }
+        }
+        public static Dictionary<GameObject,Npc> Dictionary { get; } = new Dictionary<GameObject, Npc>();
 
         public Player NPCPlayer { get; set; }
 
@@ -732,7 +739,7 @@ namespace NPCS
 
         private void OnDestroy()
         {
-            List.Remove(this);
+            Dictionary.Remove(this.gameObject);
             Timing.KillCoroutines(MovementCoroutines);
             Timing.KillCoroutines(AttachedCoroutines);
             Log.Debug("Destroyed NPC component", Plugin.Instance.Config.VerboseOutput);
@@ -745,7 +752,7 @@ namespace NPCS
             AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(AICoroutine()));
-            List.Add(this);
+            Dictionary.Add(this.gameObject, this);
             Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
         }
 

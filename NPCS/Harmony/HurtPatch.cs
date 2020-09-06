@@ -11,8 +11,8 @@ namespace NPCS.Harmony
     {
         private static bool Prefix(PlayerStats __instance, ref bool __result, global::PlayerStats.HitInfo info, GameObject go, bool noTeamDamage = false)
         {
-            bool is_npc = __instance.GetComponent<Npc>() != null;
-            bool is_shooter_npc = go.GetComponent<Npc>() != null;
+            bool is_npc = Npc.Dictionary.ContainsKey(__instance.gameObject);
+            bool is_shooter_npc = Npc.Dictionary.ContainsKey(go);
             if (!is_npc && !is_shooter_npc)
             {
                 return true;

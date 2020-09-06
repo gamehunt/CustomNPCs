@@ -31,7 +31,7 @@ namespace NPCS.Harmony
 
                 foreach (GameObject gameObject in players)
                 {
-                    if (gameObject.GetComponent<Npc>() != null)
+                    if (Npc.Dictionary.ContainsKey(gameObject))
                     {
                         continue;
                     }

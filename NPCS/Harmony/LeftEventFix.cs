@@ -19,7 +19,7 @@ namespace NPCS.Harmony
 
                 var ev = new LeftEventArgs(player);
 
-                if (player.GameObject.GetComponent<Npc>() == null)
+                if (!Npc.Dictionary.ContainsKey(__instance.gameObject))
                 {
                     Log.SendRaw($"Player {ev.Player.Nickname} ({ev.Player.UserId}) ({player?.Id}) disconnected", ConsoleColor.Green);
                 }
@@ -31,7 +31,7 @@ namespace NPCS.Harmony
                 Exiled.Events.Handlers.Player.OnLeft(ev);
 
                 Player.IdsCache.Remove(player.Id);
-                if (player.GameObject.GetComponent<Npc>() == null || Plugin.Instance.Config.DisplayNpcInPlayerList)
+                if (!Npc.Dictionary.ContainsKey(__instance.gameObject) || Plugin.Instance.Config.DisplayNpcInPlayerList)
                 {
                     Player.UserIdsCache.Remove(player.UserId);
                 }

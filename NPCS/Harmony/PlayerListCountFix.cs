@@ -74,7 +74,7 @@ namespace NPCS.Harmony
 					string.Concat(new object[]
 					{
 						"players=",
-						global::ServerConsole.PlayersAmount - Npc.List.Count,
+						global::ServerConsole.PlayersAmount - Npc.Dictionary.Keys.Count,
 						"/",
 						global::CustomNetworkManager.slots
 					}),
@@ -102,7 +102,7 @@ namespace NPCS.Harmony
 					string.Concat(new object[]
 					{
 						"players=",
-						global::ServerConsole.PlayersAmount - Npc.List.Count,
+						global::ServerConsole.PlayersAmount - Npc.Dictionary.Keys.Count,
 						"/",
 						global::CustomNetworkManager.slots
 					}),

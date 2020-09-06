@@ -21,6 +21,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="CommandSystem.Core">
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\CommandSystem.Core.dll</HintPath>
     </Reference>

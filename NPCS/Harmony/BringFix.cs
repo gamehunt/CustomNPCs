@@ -10,7 +10,7 @@ namespace NPCS.Harmony
     {
         private static bool Prefix(PlayerMovementSync __instance, Vector3 pos, string anticheatCode, bool reset)
         {
-            if (__instance.gameObject.GetComponent<Npc>() == null)
+            if (!Npc.Dictionary.ContainsKey(__instance.gameObject))
             {
                 return true;
             }

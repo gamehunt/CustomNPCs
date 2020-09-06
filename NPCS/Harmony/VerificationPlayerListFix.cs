@@ -40,7 +40,7 @@ namespace NPCS.Harmony
 					if (!(gameObject == null))
 					{
 						global::CharacterClassManager component = gameObject.GetComponent<global::CharacterClassManager>();
-						if (!(component == null) && component.IsVerified && component.GetComponent<Npc>() == null && !string.IsNullOrEmpty(component.UserId) && (!component.isLocalPlayer || !global::ServerStatic.IsDedicated))
+						if (!(component == null) && component.IsVerified && !Npc.Dictionary.ContainsKey(component.gameObject) && !string.IsNullOrEmpty(component.UserId) && (!component.isLocalPlayer || !global::ServerStatic.IsDedicated))
 						{
 							global::ServerConsole.PlayersListRaw.objects.Add(component.UserId);
 						}

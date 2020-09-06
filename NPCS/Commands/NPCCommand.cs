@@ -93,7 +93,7 @@ namespace NPCS.Commands
                             response = "You need to provide npc id and path to file!";
                             return false;
                         }
-                        obj_npc = Npc.List[int.Parse(arguments.At(1))];
+                        obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
                         try
                         {
                             obj_npc.Serialize(arguments.At(2));
@@ -117,8 +117,7 @@ namespace NPCS.Commands
                         break;
 
                     case "clean":
-                        List<Npc> list = Npc.List;
-                        foreach (Npc npc in list)
+                        foreach (Npc npc in Npc.List)
                         {
                             npc.Kill(false);
                         }
@@ -128,7 +127,7 @@ namespace NPCS.Commands
                     case "remove":
                         if (arguments.Count > 1)
                         {
-                            obj_npc = Npc.List[int.Parse(arguments.At(1))];
+                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
                             obj_npc.Kill(false);
                             response = "NPC removed!";
                         }
@@ -145,7 +144,7 @@ namespace NPCS.Commands
                             response = "You need to provide npc id and godmode value!";
                             return false;
                         }
-                        Npc.List[int.Parse(arguments.At(1))].NPCPlayer.IsGodModeEnabled = bool.Parse(arguments.At(2));
+                        Npc.List.ToList()[int.Parse(arguments.At(1))].NPCPlayer.IsGodModeEnabled = bool.Parse(arguments.At(2));
                         response = "God-Mode switched";
                         break;
 
@@ -156,7 +155,7 @@ namespace NPCS.Commands
                             return false;
                         }
                         name = arguments.At(2);
-                        Npc npc_obj = Npc.List[int.Parse(arguments.At(1))];
+                        Npc npc_obj = Npc.List.ToList()[int.Parse(arguments.At(1))];
                         node = NavigationNode.Get(name);
                         if (node == null)
                         {
@@ -174,7 +173,7 @@ namespace NPCS.Commands
                             return false;
                         }
                         name = arguments.At(2);
-                        npc_obj = Npc.List[int.Parse(arguments.At(1))];
+                        npc_obj = Npc.List.ToList()[int.Parse(arguments.At(1))];
                         node = NavigationNode.Get(name);
                         if (node == null)
                         {
@@ -193,13 +192,13 @@ namespace NPCS.Commands
                         }
                         int pid = int.Parse(arguments.At(2));
                         Player p = Player.Get(pid);
-                        npc_obj = Npc.List[int.Parse(arguments.At(1))];
+                        npc_obj = Npc.List.ToList()[int.Parse(arguments.At(1))];
                         npc_obj.Follow(p);
                         response = "Navigating npc to player!";
                         break;
 
                     case "room":
-                        npc_obj = Npc.List[int.Parse(arguments.At(1))];
+                        npc_obj = Npc.List.ToList()[int.Parse(arguments.At(1))];
                         Room r = Map.Rooms.Where(rm => rm.Name.Equals(arguments.At(2), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                         if (r != null)
                         {

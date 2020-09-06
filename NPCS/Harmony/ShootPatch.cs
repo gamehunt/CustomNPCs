@@ -15,7 +15,7 @@ namespace NPCS.Harmony
             {
                 if (!__instance._iawRateLimit.CanExecute(true))
                     return false;
-                bool is_npc = __instance.gameObject.GetComponent<Npc>() != null;
+                bool is_npc = Npc.Dictionary.ContainsKey(__instance.gameObject);
                 int itemIndex = __instance._hub.inventory.GetItemIndex();
                 if (!is_npc)
                 {

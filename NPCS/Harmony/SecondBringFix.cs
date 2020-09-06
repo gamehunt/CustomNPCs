@@ -9,7 +9,7 @@ namespace NPCS.Harmony
     {
         private static bool Prefix(PlayerMovementSync __instance, Vector3 pos, float rot, bool forceGround)
         {
-            if (__instance.gameObject.GetComponent<Npc>() == null)
+            if (!Npc.Dictionary.ContainsKey(__instance.gameObject))
             {
                 return true;
             }

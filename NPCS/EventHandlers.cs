@@ -29,8 +29,7 @@ namespace NPCS
 
         public void OnRoundEnd(RoundEndedEventArgs ev)
         {
-            List<Npc> list = Npc.List;
-            foreach (Npc npc in list)
+            foreach (Npc npc in Npc.List)
             {
                 npc.Kill(false);
             }
@@ -40,8 +39,7 @@ namespace NPCS
 
         public void OnWarheadStart(StartingEventArgs ev)
         {
-            List<Npc> list = Npc.List;
-            foreach (Npc npc in list)
+            foreach (Npc npc in Npc.List)
             {
                 NPCWarheadStartedEvent nev = new NPCWarheadStartedEvent(npc, ev.Player);
                 npc.AttachedCoroutines.Add(Timing.CallDelayed(0.1f, () => npc.FireEvent(nev)));
@@ -50,8 +48,7 @@ namespace NPCS
 
         public void OnTeamRespawning(RespawningTeamEventArgs ev)
         {
-            List<Npc> list = Npc.List;
-            foreach (Npc npc in list)
+            foreach (Npc npc in Npc.List)
             {
                 NPCTeamRespawnEvent nev = new NPCTeamRespawnEvent(npc, null, ev.NextKnownTeam);
                 npc.FireEvent(nev);

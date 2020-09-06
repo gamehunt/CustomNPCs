@@ -3,6 +3,7 @@ using Exiled.Events.Handlers;
 using GameCore;
 using HarmonyLib;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
@@ -21,22 +22,21 @@ namespace NPCS.Harmony
             RoundSummary roundSummary = instance;
             while (roundSummary != null)
             {
-                int count = PlayerManager.players.Count - Npc.List.Count;
+                int count = PlayerManager.players.Count - Npc.Dictionary.Keys.Count;
                 while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || ((roundSummary._keepRoundOnOne && count < 2) && !__npc_endRequested))
                 {
                     if (!Plugin.Instance.Config.AllowAloneNpcs)
                     {
                         //Exiled.API.Features.Log.Debug($"Trying to clean up NPCs: {count} real player count, {Npc.List.Count} - npcs count", Plugin.Instance.Config.VerboseOutput);
-                        if (count == 0 && Npc.List.Count > 0)
+                        if (count == 0 && Npc.Dictionary.Keys.Count > 0)
                         {
-                            List<Npc> list = Npc.List;
-                            foreach (Npc n in list)
+                            foreach (Npc n in Npc.List)
                             {
                                 n.Kill(false);
                             }
                         }
                     }
-                    count = PlayerManager.players.Count - Npc.List.Count;
+                    count = PlayerManager.players.Count - Npc.Dictionary.Keys.Count;
                     yield return 0.0f;
                 }
                 yield return 0.0f;
