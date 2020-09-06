@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Transactions;
-using HarmonyLib;
-using UnityEngine;
+﻿using HarmonyLib;
 
 namespace NPCS.Harmony
 {
     [HarmonyPatch(typeof(VersionCheck), nameof(VersionCheck.Start))]
-    class VersionCheckFix
+    internal class VersionCheckFix
     {
         private static bool Prefix(VersionCheck __instance)
         {
-            if(__instance.connectionToClient == null)
+            if (__instance.connectionToClient == null)
             {
                 return false;
             }

@@ -31,7 +31,6 @@ namespace NPCS.Commands
                             flag = true;
                             break;
                         }
-
                     }
                 }
                 if (!flag)

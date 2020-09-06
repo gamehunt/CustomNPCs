@@ -25,13 +25,13 @@ namespace NPCS.Commands
                 {
                     if (Vector3.Distance(obj_npc.NPCPlayer.Position, s.Position) < 3f)
                     {
-                        if(obj_npc.IsLocked && obj_npc.LockHandler == s)
+                        if (obj_npc.IsLocked && obj_npc.LockHandler == s)
                         {
                             obj_npc.IsLocked = false;
                             obj_npc.LockHandler = null;
                         }
                         obj_npc.TalkingStates.Remove(s);
-                        s.SendConsoleMessage($"ended talk with {obj_npc.Name}","yellow");
+                        s.SendConsoleMessage($"ended talk with {obj_npc.Name}", "yellow");
                         flag = true;
                         break;
                     }

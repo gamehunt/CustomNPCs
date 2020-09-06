@@ -4,7 +4,6 @@ using MEC;
 using NPCS.Events;
 using NPCS.Harmony;
 using NPCS.Navigation;
-using System.Collections.Generic;
 
 namespace NPCS
 {
@@ -75,8 +74,6 @@ namespace NPCS
                 npc.FireEvent(new NPCHurtEvent(npc, ev.Attacker));
             }
         }
-
-
 
         public void OnGrenadeExplosion(ExplodingGrenadeEventArgs ev)
         {

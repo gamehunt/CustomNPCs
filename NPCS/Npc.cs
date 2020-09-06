@@ -211,7 +211,8 @@ namespace NPCS
                 return Dictionary.Values;
             }
         }
-        public static Dictionary<GameObject,Npc> Dictionary { get; } = new Dictionary<GameObject, Npc>();
+
+        public static Dictionary<GameObject, Npc> Dictionary { get; } = new Dictionary<GameObject, Npc>();
 
         public Player NPCPlayer { get; set; }
 

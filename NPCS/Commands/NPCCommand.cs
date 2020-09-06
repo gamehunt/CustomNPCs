@@ -4,7 +4,6 @@ using Exiled.Permissions.Extensions;
 using NPCS.Navigation;
 using RemoteAdmin;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
