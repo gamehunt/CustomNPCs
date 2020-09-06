@@ -79,6 +79,8 @@ namespace NPCS
             }
         }
 
+
+
         public void OnGrenadeExplosion(ExplodingGrenadeEventArgs ev)
         {
             foreach (Player p in ev.TargetToDamages.Keys)
