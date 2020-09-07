@@ -7,7 +7,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace NPCS.Talking
 {
-    internal class TalkNode
+    public class TalkNode
     {
         public TalkNode(string path)
         {

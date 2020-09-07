@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace NPCS.Events
 {
-    internal abstract class NPCEvent
+    public abstract class NPCEvent
     {
         public abstract string Name { get; }
 

@@ -108,7 +108,6 @@ namespace NPCS
                 int health = int.Parse((string)mapping.Children[new YamlScalarNode("health")]);
 
                 n.SaveFile = path;
-
                 if (health > 0)
                 {
                     n.NPCPlayer.MaxHealth = health;
@@ -190,7 +189,7 @@ namespace NPCS
                 if (!manual_mappings.ContainsKey(r.Name))
                 {
                     NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
-                    foreach (Door d in r.GetDoors())
+                    foreach (Door d in r.Doors)
                     {
                         if (d.gameObject.transform.position == Vector3.zero)
                         {
@@ -216,7 +215,7 @@ namespace NPCS
                     NavigationNode prev = null;
                     int i = 0;
                     Dictionary<NavigationNode, Door> near_doors = new Dictionary<NavigationNode, Door>();
-                    foreach (Door d in r.GetDoors())
+                    foreach (Door d in r.Doors)
                     {
                         if (d.gameObject.transform.position == Vector3.zero)
                         {

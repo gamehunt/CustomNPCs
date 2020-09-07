@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NPCS.AI
 {
-    internal abstract class AITarget
+    public abstract class AITarget
     {
         public abstract string Name { get; }
 

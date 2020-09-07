@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NPCS.Talking
 {
-    internal abstract class NodeAction
+    public abstract class NodeAction
     {
         public abstract string Name { get; }
 

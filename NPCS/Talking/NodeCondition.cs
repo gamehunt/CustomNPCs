@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NPCS.Talking
 {
-    internal abstract class NodeCondition
+    public abstract class NodeCondition
     {
         public abstract string Name { get; }
 

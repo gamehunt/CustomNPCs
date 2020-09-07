@@ -13,7 +13,7 @@ using YamlDotNet.Serialization;
 
 namespace NPCS
 {
-    internal class Npc : MonoBehaviour
+    public class Npc : MonoBehaviour
     {
         #region Serialization
 

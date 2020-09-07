@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NPCS.Navigation
 {
-    internal class NavigationNode : MonoBehaviour
+    public class NavigationNode : MonoBehaviour
     {
         public int Priority { get; set; } = 100;
 
