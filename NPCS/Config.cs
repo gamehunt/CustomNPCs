@@ -16,6 +16,9 @@ namespace NPCS
         [Description("Should PlayerList contain NPCs?")]
         public bool DisplayNpcInPlayerList { get; set; } = false;
 
+        [Description("Should RA contain NPCs?")]
+        public bool DisplayNpcInRemoteAdmin{ get; set; } = false;
+
         [Description("If false NPCs will be cleaned if they are alone on server")]
         public bool AllowAloneNpcs { get; set; } = true;
 

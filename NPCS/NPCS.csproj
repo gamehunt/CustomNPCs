@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>7.3</LangVersion>
     <Authors>gamehunt</Authors>
     <Version>1.3.2</Version>
     <Product>CustomNPCS</Product>
@@ -42,14 +43,8 @@
     <Reference Include="Mirror">
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\Mirror.dll</HintPath>
     </Reference>
-    <Reference Include="mscorlib">
-      <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\mscorlib.dll</HintPath>
-    </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
-      <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\System.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
