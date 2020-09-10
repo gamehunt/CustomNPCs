@@ -27,6 +27,9 @@ namespace NPCS.Harmony
             var skipStrLabel = generator.DefineLabel();
             newInstructions[continue_index].labels.Add(continueLabel);
 
+
+            // if (Npc.Dictionary.ContainsKey(gameObject4))
+            //    continue
             newInstructions.InsertRange(start_index + 1, new[]
             {
                 new CodeInstruction(OpCodes.Stloc_S, go.LocalIndex),
@@ -43,6 +46,8 @@ namespace NPCS.Harmony
 
             newInstructions[start_index + 10].labels.Add(skipLabel);
 
+            // if (Npc.Dictionary.ContainsKey(component.gameObject))
+            //    text4 = "[NPC] "
             newInstructions.InsertRange(name_index + 10 + 1, new[]
             {
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
