@@ -30,7 +30,7 @@ namespace NPCS.Harmony
             __instance.RealModelPosition = pos;
             __instance._lastSafePosition = pos;
             __instance._receivedPosition = pos;
-            __instance._hub.falldamage._previousHeight = pos.y;
+            __instance._hub.falldamage.PreviousHeight = pos.y;
             __instance._groundedY = pos.y;
             __instance._flyTime = 0f;
             if (anticheatCode == null || reset)

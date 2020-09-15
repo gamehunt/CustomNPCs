@@ -56,7 +56,7 @@ namespace NPCS.Harmony
                         while (enumerator.MoveNext())
                         {
                             global::ReferenceHub referenceHub = enumerator.Current;
-                            if (!referenceHub.isDedicatedServer && referenceHub.isReady)
+                            if (!referenceHub.isDedicatedServer && referenceHub.Ready)
                             {
                                 global::PlayerStats playerStats = referenceHub.playerStats;
                                 if (!Npc.Dictionary.ContainsKey(__instance.gameObject))

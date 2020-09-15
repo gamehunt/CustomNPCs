@@ -16,9 +16,9 @@ namespace NPCS.Harmony
         {
             var newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
-            int start_index = 10048;
-            int continue_index = 10169;
-            int name_index = 10091;
+            int start_index = 10019;
+            int continue_index = 10141;
+            int name_index = 10062;
 
             LocalBuilder go = generator.DeclareLocal(typeof(GameObject));
 
@@ -51,12 +51,12 @@ namespace NPCS.Harmony
             newInstructions.InsertRange(name_index + 10 + 1, new[]
             {
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
-                new CodeInstruction(OpCodes.Ldloc_S, 122),
+                new CodeInstruction(OpCodes.Ldloc_S, 121),
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(ServerRoles), nameof(ServerRoles.gameObject))),
                 new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject,Npc>),nameof(Dictionary<GameObject,Npc>.ContainsKey))),
                 new CodeInstruction(OpCodes.Brfalse_S, skipStrLabel),
                 new CodeInstruction(OpCodes.Ldstr, "[NPC] "),
-                new CodeInstruction(OpCodes.Stloc_S, 120),
+                new CodeInstruction(OpCodes.Stloc_S, 119),
             });
 
             newInstructions[name_index + 10 + 7].labels.Add(skipStrLabel);
