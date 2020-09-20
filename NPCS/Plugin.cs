@@ -48,23 +48,23 @@ namespace NPCS
                 {
                     if (bas.Name.Equals("TransmitData"))
                     {
-                        Exiled.Events.Events.DisabledPatches.Add(bas);
+                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
                     }
                     else if (bas.DeclaringType.Name.Equals("RoundSummary") && bas.Name.Equals("Start"))
                     {
-                        Exiled.Events.Events.DisabledPatches.Add(bas);
+                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
                     }
                     else if (bas.DeclaringType.Name.Equals("ReferenceHub") && bas.Name.Equals("OnDestroy"))
                     {
-                        Exiled.Events.Events.DisabledPatches.Add(bas);
+                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
                     }
                     else if (bas.Name.Equals("BanUser"))
                     {
-                        Exiled.Events.Events.DisabledPatches.Add(bas);
+                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
                     }
                     else if (bas.Name.Equals("CallCmdShoot"))
                     {
-                        Exiled.Events.Events.DisabledPatches.Add(bas);
+                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
                     }
                 }
 
