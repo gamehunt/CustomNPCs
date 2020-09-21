@@ -23,7 +23,10 @@ namespace NPCS
 
         public void OnWaitingForPlayers()
         {
-            Methods.GenerateNavGraph();
+            if (Plugin.Instance.Config.GenerateNavigationGraph)
+            {
+                Methods.GenerateNavGraph();
+            }
         }
 
         public void OnRoundEnd(RoundEndedEventArgs ev)

@@ -25,6 +25,9 @@ namespace NPCS
         [Description("Maximum distance between NPC and follow target. If it's reached NPC will tp to target")]
         public float MaxFollowDistance { get; set; } = 15f;
 
+        [Description("Enable this if you will use nav system (not neccessary for following)")]
+        public bool GenerateNavigationGraph { get; set; } = false;
+
         //TRANSLATIONS
 
         [Description("Localizations")]
