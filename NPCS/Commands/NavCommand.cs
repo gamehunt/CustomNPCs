@@ -1,4 +1,5 @@
 ﻿using CommandSystem;
+using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
 using NPCS.Navigation;
@@ -107,15 +108,15 @@ namespace NPCS.Commands
                         IEnumerable<NavigationNode> to_serialize = NavigationNode.AllNodes.Values.Where(n => n.SInfo != null);
                         foreach (NavigationNode node in to_serialize)
                         {
-                            if (!manual_mappings.ContainsKey(node.Room))
+                            if (!manual_mappings.ContainsKey(node.Room.RemoveBracketsOnEndOfName()))
                             {
                                 List<NavigationNode.NavNodeSerializationInfo> nodes = new List<NavigationNode.NavNodeSerializationInfo>();
                                 nodes.Add(node.SInfo);
-                                manual_mappings.Add(node.Room, nodes);
+                                manual_mappings.Add(node.Room.RemoveBracketsOnEndOfName(), nodes);
                             }
                             else
                             {
-                                manual_mappings[node.Room].Add(node.SInfo);
+                                manual_mappings[node.Room.RemoveBracketsOnEndOfName()].Add(node.SInfo);
                             }
                         }
                         FileStream fs = File.Open(Config.NPCs_nav_mappings_path, FileMode.Truncate, FileAccess.Write);

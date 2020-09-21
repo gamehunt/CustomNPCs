@@ -1,11 +1,13 @@
 ﻿using CommandSystem;
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
+using HarmonyLib;
 using NPCS.Navigation;
 using RemoteAdmin;
 using System;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 
 namespace NPCS.Commands
 {
@@ -47,62 +49,14 @@ namespace NPCS.Commands
                 string name;
                 switch (arguments.At(0))
                 {
-                    case "create":
-
-                        if (arguments.Count == 1)
-                        {
-                            Methods.CreateNPC(s.Position, s.Rotations, "default_npc.yml");
-                        }
-                        else if (arguments.Count == 2)
-                        {
-                            Methods.CreateNPC(s.Position, s.Rotations, RoleType.Scientist, ItemType.None, arguments.At(1));
-                        }
-                        else if (arguments.Count == 3)
-                        {
-                            Methods.CreateNPC(s.Position, s.Rotations, (RoleType)int.Parse(arguments.At(2)), ItemType.None, arguments.At(1));
-                        }
-                        else if (arguments.Count == 4)
-                        {
-                            Methods.CreateNPC(s.Position, s.Rotations, (RoleType)int.Parse(arguments.At(2)), (ItemType)int.Parse(arguments.At(3)), arguments.At(1));
-                        }
-                        else if (arguments.Count == 5)
-                        {
-                            Methods.CreateNPC(s.Position, s.Rotations, (RoleType)int.Parse(arguments.At(2)), (ItemType)int.Parse(arguments.At(3)), arguments.At(1), arguments.At(4));
-                        }
-                        response = "NPC created";
-                        break;
-
                     case "load":
-                        if (arguments.Count < 2)
-                        {
-                            response = "You need to provide path to file!";
-                            return false;
-                        }
-                        if (Methods.CreateNPC(s.Position, s.Rotations, arguments.At(1)) == null)
+                        string file = arguments.Count < 2 ? "default_npc.yml" : arguments.At(1);
+                        if (Methods.CreateNPC(s.Position, s.Rotations, file) == null)
                         {
                             response = "Failed to load NPC!";
                             return false;
                         }
                         response = "NPC loaded";
-                        break;
-
-                    case "save":
-                        if (arguments.Count < 3)
-                        {
-                            response = "You need to provide npc id and path to file!";
-                            return false;
-                        }
-                        obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
-                        try
-                        {
-                            obj_npc.Serialize(arguments.At(2));
-                        }
-                        catch (Exception)
-                        {
-                            response = "Failed to save NPC!";
-                            return false;
-                        }
-                        response = "NPC saved";
                         break;
 
                     case "list":
@@ -133,6 +87,20 @@ namespace NPCS.Commands
                         else
                         {
                             response = "You need to provide NPC's id!";
+                            return false;
+                        }
+                        break;
+
+                    case "move":
+                        if (arguments.Count > 4)
+                        {
+                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                            obj_npc.NPCPlayer.Position += new UnityEngine.Vector3(float.Parse(arguments.At(2)), float.Parse(arguments.At(3)), float.Parse(arguments.At(4)));
+                            response = "NPC moved!";
+                        }
+                        else
+                        {
+                            response = "You need to provide NPC's id and relatives to current position!";
                             return false;
                         }
                         break;

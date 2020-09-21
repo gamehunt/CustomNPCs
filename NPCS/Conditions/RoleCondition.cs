@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
 using System.Collections.Generic;
+using System;
 
 namespace NPCS.Conditions
 {
@@ -12,9 +13,9 @@ namespace NPCS.Conditions
         {
             if (bool.Parse("inverted"))
             {
-                return player.Role != (RoleType)int.Parse(args["role"]);
+                return player.Role != (RoleType)Enum.Parse(typeof(RoleType),args["role"]);
             }
-            return player.Role == (RoleType)int.Parse(args["role"]);
+            return player.Role == (RoleType)Enum.Parse(typeof(RoleType), args["role"]);
         }
     }
 }

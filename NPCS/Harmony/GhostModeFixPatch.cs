@@ -152,19 +152,18 @@ namespace NPCS.Harmony
                                                 break;
                                         }
                                     }
-
-                                    if (!canSee)
-                                    {
-                                        ppd = new PlayerPositionData(Vector3.up * 6000f, 0f, ppd.playerID);
-                                    }
-                                    else if (shouldRotate)
-                                    {
-                                        ppd = new PlayerPositionData(ppd.position, Quaternion.LookRotation(FindLookRotation(player.Position, currentTarget.Position)).eulerAngles.y, ppd.playerID);
-                                    }
-
-                                    __instance._transmitBuffer[index] = ppd;
                                 }
                             }
+                            if (!canSee)
+                            {
+                                ppd = new PlayerPositionData(Vector3.up * 6000f, 0f, ppd.playerID);
+                            }
+                            else if (shouldRotate)
+                            {
+                                ppd = new PlayerPositionData(ppd.position, Quaternion.LookRotation(FindLookRotation(player.Position, currentTarget.Position)).eulerAngles.y, ppd.playerID);
+                            }
+
+                            __instance._transmitBuffer[index] = ppd;
                         }
                     }
 

@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
 using System.Collections.Generic;
+using System;
 
 namespace NPCS.Conditions
 {
@@ -10,7 +11,7 @@ namespace NPCS.Conditions
 
         public override bool Check(Player player, Dictionary<string, string> args)
         {
-            return player.Inventory.curItem == (ItemType)int.Parse(args["item"]);
+            return player.Inventory.curItem == (ItemType)Enum.Parse(typeof(ItemType), args["item"]);
         }
     }
 }

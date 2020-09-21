@@ -28,6 +28,9 @@
     <Reference Include="CommandSystem.Core">
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\CommandSystem.Core.dll</HintPath>
     </Reference>
+    <Reference Include="DissonanceVoip">
+      <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\DissonanceVoip.dll</HintPath>
+    </Reference>
     <Reference Include="Exiled.API">
       <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
     </Reference>

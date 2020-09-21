@@ -17,64 +17,6 @@ namespace NPCS
     {
         #region Serialization
 
-        private class NPCSerializeInfo
-        {
-            private readonly Npc parent;
-
-            public NPCSerializeInfo(Npc which)
-            {
-                parent = which;
-            }
-
-            public string name
-            {
-                get
-                {
-                    return parent.Name;
-                }
-            }
-
-            public int role
-            {
-                get
-                {
-                    return (int)parent.NPCPlayer.Role;
-                }
-            }
-
-            public int item_held
-            {
-                get
-                {
-                    return (int)parent.ItemHeld;
-                }
-            }
-
-            public string root_node
-            {
-                get
-                {
-                    return Path.GetFileName(parent.RootNode.NodeFile);
-                }
-            }
-
-            public bool god_mode
-            {
-                get
-                {
-                    return parent.NPCPlayer.IsGodModeEnabled;
-                }
-            }
-
-            public bool is_exclusive
-            {
-                get
-                {
-                    return parent.IsExclusive;
-                }
-            }
-        }
-
         //Megabruh
         private class NPCMappingInfo
         {
@@ -172,25 +114,6 @@ namespace NPCS
             }
         }
 
-        public void Serialize(string path)
-        {
-            path = Path.Combine(Config.NPCs_root_path, path);
-            StreamWriter sw;
-            if (!File.Exists(path))
-            {
-                sw = File.CreateText(path);
-                var serializer = new SerializerBuilder().Build();
-                NPCSerializeInfo info = new NPCSerializeInfo(this);
-                var yaml = serializer.Serialize(info);
-                sw.Write(yaml);
-                sw.Close();
-            }
-            else
-            {
-                Log.Error("Failed to save npc: File exists!");
-            }
-        }
-
         #endregion Serialization
 
         #region Properties
@@ -260,7 +183,7 @@ namespace NPCS
 
         public Player FollowTarget { get; set; } = null;
 
-        public float MovementSpeed { get; set; } = 2f;
+        public float MovementSpeed { get; set; } = 5f;
 
         public List<CoroutineHandle> AttachedCoroutines { get; } = new List<CoroutineHandle>();
 
@@ -322,41 +245,73 @@ namespace NPCS
 
         private IEnumerator<float> NavCoroutine()
         {
+            Queue<Vector3> FollowTargetPosCache = new Queue<Vector3>();
+            int eta = 0;
             for (; ; )
             {
                 if (FollowTarget != null)
                 {
                     if (FollowTarget.IsAlive)
                     {
-                        GoTo(FollowTarget.Position);
                         if (Vector3.Distance(FollowTarget.Position, NPCPlayer.Position) >= Plugin.Instance.Config.MaxFollowDistance)
                         {
                             NPCPlayer.Position = FollowTarget.Position;
+                            eta = 0;
+                            FollowTargetPosCache.Clear();
+                        }
+                        if (Vector3.Distance(FollowTarget.Position, NPCPlayer.Position) >= 5f)
+                        {
+                            FollowTargetPosCache.Enqueue(FollowTarget.Position);
+                        }
+                        else
+                        {
+                            eta = 0;
+                            FollowTargetPosCache.Clear();
+                            GoTo(FollowTarget.Position);
                         }
                     }
                     else
                     {
+                        FollowTargetPosCache.Clear();
+                        eta = 0;
                         FireEvent(new NPCFollowTargetDiedEvent(this, FollowTarget));
-                        FollowTarget = null;
+                        Stop();
                     }
                 }
                 else
                 {
-                    if (!NavigationQueue.IsEmpty())
+                    eta = 0;
+                    FollowTargetPosCache.Clear();
+                }
+                if (!FollowTargetPosCache.IsEmpty())
+                {
+                    if (eta <= 0)
+                    {
+                        float full_eta = GoTo(FollowTargetPosCache.Dequeue());
+                        eta = (int)(full_eta / Plugin.Instance.Config.NavUpdateFrequency);
+                    }
+                    else
+                    {
+                        eta--;
+                    }
+                }
+                else if (!NavigationQueue.IsEmpty())
+                {
+                    if (CurrentNavTarget != null)
+                    {
+                        if (Vector3.Distance(CurrentNavTarget.Position, NPCPlayer.Position) < 1f || CurMovementDirection == MovementDirection.NONE)
+                        {
+                            if (CurrentNavTarget.AttachedDoor != null)
+                            {
+                                CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
+                            }
+                            CurrentNavTarget = null;
+                        }
+                    }
+                    else
                     {
                         CurrentNavTarget = NavigationQueue.Dequeue();
-                        if (CurrentNavTarget.AttachedDoor != null)
-                        {
-                            yield return Timing.WaitForSeconds(GoTo(CurrentNavTarget.Position) - 0.5f);
-                            CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
-                            yield return Timing.WaitForSeconds(0.6f);
-                        }
-                        else
-                        {
-                            yield return Timing.WaitForSeconds(GoTo(CurrentNavTarget.Position) + 0.1f);
-                        }
-
-                        CurrentNavTarget = null;
+                        GoTo(CurrentNavTarget.Position);
                     }
                 }
                 yield return Timing.WaitForSeconds(Plugin.Instance.Config.NavUpdateFrequency);

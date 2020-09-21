@@ -10,7 +10,7 @@ namespace NPCS.Conditions
 
         public override bool Check(Player player, Dictionary<string, string> args)
         {
-            return Plugin.Random.Next(0, 101) < int.Parse(args["chance"]);
+            return Plugin.Random.Next(0, 100) < int.Parse(args["chance"]);
         }
     }
 }
