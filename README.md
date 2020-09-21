@@ -17,5 +17,3 @@ Todo:
 - Better nav system
 
 - Not retarded AI
-
-- API
