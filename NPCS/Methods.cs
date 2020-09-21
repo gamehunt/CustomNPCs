@@ -21,7 +21,7 @@ namespace NPCS
 
     
 
-    internal class Methods
+    public class Methods
     {
         public static Npc CreateNPC(Vector3 pos, Vector2 rot, Vector3 scale, RoleType type = RoleType.ClassD, ItemType itemHeld = ItemType.None, string name = "(EMPTY)", string root_node = "default_node.yml")
         {

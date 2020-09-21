@@ -59,12 +59,15 @@ namespace NPCS.Harmony
                             {
                                 ReferenceHub hub2 = ReferenceHub.GetHub(players[index]);
 
-                                if (hub2.characterClassManager.CurRole.team != Team.SCP
-                                    && hub2.characterClassManager.CurRole.team != Team.RIP
-                                    && !players[index]
-                                        .GetComponent<Scp939_VisionController>()
-                                        .CanSee(player.ReferenceHub.characterClassManager.Scp939))
+                                Npc npc = (Npc.Dictionary.ContainsKey(hub2.gameObject)) ? Npc.Dictionary[hub2.gameObject] : null;
+
+                                if ((hub2.characterClassManager.CurRole.team != Team.SCP
+                                && hub2.characterClassManager.CurRole.team != Team.RIP
+                                && !players[index]
+                                    .GetComponent<Scp939_VisionController>()
+                                    .CanSee(player.ReferenceHub.characterClassManager.Scp939)) || (npc != null && !npc.ShouldBeVisibleBySCPs))
                                 {
+                                    
                                     __instance._transmitBuffer[index] = new PlayerPositionData(Vector3.up * 6000f, 0.0f, __instance._transmitBuffer[index].playerID);
                                 }
                             }
@@ -84,8 +87,10 @@ namespace NPCS.Harmony
                             if (currentTarget?.ReferenceHub == null)
                                 continue;
 
+                            Npc npc = (Npc.Dictionary.ContainsKey(currentTarget.GameObject)) ? Npc.Dictionary[currentTarget.GameObject] : null;
+
 #pragma warning disable CS0618 // Type or member is obsolete
-                            if (currentTarget.IsInvisible || player.TargetGhostsHashSet.Contains(ppd.playerID) || player.TargetGhosts.Contains(ppd.playerID))
+                            if (currentTarget.IsInvisible || player.TargetGhostsHashSet.Contains(ppd.playerID) || player.TargetGhosts.Contains(ppd.playerID) || (player.Side == Exiled.API.Enums.Side.Scp && npc != null && !npc.ShouldBeVisibleBySCPs))
 #pragma warning restore CS0618 // Type or member is obsolete
                             {
                                 canSee = false;
@@ -147,7 +152,7 @@ namespace NPCS.Harmony
                                                 shouldRotate = true;
                                                 break;
 
-                                            case RoleType.Scp096 when !Exiled.Events.Events.Instance.Config.CanTutorialTriggerScp096 && currentTarget.Role == RoleType.Tutorial:
+                                            case RoleType.Scp096 when !Exiled.Events.Events.Instance.Config.CanTutorialTriggerScp096 && currentTarget.Role == RoleType.Tutorial || Exiled.API.Features.Scp096.TurnedPlayers.Contains(currentTarget):
                                                 shouldRotate = true;
                                                 break;
                                         }

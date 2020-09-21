@@ -23,6 +23,10 @@ namespace NPCS.Commands
                 bool flag = false;
                 foreach (Npc obj_npc in Npc.List)
                 {
+                    if (obj_npc.DisableDialogSystem)
+                    {
+                        continue;
+                    }
                     if (!obj_npc.AIEnabled && !obj_npc.IsActionLocked && !(obj_npc.IsExclusive && obj_npc.IsLocked))
                     {
                         if (Vector3.Distance(obj_npc.NPCPlayer.Position, s.Position) < 3f)

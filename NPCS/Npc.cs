@@ -143,6 +143,10 @@ namespace NPCS
 
         public string SaveFile { get; set; } = null;
 
+        public bool DisableDialogSystem { get; set; } = false;
+
+        public bool ShouldBeVisibleBySCPs { get; set; } = false;
+
         public string Name
         {
             get
@@ -247,27 +251,28 @@ namespace NPCS
         {
             Queue<Vector3> FollowTargetPosCache = new Queue<Vector3>();
             int eta = 0;
+            int dormant_cache_update = 0;
             for (; ; )
             {
                 if (FollowTarget != null)
                 {
                     if (FollowTarget.IsAlive)
                     {
-                        if (Vector3.Distance(FollowTarget.Position, NPCPlayer.Position) >= Plugin.Instance.Config.MaxFollowDistance)
+                        float dist = Vector3.Distance(FollowTarget.Position, NPCPlayer.Position);
+                        if (dist >= Plugin.Instance.Config.MaxFollowDistance)
                         {
                             NPCPlayer.Position = FollowTarget.Position;
                             eta = 0;
                             FollowTargetPosCache.Clear();
                         }
-                        if (Vector3.Distance(FollowTarget.Position, NPCPlayer.Position) >= 5f)
+                        if (dist >= 1f)
                         {
-                            FollowTargetPosCache.Enqueue(FollowTarget.Position);
-                        }
-                        else
-                        {
-                            eta = 0;
-                            FollowTargetPosCache.Clear();
-                            GoTo(FollowTarget.Position);
+                            if (dormant_cache_update > 3)
+                            {
+                                FollowTargetPosCache.Enqueue(FollowTarget.Position);
+                                dormant_cache_update = 0;
+                            }
+                            dormant_cache_update++;
                         }
                     }
                     else
@@ -283,19 +288,20 @@ namespace NPCS
                     eta = 0;
                     FollowTargetPosCache.Clear();
                 }
-                if (!FollowTargetPosCache.IsEmpty())
+
+                if (eta <= 0)
                 {
-                    if (eta <= 0)
+                    if (!FollowTargetPosCache.IsEmpty())
                     {
                         float full_eta = GoTo(FollowTargetPosCache.Dequeue());
-                        eta = (int)(full_eta / Plugin.Instance.Config.NavUpdateFrequency);
-                    }
-                    else
-                    {
-                        eta--;
+                        eta = (int)(full_eta / Plugin.Instance.Config.NavUpdateFrequency) - 1;
                     }
                 }
-                else if (!NavigationQueue.IsEmpty())
+                else
+                {
+                    eta--;
+                }
+                if (FollowTarget == null && !NavigationQueue.IsEmpty())
                 {
                     if (CurrentNavTarget != null)
                     {
