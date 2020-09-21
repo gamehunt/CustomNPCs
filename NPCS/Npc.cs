@@ -187,7 +187,7 @@ namespace NPCS
 
         public Player FollowTarget { get; set; } = null;
 
-        public float MovementSpeed { get; set; } = 5f;
+        public float MovementSpeed { get; set; } = 8f;
 
         public List<CoroutineHandle> AttachedCoroutines { get; } = new List<CoroutineHandle>();
 
@@ -267,7 +267,7 @@ namespace NPCS
                         }
                         if (dist >= 1f)
                         {
-                            if (dormant_cache_update > 3)
+                            if (dormant_cache_update > 2)
                             {
                                 FollowTargetPosCache.Enqueue(FollowTarget.Position);
                                 dormant_cache_update = 0;
