@@ -102,6 +102,7 @@ namespace NPCS.Navigation
             {
                 UnityEngine.Object.Destroy(navnode);
             }
+            AllNodes.Clear();
         }
 
         public static NavigationNode Get(string name)

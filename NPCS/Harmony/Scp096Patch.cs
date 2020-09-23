@@ -17,7 +17,7 @@ namespace NPCS.Harmony
                 RaycastHit = false,
                 Looking = false
             };
-            if (npc != null && !npc.ShouldTrigger096)
+            if (npc != null && !npc.ShouldTrigger096 || Exiled.API.Features.Player.Get(__instance.Hub).IsNPC())
             {
                 __result = visionInformation;
                 return false;
