@@ -143,10 +143,6 @@ namespace NPCS
 
         public string SaveFile { get; set; } = null;
 
-        public bool DisableDialogSystem { get; set; } = false;
-
-        public bool ShouldBeVisibleBySCPs { get; set; } = false;
-
         public string Name
         {
             get
@@ -312,7 +308,7 @@ namespace NPCS
                 {
                     if (CurrentNavTarget != null)
                     {
-                        if (Vector3.Distance(CurrentNavTarget.Position, NPCPlayer.Position) < 1f || CurMovementDirection == MovementDirection.NONE)
+                        if (Vector3.Distance(CurrentNavTarget.Position, NPCPlayer.Position) < 1.5f || CurMovementDirection == MovementDirection.NONE)
                         {
                             if (CurrentNavTarget.AttachedDoor != null)
                             {
@@ -665,6 +661,17 @@ namespace NPCS
         }
 
         #endregion Navigation
+
+        #region API
+
+
+        public bool DisableDialogSystem { get; set; } = false;
+
+        public bool ShouldBeVisibleBySCPs { get; set; } = true;
+
+        public bool ShouldTrigger096{ get; set; } = false;
+
+        #endregion
 
         public void TalkWith(Player p)
         {
