@@ -77,6 +77,7 @@ namespace NPCS
             {
                 npcc.NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(pos,0,true);
                 npcc.NPCPlayer.Rotations = rot;
+                npcc.NPCPlayer.Rotation.Set(90f, 0f, 90f);
             }));
 
             npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.4f, () =>

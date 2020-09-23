@@ -265,7 +265,7 @@ namespace NPCS
                             eta = 0;
                             FollowTargetPosCache.Clear();
                         }
-                        if (dist >= 1f)
+                        if (dist >= 1.5f)
                         {
                             if (dormant_cache_update > 2)
                             {
@@ -273,6 +273,13 @@ namespace NPCS
                                 dormant_cache_update = 0;
                             }
                             dormant_cache_update++;
+                        }
+                        else
+                        {
+                            FollowTargetPosCache.Clear();
+                            eta = 0;
+                            Timing.KillCoroutines(MovementCoroutines);
+                            Move(MovementDirection.NONE);
                         }
                     }
                     else
