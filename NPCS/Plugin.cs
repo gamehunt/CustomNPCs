@@ -43,8 +43,7 @@ namespace NPCS
 
                 Random = new Random();
 
-                List<MethodBase> methods = new List<MethodBase>(Evs.Events.Instance.Harmony.GetPatchedMethods());
-                foreach (System.Reflection.MethodBase bas in methods)
+                foreach (MethodBase bas in Evs.Events.Instance.Harmony.GetPatchedMethods())
                 {
                     if (bas.Name.Equals("TransmitData"))
                     {
@@ -68,7 +67,7 @@ namespace NPCS
                     }
                 }
 
-                Exiled.Events.Events.Instance.ReloadDisabledPatches();
+                Evs.Events.Instance.ReloadDisabledPatches();
 
                 Harmony = new HarmonyLib.Harmony($"gamehunt.cnpcs.{reloads}");
                 reloads++;

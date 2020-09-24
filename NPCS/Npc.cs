@@ -667,7 +667,7 @@ namespace NPCS
 
         public bool DisableDialogSystem { get; set; } = false;
 
-        public bool ShouldBeVisibleBySCPs { get; set; } = true;
+        public HashSet<RoleType> VisibleFor { get; set; } = new HashSet<RoleType>();
 
         public bool ShouldTrigger096{ get; set; } = false;
 

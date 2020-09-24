@@ -65,7 +65,7 @@ namespace NPCS.Harmony
                                 && hub2.characterClassManager.CurRole.team != Team.RIP
                                 && !players[index]
                                     .GetComponent<Scp939_VisionController>()
-                                    .CanSee(player.ReferenceHub.characterClassManager.Scp939)) || (npc != null && !npc.ShouldBeVisibleBySCPs))
+                                    .CanSee(player.ReferenceHub.characterClassManager.Scp939)) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
                                 {
                                     
                                     __instance._transmitBuffer[index] = new PlayerPositionData(Vector3.up * 6000f, 0.0f, __instance._transmitBuffer[index].playerID);
@@ -90,7 +90,7 @@ namespace NPCS.Harmony
                             Npc npc = (Npc.Dictionary.ContainsKey(currentTarget.GameObject)) ? Npc.Dictionary[currentTarget.GameObject] : null;
 
 #pragma warning disable CS0618 // Type or member is obsolete
-                            if (currentTarget.IsInvisible || player.TargetGhostsHashSet.Contains(ppd.playerID) || player.TargetGhosts.Contains(ppd.playerID) || (player.Side == Exiled.API.Enums.Side.Scp && npc != null && !npc.ShouldBeVisibleBySCPs))
+                            if (currentTarget.IsInvisible || player.TargetGhostsHashSet.Contains(ppd.playerID) || player.TargetGhosts.Contains(ppd.playerID) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
 #pragma warning restore CS0618 // Type or member is obsolete
                             {
                                 canSee = false;
