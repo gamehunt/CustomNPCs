@@ -33,7 +33,10 @@ namespace NPCS
         {
             foreach (Npc npc in Npc.List)
             {
-                npc.Kill(false);
+                if (!npc.DontCleanup)
+                {
+                    npc.Kill(false);
+                }
             }
             RoundSummaryFix.__npc_endRequested = false;
             NavigationNode.Clear();

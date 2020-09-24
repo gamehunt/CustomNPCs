@@ -664,14 +664,15 @@ namespace NPCS
 
         #region API
 
-
         public bool DisableDialogSystem { get; set; } = false;
 
         public HashSet<RoleType> VisibleFor { get; set; } = new HashSet<RoleType>();
 
-        public bool ShouldTrigger096{ get; set; } = false;
+        public bool ShouldTrigger096 { get; set; } = false;
 
-        #endregion
+        public bool DontCleanup { get; set; } = false;
+
+        #endregion API
 
         public void TalkWith(Player p)
         {
