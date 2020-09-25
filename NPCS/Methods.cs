@@ -1,5 +1,4 @@
-﻿using Exiled.API.Extensions;
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
 using MEC;
 using Mirror;
 using NPCS.AI;
@@ -15,8 +14,13 @@ using UnityEngine;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 
+using Exiled.API.Extensions;
+
 namespace NPCS
 {
+
+    
+
     public class Methods
     {
         public static Npc CreateNPC(Vector3 pos, Vector2 rot, Vector3 scale, RoleType type = RoleType.ClassD, ItemType itemHeld = ItemType.None, string name = "(EMPTY)", string root_node = "default_node.yml")
@@ -26,7 +30,7 @@ namespace NPCS
                     NetworkManager.singleton.spawnPrefabs.FirstOrDefault(p => p.gameObject.name == "Player"));
             CharacterClassManager ccm = obj.GetComponent<CharacterClassManager>();
 
-            pos = new Vector3(pos.x, pos.y - (1f - scale.y) * 1.27f, pos.z);
+            pos = new Vector3(pos.x, pos.y - (1f - scale.y)*1.27f, pos.z);
 
             obj.transform.localScale = scale;
             obj.transform.position = pos;
@@ -47,6 +51,8 @@ namespace NPCS
             obj.GetComponent<ServerRoles>().MyText = "NPC";
             obj.GetComponent<ServerRoles>().MyColor = "red";
 
+            
+
             NetworkServer.Spawn(obj);
             PlayerManager.AddPlayer(obj); //I'm not sure if I need this
 
@@ -62,22 +68,24 @@ namespace NPCS
 
             Npc npcc = obj.AddComponent<Npc>();
 
+            npcc.ItemHeld = itemHeld;
             npcc.RootNode = TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node));
 
             npcc.NPCPlayer.ReferenceHub.transform.localScale = scale;
 
             npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.3f, () =>
             {
-                npcc.NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(pos, 0, true);
+                npcc.NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(pos,0,true);
                 npcc.NPCPlayer.Rotations = rot;
                 npcc.NPCPlayer.Rotation.Set(90f, 0f, 90f);
-                npcc.ItemHeld = itemHeld;
             }));
 
             npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.4f, () =>
             {
                 npcc.FireEvent(new NPCOnCreatedEvent(npcc, null));
             }));
+
+
 
             return npcc;
         }
@@ -113,7 +121,8 @@ namespace NPCS
                 float y = float.Parse(((string)scale.Children[1]).Replace('.', ','));
                 float z = float.Parse(((string)scale.Children[2]).Replace('.', ','));
 
-                Npc n = CreateNPC(pos, rot, new Vector3(x, y, z), (RoleType)Enum.Parse(typeof(RoleType), (string)mapping.Children[new YamlScalarNode("role")]), (ItemType)Enum.Parse(typeof(ItemType), (string)mapping.Children[new YamlScalarNode("item_held")]), (string)mapping.Children[new YamlScalarNode("name")], (string)mapping.Children[new YamlScalarNode("root_node")]);
+
+                Npc n = CreateNPC(pos, rot, new Vector3(x, y, z), (RoleType)Enum.Parse(typeof(RoleType),(string)mapping.Children[new YamlScalarNode("role")]), (ItemType)Enum.Parse(typeof(ItemType),(string)mapping.Children[new YamlScalarNode("item_held")]), (string)mapping.Children[new YamlScalarNode("name")], (string)mapping.Children[new YamlScalarNode("root_node")]);
 
                 n.NPCPlayer.IsGodModeEnabled = bool.Parse((string)mapping.Children[new YamlScalarNode("god_mode")]);
 

@@ -44,7 +44,7 @@
       <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
-      <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\Mirror.dll</HintPath>
+      <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\publicized_assemblies\Mirror_publicized.dll</HintPath>
     </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>

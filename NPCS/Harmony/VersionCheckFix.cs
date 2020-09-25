@@ -7,11 +7,7 @@ namespace NPCS.Harmony
     {
         private static bool Prefix(VersionCheck __instance)
         {
-            if (__instance.connectionToClient == null)
-            {
-                return false;
-            }
-            return true;
+            return __instance.connectionToClient != null;
         }
     }
 }
