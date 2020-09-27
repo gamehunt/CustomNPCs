@@ -30,7 +30,7 @@ namespace NPCS
                     NetworkManager.singleton.spawnPrefabs.FirstOrDefault(p => p.gameObject.name == "Player"));
             CharacterClassManager ccm = obj.GetComponent<CharacterClassManager>();
 
-            pos = new Vector3(pos.x, pos.y - (1f - scale.y)*1.27f, pos.z);
+            pos = new Vector3(pos.x, pos.y - (1f - scale.y)*Plugin.Instance.Config.NpcSizePositionMultiplier, pos.z);
 
             obj.transform.localScale = scale;
             obj.transform.position = pos;

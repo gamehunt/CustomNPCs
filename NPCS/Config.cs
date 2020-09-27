@@ -28,6 +28,9 @@ namespace NPCS
         [Description("Enable this if you will use nav system (not neccessary for following)")]
         public bool GenerateNavigationGraph { get; set; } = false;
 
+        [Description("Ajust this if NPCs with custom scale are \"flying\"")]
+        public float NpcSizePositionMultiplier { get; set; } = 1.27f;
+
         //TRANSLATIONS
 
         [Description("Localizations")]
