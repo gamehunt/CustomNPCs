@@ -5,6 +5,7 @@ using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using Scp096 = PlayableScps.Scp096;
 
 namespace NPCS.Harmony
