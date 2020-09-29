@@ -27,7 +27,6 @@ namespace NPCS.Harmony
             var skipStrLabel = generator.DefineLabel();
             newInstructions[continue_index].labels.Add(continueLabel);
 
-
             // if (Npc.Dictionary.ContainsKey(gameObject4))
             //    continue
             newInstructions.InsertRange(start_index + 1, new[]

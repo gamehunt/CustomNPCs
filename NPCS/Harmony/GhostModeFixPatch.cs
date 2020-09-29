@@ -5,7 +5,6 @@ using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using Scp096 = PlayableScps.Scp096;
 
 namespace NPCS.Harmony
@@ -43,7 +42,6 @@ namespace NPCS.Harmony
 
                 foreach (GameObject gameObject in players)
                 {
-
                     if (Npc.Dictionary.ContainsKey(gameObject))
                     {
                         continue;
@@ -68,7 +66,6 @@ namespace NPCS.Harmony
                                     .GetComponent<Scp939_VisionController>()
                                     .CanSee(player.ReferenceHub.characterClassManager.Scp939)) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
                                 {
-                                    
                                     __instance._transmitBuffer[index] = new PlayerPositionData(Vector3.up * 6000f, 0.0f, __instance._transmitBuffer[index].playerID);
                                 }
                             }

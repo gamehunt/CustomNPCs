@@ -1,10 +1,8 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using System;
-using System.Linq;
-using Handlers = Exiled.Events.Handlers;
 
-namespace Stalky106CompatModule
+namespace ReversePlagueCompatModule
 {
     public class Plugin : Exiled.API.Features.Plugin<ReversePlagueCompatModule.Config>
     {
@@ -35,15 +33,16 @@ namespace Stalky106CompatModule
                     return;
                 }
 
-                if (Exiled.Loader.Loader.Plugins.Find(p => p.Prefix == "ST106") == null){
-                    Log.Error("Failed to load Stalky106 compat module addon: Stalky106 not found!");
+                if (Exiled.Loader.Loader.Plugins.Find(p => p.Name == "ReversePlague") == null)
+                {
+                    Log.Error("Failed to load Stalky106 compat module addon: ReversePlague not found!");
                     return;
                 }
 
-                Harmony = new HarmonyLib.Harmony("gamehunt.compat.stalky106");
+                Harmony = new HarmonyLib.Harmony("gamehunt.compat.reverseplague");
                 Harmony.PatchAll();
 
-                Log.Info($"Stalky106 compat module loaded. @gamehunt");
+                Log.Info($"ReversePlague compat module loaded. @gamehunt");
             }
             catch (Exception e)
             {

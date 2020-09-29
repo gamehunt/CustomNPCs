@@ -4,7 +4,6 @@ using NPCS.AI;
 using NPCS.Conditions;
 using NPCS.Talking;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Evs = Exiled.Events;

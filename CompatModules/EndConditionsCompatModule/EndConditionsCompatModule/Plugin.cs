@@ -1,8 +1,6 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using System;
-using System.Linq;
-using Handlers = Exiled.Events.Handlers;
 
 namespace EndConditionsCompatModule
 {
@@ -35,7 +33,8 @@ namespace EndConditionsCompatModule
                     return;
                 }
 
-                if (Exiled.Loader.Loader.Plugins.Find(p => p.Name == "EndConditions") == null){
+                if (Exiled.Loader.Loader.Plugins.Find(p => p.Name == "EndConditions") == null)
+                {
                     Log.Error("Failed to load EndConditions compat module addon: EndConditions not found!");
                     return;
                 }
