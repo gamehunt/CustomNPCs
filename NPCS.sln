@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndConditionsCompatModule",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stalky106CompatModule", "CompatModules\Stalky106CompatModule\Stalky106CompatModule\Stalky106CompatModule.csproj", "{020F5135-ACA6-4EB2-B3DD-F4EF624302D9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReversePlagueCompatModule", "CompatModules\ReversePlagueCompatModule\ReversePlagueCompatModule\ReversePlagueCompatModule.csproj", "{8889DE2C-9999-417C-A927-DBEC1AD7452C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{020F5135-ACA6-4EB2-B3DD-F4EF624302D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{020F5135-ACA6-4EB2-B3DD-F4EF624302D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{020F5135-ACA6-4EB2-B3DD-F4EF624302D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8889DE2C-9999-417C-A927-DBEC1AD7452C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8889DE2C-9999-417C-A927-DBEC1AD7452C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8889DE2C-9999-417C-A927-DBEC1AD7452C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8889DE2C-9999-417C-A927-DBEC1AD7452C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

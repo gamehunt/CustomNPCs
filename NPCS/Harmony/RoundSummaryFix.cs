@@ -42,7 +42,7 @@ namespace NPCS.Harmony
                 RoundSummary.SumInfo_ClassList newList = default;
                 foreach (GameObject player in PlayerManager.players)
                 {
-                    if (!(player == null) && player.GetComponent<Npc>() == null)
+                    if (!(player == null) && !Npc.Dictionary.ContainsKey(player))
                     {
                         CharacterClassManager component = player.GetComponent<CharacterClassManager>();
                         if (component.Classes.CheckBounds(component.CurClass))

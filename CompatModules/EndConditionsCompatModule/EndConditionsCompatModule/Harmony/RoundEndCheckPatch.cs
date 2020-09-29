@@ -28,6 +28,9 @@ namespace EndConditionsCompatModule.Harmony
 
             newInstructions.InsertRange(index + 1, new[]
             {
+                new CodeInstruction(OpCodes.Call,PropertyGetter(typeof(Player),nameof(Player.Nickname))),
+                new CodeInstruction(OpCodes.Call,Method(typeof(Log),nameof(Log.Info))),
+                new CodeInstruction(OpCodes.Ldloc_2),
                 new CodeInstruction(OpCodes.Call, Method(typeof(NPCS.Extensions), nameof(NPCS.Extensions.IsNPC))),
                 new CodeInstruction(OpCodes.Brtrue_S,continueLabel),
                 new CodeInstruction(OpCodes.Ldloc_2)
