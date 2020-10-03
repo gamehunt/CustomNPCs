@@ -78,7 +78,7 @@ name: DEFAULT
 role: 6
 health: -1
 scale: [1, 1, 1]
-item_held: 24
+item_held: GunLogicer
 root_node: default_node.yml
 god_mode: true
 is_exclusive: true

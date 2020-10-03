@@ -322,6 +322,9 @@ namespace NPCS
                         CurrentNavTarget = NavigationQueue.Dequeue();
                         GoTo(CurrentNavTarget.Position);
                     }
+                }else if(FollowTarget == null && NavigationQueue.Count == 0 && CurrentAIRoomTarget != null)
+                {
+                    CurrentAIRoomTarget = null;
                 }
                 yield return Timing.WaitForSeconds(Plugin.Instance.Config.NavUpdateFrequency);
             }

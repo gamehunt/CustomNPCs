@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using System;
+using NorthwoodLib;
 using System.Linq;
 
 namespace NPCS.AI
@@ -10,7 +11,7 @@ namespace NPCS.AI
 
         public override bool Check(Npc npc)
         {
-            return Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null;
+            return !string.IsNullOrEmpty(Arguments["room"]) && (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null);
         }
 
         public override float Process(Npc npc)
@@ -18,7 +19,7 @@ namespace NPCS.AI
             if (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase))
             {
                 Room r = Map.Rooms[RandomGenerator.GetInt32(true) % Map.Rooms.Count];
-                if (r != npc.CurrentAIRoomTarget)
+                if (npc.CurrentAIRoomTarget == null)
                 {
                     if (npc.GotoRoom(r))
                     {
@@ -29,7 +30,7 @@ namespace NPCS.AI
             else
             {
                 Room r = Map.Rooms.Where(rm => rm.Name.Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                if (r != npc.CurrentAIRoomTarget)
+                if (npc.CurrentAIRoomTarget == null)
                 {
                     if (npc.GotoRoom(r))
                     {
