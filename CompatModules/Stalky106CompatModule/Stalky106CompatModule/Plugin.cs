@@ -1,8 +1,6 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using System;
-using System.Linq;
-using Handlers = Exiled.Events.Handlers;
 
 namespace Stalky106CompatModule
 {
@@ -35,7 +33,8 @@ namespace Stalky106CompatModule
                     return;
                 }
 
-                if (Exiled.Loader.Loader.Plugins.Find(p => p.Prefix == "ST106") == null){
+                if (Exiled.Loader.Loader.Plugins.Find(p => p.Prefix == "ST106") == null)
+                {
                     Log.Error("Failed to load Stalky106 compat module addon: Stalky106 not found!");
                     return;
                 }

@@ -28,7 +28,7 @@
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
     <Reference Include="EndConditions">
-      <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\EndConditions.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\publicized_assemblies\EndConditions_publicized.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.API">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
@@ -41,6 +41,9 @@
     </Reference>
     <Reference Include="Exiled.Permissions">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror">
+      <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>

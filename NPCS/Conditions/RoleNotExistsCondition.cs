@@ -1,8 +1,8 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace NPCS.Conditions
 {
