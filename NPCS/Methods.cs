@@ -246,10 +246,12 @@ namespace NPCS
                     foreach (NavigationNode.NavNodeSerializationInfo info in nodes)
                     {
                         NavigationNode node = NavigationNode.Create(info, $"MANUAL_Room_{r.Name}_{i}", rname);
-                        foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => Vector3.Distance(nd.Position, node.Position) < 3f))
+                        foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => nd != node && Vector3.Distance(nd.Position, node.Position) < 3f))
                         {
                             node.LinkedNodes.Add(d);
                             d.LinkedNodes.Add(node);
+
+                            Log.Info($"Linked {node.Name} and {d.Name}");
                         }
                         i++;
                     }
