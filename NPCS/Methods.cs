@@ -71,7 +71,6 @@ namespace NPCS
             {
                 npcc.NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(pos, 0, true);
                 npcc.NPCPlayer.Rotations = rot;
-                npcc.NPCPlayer.Rotation.Set(90f, 0f, 90f);
             }));
 
             npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.4f, () =>
@@ -247,7 +246,7 @@ namespace NPCS
                     foreach (NavigationNode.NavNodeSerializationInfo info in nodes)
                     {
                         NavigationNode node = NavigationNode.Create(info, $"MANUAL_Room_{r.Name}_{i}", rname);
-                        foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => Vector3.Distance(nd.Position, node.Position) < 2f))
+                        foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => Vector3.Distance(nd.Position, node.Position) < 3f))
                         {
                             node.LinkedNodes.Add(d);
                             d.LinkedNodes.Add(node);

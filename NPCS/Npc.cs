@@ -183,7 +183,7 @@ namespace NPCS
 
         public Player FollowTarget { get; set; } = null;
 
-        public float MovementSpeed { get; set; } = 8f;
+        public float MovementSpeed { get; set; } = 4f;
 
         public List<CoroutineHandle> AttachedCoroutines { get; } = new List<CoroutineHandle>();
 
@@ -211,10 +211,31 @@ namespace NPCS
                 {
                     if (CurrentAITarget != null)
                     {
-                        if (CurrentAITarget.Check(this))
+                        bool res = false;
+                        try
                         {
-                            yield return Timing.WaitForSeconds(CurrentAITarget.Process(this));
-                            if (CurrentAITarget.IsFinished)
+                            res = CurrentAITarget.Check(this);
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Warn($"AI Target check failure: {e}");
+                        }
+                        if (res)
+                        {
+                            float delay = 0f;
+                            bool failure = false;
+                            try
+                            {
+                                delay = CurrentAITarget.Process(this);
+                            }
+                            catch (Exception e)
+                            {
+                                failure = true;
+                            }
+
+                            yield return Timing.WaitForSeconds(delay);
+
+                            if (CurrentAITarget.IsFinished || failure)
                             {
                                 CurrentAITarget = null;
                             }
@@ -227,11 +248,18 @@ namespace NPCS
                     }
                     else
                     {
-                        if (!AIQueue.IsEmpty())
+                        try
                         {
-                            CurrentAITarget = AIQueue.First.Value;
-                            AIQueue.RemoveFirst();
-                            AIQueue.AddLast(CurrentAITarget);
+                            if (!AIQueue.IsEmpty())
+                            {
+                                CurrentAITarget = AIQueue.First.Value;
+                                AIQueue.RemoveFirst();
+                                AIQueue.AddLast(CurrentAITarget);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Warn($"Error while scheduling AI target: {e}");
                         }
                         yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                     }
@@ -285,46 +313,52 @@ namespace NPCS
                         FireEvent(new NPCFollowTargetDiedEvent(this, FollowTarget));
                         Stop();
                     }
+
+                    if (eta <= 0)
+                    {
+                        if (!FollowTargetPosCache.IsEmpty())
+                        {
+                            float full_eta = GoTo(FollowTargetPosCache.Dequeue());
+                            eta = (int)(full_eta / Plugin.Instance.Config.NavUpdateFrequency) - 1;
+                        }
+                    }
+                    else
+                    {
+                        eta--;
+                    }
+
                 }
                 else
                 {
                     eta = 0;
                     FollowTargetPosCache.Clear();
-                }
 
-                if (eta <= 0)
-                {
-                    if (!FollowTargetPosCache.IsEmpty())
-                    {
-                        float full_eta = GoTo(FollowTargetPosCache.Dequeue());
-                        eta = (int)(full_eta / Plugin.Instance.Config.NavUpdateFrequency) - 1;
-                    }
-                }
-                else
-                {
-                    eta--;
-                }
-                if (FollowTarget == null && !NavigationQueue.IsEmpty())
-                {
                     if (CurrentNavTarget != null)
                     {
-                        if (Vector3.Distance(CurrentNavTarget.Position, NPCPlayer.Position) < 1.5f || CurMovementDirection == MovementDirection.NONE)
+                        float distance = Vector3.Distance(CurrentNavTarget.Position, NPCPlayer.Position);
+                        if (distance < 3f)
                         {
                             if (CurrentNavTarget.AttachedDoor != null)
                             {
                                 CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
                             }
+                        }
+                        if (CurMovementDirection == MovementDirection.NONE)
+                        {
+                            Vector3 forced = new Vector3(CurrentNavTarget.Position.x,NPCPlayer.Position.y,CurrentNavTarget.Position.z);
+                            NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(forced, 0f, true);
                             CurrentNavTarget = null;
                         }
                     }
-                    else
+                    else if (NavigationQueue.Count > 0)
                     {
                         CurrentNavTarget = NavigationQueue.Dequeue();
                         GoTo(CurrentNavTarget.Position);
                     }
-                }else if(FollowTarget == null && NavigationQueue.Count == 0 && CurrentAIRoomTarget != null)
-                {
-                    CurrentAIRoomTarget = null;
+                    else if (CurrentAIRoomTarget != null)
+                    {
+                        CurrentAIRoomTarget = null;
+                    }
                 }
                 yield return Timing.WaitForSeconds(Plugin.Instance.Config.NavUpdateFrequency);
             }
@@ -417,6 +451,7 @@ namespace NPCS
         {
             ClearNavTargets();
             FollowTarget = null;
+            CurrentAIRoomTarget = null;
             Timing.KillCoroutines(MovementCoroutines);
             Move(MovementDirection.NONE);
         }
@@ -566,10 +601,15 @@ namespace NPCS
             float dist = heading.magnitude;
             NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
             Move(MovementDirection.FORWARD);
-            float eta = 0.1f * (dist / (NPCPlayer.CameraTransform.forward / 10 * MovementSpeed).magnitude);
+            float eta = Plugin.Instance.Config.MovementUpdateFrequency * (dist / (NPCPlayer.CameraTransform.forward / 10 * MovementSpeed).magnitude);
+            position.y = NPCPlayer.Position.y;
             MovementCoroutines.Add(Timing.CallDelayed(eta, () =>
             {
                 Move(MovementDirection.NONE);
+                if (Vector3.Distance(NPCPlayer.Position, position) >= 2f)
+                {
+                    NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(position, 0f, true);
+                }
                 IsActionLocked = false;
             }));
             return eta;

@@ -12,7 +12,17 @@ namespace NPCS.Actions
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
             NPCCustomEvent ev = new NPCCustomEvent(npc, player, args["event_name"]);
-            npc.FireEvent(ev);
+            if (bool.Parse(args["global"]))
+            {
+                foreach(Npc n in Npc.List)
+                {
+                    n.FireEvent(ev);
+                }
+            }
+            else
+            {
+                npc.FireEvent(ev);
+            }
         }
     }
 }
