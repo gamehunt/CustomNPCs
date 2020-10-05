@@ -16,7 +16,7 @@ namespace NPCS.Harmony
             RaycastHit raycastHit;
             if (forceGround && Physics.Raycast(pos, Vector3.down, out raycastHit, 100f, __instance.CollidableSurfaces))
             {
-                pos = raycastHit.point + Vector3.up * 1.23f;
+                pos = raycastHit.point + Vector3.up * Plugin.Instance.Config.NpcSizePositionMultiplier;
                 pos = new Vector3(pos.x, pos.y - (1f - __instance._hub.transform.localScale.y) * Plugin.Instance.Config.NpcSizePositionMultiplier, pos.z);
             }
             __instance.ForcePosition(pos);

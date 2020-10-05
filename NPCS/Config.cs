@@ -29,7 +29,7 @@ namespace NPCS
         public bool GenerateNavigationGraph { get; set; } = false;
 
         [Description("Ajust this if NPCs with custom scale are \"flying\"")]
-        public float NpcSizePositionMultiplier { get; set; } = 1.27f;
+        public float NpcSizePositionMultiplier { get; set; } = 1.3f;
 
         //TRANSLATIONS
 
