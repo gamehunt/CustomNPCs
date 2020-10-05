@@ -75,7 +75,7 @@ next_nodes: []";
         public static string DefaultNPCContents =
 @"---
 name: DEFAULT
-role: 6
+role: Scientist
 health: -1
 scale: [1, 1, 1]
 item_held: GunLogicer
