@@ -15,7 +15,6 @@ namespace NPCS.AI
 
         public override float Process(Npc npc)
         {
-            Log.Debug($"[AI] Processing room selection....", Plugin.Instance.Config.VerboseOutput);
             if (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase))
             {
                 Room r = Map.Rooms[Plugin.Random.Next(0, Map.Rooms.Count)];

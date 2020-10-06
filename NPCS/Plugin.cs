@@ -59,6 +59,9 @@ namespace NPCS
                     else if (bas.Name.Equals("BanUser"))
                     {
                         Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
+                    }else if (bas.Name.Equals("CallCmdShoot"))
+                    {
+                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
                     }
                 }
 

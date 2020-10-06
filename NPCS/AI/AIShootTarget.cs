@@ -19,6 +19,7 @@ namespace NPCS.AI
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
             npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
             npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(npc.CurrentAIPlayerTarget.GameObject, "HEAD", npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
+            //Log.Info("SHOOTING");
             return npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
         }
 

@@ -127,7 +127,13 @@ namespace NPCS.Commands
                         sw.Close();
                         response = "Saved manual navigation mappings!";
                         break;
-
+                    case "show":
+                        foreach(NavigationNode node in NavigationNode.AllNodes.Values)
+                        {
+                            ItemType.SCP018.Spawn(1f, node.Position + new UnityEngine.Vector3(0, 1, 0));
+                        }
+                        response = "Marked nodes!";
+                        break;
                     default:
                         response = "Unknown subcommand!";
                         return false;
