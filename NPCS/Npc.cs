@@ -229,6 +229,7 @@ namespace NPCS
                         {
                             float delay = 0f;
                             bool failure = false;
+                            //Log.Debug($"Processing AI target: {CurrentAITarget.Name}", Plugin.Instance.Config.VerboseOutput);
                             try
                             {
                                 delay = CurrentAITarget.Process(this);

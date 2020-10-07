@@ -37,7 +37,8 @@ namespace NPCS.AI
                         switch (npc.NPCPlayer.Role)
                         {
                             case RoleType.Scp106:
-                                npc.NPCPlayer.GameObject.GetComponent<Scp106PlayerScript>().CallCmdMovePlayer(npc.CurrentAIPlayerTarget.GameObject, global::ServerTime.time);
+                                npc.NPCPlayer.GameObject.GetComponent<Scp106PlayerScript>().CallCmdMovePlayer(npc.CurrentAIPlayerTarget.GameObject, ServerTime.time);
+                                npc.Stop();
                                 break;
                             case RoleType.Scp173:
                                 npc.NPCPlayer.GameObject.GetComponent<Scp173PlayerScript>().CallCmdHurtPlayer(npc.CurrentAIPlayerTarget.GameObject);
