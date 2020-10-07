@@ -1,7 +1,10 @@
 # CustomNPCs
 Plugin is currently under development, so new features will be added soon
 
+Permission node: `npc.all`
+
 For usage instructions see https://github.com/gamehunt/CustomNPCs/wiki/Get-started
+
 
 ** AI and Nav system are experimental features, they are under development **
 
