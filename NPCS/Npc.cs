@@ -385,7 +385,7 @@ namespace NPCS
                     }
                     else if (NavigationQueue.Count > 0)
                     {
-                        //No current, but there is pending targets
+                        //No current, but there are pending targets
                         CurrentNavTarget = NavigationQueue.Dequeue();
                         GoTo(CurrentNavTarget.Position);
                     }
