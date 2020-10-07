@@ -13,6 +13,7 @@ namespace NPCS.AI
 
         public override float Process(Npc npc)
         {
+            npc.DisableFollowAutoTeleport = false;
             npc.Follow(npc.CurrentAIPlayerTarget);
             IsFinished = true;
             return 0f;

@@ -62,6 +62,8 @@ namespace NPCS
 
             Npc npcc = obj.AddComponent<Npc>();
 
+            npcc.MovementSpeed = CharacterClassManager._staticClasses[(int)type].walkSpeed;
+
             npcc.ItemHeld = itemHeld;
             npcc.RootNode = TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node));
 

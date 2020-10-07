@@ -183,7 +183,12 @@ namespace NPCS
 
         public Player FollowTarget { get; set; } = null;
 
+        public bool DisableFollowAutoTeleport { get; set; } = false;
+
         public float MovementSpeed { get; set; } = 4f;
+
+        public bool DisableRun { get; set; } = false;
+        public bool IsRunning { get; set; } = false;
 
         public List<CoroutineHandle> AttachedCoroutines { get; } = new List<CoroutineHandle>();
 
@@ -283,14 +288,34 @@ namespace NPCS
                     if (FollowTarget.IsAlive)
                     {
                         float dist = Vector3.Distance(FollowTarget.Position, NPCPlayer.Position);
+
+                        //If run is disabled dont update it
+                        if (!DisableRun)
+                        {
+                            IsRunning = dist >= Plugin.Instance.Config.MaxFollowDistance / 3;
+                        }
+
+                        //If we are far away...
                         if (dist >= Plugin.Instance.Config.MaxFollowDistance)
                         {
-                            NPCPlayer.Position = FollowTarget.Position;
-                            eta = 0;
-                            FollowTargetPosCache.Clear();
+                            if (!DisableFollowAutoTeleport)
+                            {
+                                //... Teleport to player is Allowed
+                                NPCPlayer.Position = FollowTarget.Position;
+                                eta = 0;
+                                FollowTargetPosCache.Clear();
+                            }
+                            else
+                            {
+                                //Otherwise just lost the target and reset nav
+                                Stop();
+                            }
                         }
+
+                        //If target is not near
                         if (dist >= 1.5f)
                         {
+                            //Update Pos cache each third tick
                             if (dormant_cache_update > 2)
                             {
                                 FollowTargetPosCache.Enqueue(FollowTarget.Position);
@@ -300,6 +325,7 @@ namespace NPCS
                         }
                         else
                         {
+                            //Otherwise just dont move
                             FollowTargetPosCache.Clear();
                             eta = 0;
                             Timing.KillCoroutines(MovementCoroutines);
@@ -308,14 +334,17 @@ namespace NPCS
                     }
                     else
                     {
+                        // Target dead, reset
                         FollowTargetPosCache.Clear();
                         eta = 0;
                         FireEvent(new NPCFollowTargetDiedEvent(this, FollowTarget));
                         Stop();
                     }
 
+                    //If we reached predicted target
                     if (eta <= 0)
                     {
+                        //Schedule next position
                         if (!FollowTargetPosCache.IsEmpty())
                         {
                             float full_eta = GoTo(FollowTargetPosCache.Dequeue());
@@ -326,18 +355,21 @@ namespace NPCS
                     {
                         eta--;
                     }
-
                 }
                 else
                 {
+                    //Noone to follow, try taking nodes from nav queue
+
                     eta = 0;
                     FollowTargetPosCache.Clear();
 
                     if (CurrentNavTarget != null)
                     {
+                        //There is current
                         float distance = Vector3.Distance(CurrentNavTarget.Position, NPCPlayer.Position);
                         if (distance < 3f)
                         {
+                            //Open the door if there is one, so we wont collide with it
                             if (CurrentNavTarget.AttachedDoor != null)
                             {
                                 CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
@@ -345,18 +377,21 @@ namespace NPCS
                         }
                         if (CurMovementDirection == MovementDirection.NONE)
                         {
-                            Vector3 forced = new Vector3(CurrentNavTarget.Position.x,NPCPlayer.Position.y,CurrentNavTarget.Position.z);
+                            //Target reached - force position to it so we wont stuck
+                            Vector3 forced = new Vector3(CurrentNavTarget.Position.x, NPCPlayer.Position.y, CurrentNavTarget.Position.z);
                             NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(forced, 0f, true);
                             CurrentNavTarget = null;
                         }
                     }
                     else if (NavigationQueue.Count > 0)
                     {
+                        //No current, but there is pending targets
                         CurrentNavTarget = NavigationQueue.Dequeue();
                         GoTo(CurrentNavTarget.Position);
                     }
                     else if (CurrentAIRoomTarget != null)
                     {
+                        //No current, no pending - room reached
                         CurrentAIRoomTarget = null;
                     }
                 }
@@ -393,14 +428,15 @@ namespace NPCS
         {
             for (; ; )
             {
+                float speed = (IsRunning && !DisableRun ? CharacterClassManager._staticClasses[(int)NPCPlayer.Role].runSpeed : MovementSpeed);
                 switch (CurMovementDirection)
                 {
                     case MovementDirection.FORWARD:
                         try
                         {
-                            if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position + NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                            if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position + NPCPlayer.CameraTransform.forward / 10 * speed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position + NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, 0f, true);
+                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position + NPCPlayer.CameraTransform.forward / 10 * speed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -409,9 +445,9 @@ namespace NPCS
                     case MovementDirection.BACKWARD:
                         try
                         {
-                            if (!Physics.Linecast(NPCPlayer.Position, gameObject.transform.position - NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                            if (!Physics.Linecast(NPCPlayer.Position, gameObject.transform.position - NPCPlayer.CameraTransform.forward / 10 * speed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position - NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, 0f, true);
+                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position - NPCPlayer.CameraTransform.forward / 10 * speed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -420,9 +456,9 @@ namespace NPCS
                     case MovementDirection.LEFT:
                         try
                         {
-                            if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position + Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                            if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position + Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * speed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position + Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, 0f, true);
+                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position + Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * speed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -431,9 +467,9 @@ namespace NPCS
                     case MovementDirection.RIGHT:
                         try
                         {
-                            if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position - Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                            if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position - Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * speed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position - Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * MovementSpeed, 0f, true);
+                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position - Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * speed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -551,22 +587,35 @@ namespace NPCS
         public void Move(MovementDirection dir)
         {
             CurMovementDirection = dir;
+
+            if (!DisableRun)
+            {
+                if (IsRunning)
+                {
+                    NPCPlayer.ReferenceHub.animationController.Network_curMoveState = (byte)PlayerMovementState.Sprinting;
+                }
+                else
+                {
+                    NPCPlayer.ReferenceHub.animationController.Network_curMoveState = (byte)PlayerMovementState.Walking;
+                }
+            }
+            float speed = (IsRunning && !DisableRun ? CharacterClassManager._staticClasses[(int)NPCPlayer.Role].runSpeed : MovementSpeed);
             switch (dir)
             {
                 case MovementDirection.FORWARD:
-                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(MovementSpeed, 0);
+                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(speed, 0);
                     break;
 
                 case MovementDirection.BACKWARD:
-                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(-MovementSpeed, 0);
+                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(-speed, 0);
                     break;
 
                 case MovementDirection.RIGHT:
-                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(0, MovementSpeed);
+                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(0, speed);
                     break;
 
                 case MovementDirection.LEFT:
-                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(0, -MovementSpeed);
+                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(0, -speed);
                     break;
 
                 default:
