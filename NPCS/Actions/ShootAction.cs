@@ -14,8 +14,39 @@ namespace NPCS.Actions
         {
             for (int i = 0; i < amount; i++)
             {
-                npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(p.GameObject, hitbox, npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, p.Position);
-                yield return Timing.WaitForSeconds(npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown);
+                if (!p.ReferenceHub.characterClassManager.IsAnyScp())
+                {
+                    npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(p.GameObject, hitbox, npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, p.Position);
+                    yield return Timing.WaitForSeconds(npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown);
+                }
+                else
+                {
+                    if (npc.NPCPlayer.Role.Is939())
+                    {
+                        npc.NPCPlayer.GameObject.GetComponent<Scp939PlayerScript>().CallCmdShoot(npc.CurrentAIPlayerTarget.GameObject);
+                    }
+                    else
+                    {
+                        switch (npc.NPCPlayer.Role)
+                        {
+                            case RoleType.Scp106:
+                                npc.NPCPlayer.GameObject.GetComponent<Scp106PlayerScript>().CallCmdMovePlayer(npc.CurrentAIPlayerTarget.GameObject, ServerTime.time);
+                                npc.Stop();
+                                break;
+                            case RoleType.Scp173:
+                                npc.NPCPlayer.GameObject.GetComponent<Scp173PlayerScript>().CallCmdHurtPlayer(npc.CurrentAIPlayerTarget.GameObject);
+                                break;
+                            case RoleType.Scp049:
+                                npc.CurrentAIPlayerTarget.Hurt(99999f, DamageTypes.Scp049, npc.NPCPlayer.Nickname);
+                                break;
+                            case RoleType.Scp0492:
+                                npc.NPCPlayer.GameObject.GetComponent<Scp049_2PlayerScript>().CallCmdShootAnim();
+                                npc.NPCPlayer.GameObject.GetComponent<Scp049_2PlayerScript>().CallCmdHurtPlayer(npc.CurrentAIPlayerTarget.GameObject);
+                                break;
+                        }
+                    }
+                    yield return Timing.WaitForSeconds(1f);
+                }
             }
         }
 
