@@ -32,14 +32,9 @@ namespace NPCS.Commands
                     response = "Round is not started!";
                     return false;
                 }
-                if (!s.IsAlive)
-                {
-                    response = "You must be alive to use this!";
-                    return false;
-                }
                 if (arguments.Count == 0)
                 {
-                    response = "Available subcommands: [create, list, remove, clean, load, save, god, goto]";
+                    response = "Available subcommands: [load, list, clean, remove, move, god, goto, queue, follow, room, sav_mappings, load_mappings]";
                     return false;
                 }
                 Npc obj_npc;
@@ -48,6 +43,11 @@ namespace NPCS.Commands
                 switch (arguments.At(0))
                 {
                     case "load":
+                        if (!s.IsAlive)
+                        {
+                            response = "You must be alive to use this!";
+                            return false;
+                        }
                         string file = arguments.Count < 2 ? "default_npc.yml" : arguments.At(1);
                         if (Methods.CreateNPC(s.Position, s.Rotations, file) == null)
                         {
