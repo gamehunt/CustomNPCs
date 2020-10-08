@@ -26,7 +26,6 @@ namespace NPCS.Harmony
                 {
                     if (!Plugin.Instance.Config.AllowAloneNpcs)
                     {
-                        //Exiled.API.Features.Log.Debug($"Trying to clean up NPCs: {count} real player count, {Npc.List.Count} - npcs count", Plugin.Instance.Config.VerboseOutput);
                         if (count == 0 && Npc.Dictionary.Keys.Count > 0)
                         {
                             foreach (Npc n in Npc.List)

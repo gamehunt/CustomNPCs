@@ -62,9 +62,10 @@ namespace NPCS
 
         public void OnDying(DyingEventArgs ev)
         {
-            Npc cmp = ev.Target.GameObject.GetComponent<Npc>();
-            if (cmp != null)
+            
+            if (ev.Target.IsNPC())
             {
+                Npc cmp = Npc.Dictionary[ev.Target.GameObject];
                 NPCDiedEvent npc_ev = new NPCDiedEvent(cmp, ev.Killer);
                 cmp.FireEvent(npc_ev);
                 cmp.Kill(ev.HitInformation.GetDamageType() != DamageTypes.RagdollLess);
@@ -74,9 +75,10 @@ namespace NPCS
 
         public void OnHurt(HurtingEventArgs ev)
         {
-            Npc npc = ev.Target.GameObject.GetComponent<Npc>();
-            if (npc != null)
+            
+            if (ev.Target.IsNPC())
             {
+                Npc npc = Npc.Dictionary[ev.Target.GameObject];
                 npc.FireEvent(new NPCHurtEvent(npc, ev.Attacker));
             }
         }
@@ -85,9 +87,10 @@ namespace NPCS
         {
             foreach (Player p in ev.TargetToDamages.Keys)
             {
-                Npc component = p.GameObject.GetComponent<Npc>();
-                if (component != null)
+                
+                if (p.IsNPC())
                 {
+                    Npc component = Npc.Dictionary[p.GameObject];
                     if (!component.NPCPlayer.IsGodModeEnabled)
                     {
                         p.Health -= ev.TargetToDamages[p];
@@ -105,9 +108,9 @@ namespace NPCS
 
         public void OnEnteringPocketDim(EnteringPocketDimensionEventArgs ev)
         {
-            Npc npc = ev.Player.GameObject.GetComponent<Npc>();
-            if (npc != null)
+            if (ev.Player.IsNPC())
             {
+                Npc npc = Npc.Dictionary[ev.Player.GameObject];
                 if (npc.NPCPlayer.IsGodModeEnabled)
                 {
                     ev.IsAllowed = false;
