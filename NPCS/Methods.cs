@@ -31,21 +31,20 @@ namespace NPCS
             obj.transform.localScale = scale;
             obj.transform.position = pos;
 
-            obj.GetComponent<QueryProcessor>().NetworkPlayerId = QueryProcessor._idIterator++;
-            obj.GetComponent<QueryProcessor>()._ipAddress = "127.0.0.WAN";
+            QueryProcessor processor = obj.GetComponent<QueryProcessor>();
 
-            if (Plugin.Instance.Config.DisplayNpcInPlayerList)
-            {
-                ccm._privUserId = $"{name}-{obj.GetComponent<QueryProcessor>().PlayerId }@NPC";
-            }
+            processor.NetworkPlayerId = QueryProcessor._idIterator++;
+            processor._ipAddress = "127.0.0.WAN";
 
             ccm.CurClass = type;
             obj.GetComponent<PlayerStats>().SetHPAmount(ccm.Classes.SafeGet(type).maxHP);
 
             obj.GetComponent<NicknameSync>().Network_myNickSync = name;
 
-            obj.GetComponent<ServerRoles>().MyText = "NPC";
-            obj.GetComponent<ServerRoles>().MyColor = "red";
+            ServerRoles roles = obj.GetComponent<ServerRoles>();
+
+            roles.MyText = "NPC";
+            roles.MyColor = "red";
 
             NetworkServer.Spawn(obj);
             PlayerManager.AddPlayer(obj); //I'm not sure if I need this
@@ -54,11 +53,6 @@ namespace NPCS
             Player.Dictionary.Add(obj, ply_obj);
 
             Player.IdsCache.Add(ply_obj.Id, ply_obj);
-
-            if (Plugin.Instance.Config.DisplayNpcInPlayerList)
-            {
-                Player.UserIdsCache.Add(ccm._privUserId, ply_obj);
-            }
 
             Npc npcc = obj.AddComponent<Npc>();
 

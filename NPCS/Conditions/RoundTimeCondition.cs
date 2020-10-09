@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
+using NPCS.Utils;
 using System.Collections.Generic;
 
 namespace NPCS.Conditions
@@ -10,29 +11,8 @@ namespace NPCS.Conditions
 
         public override bool Check(Player player, Dictionary<string, string> args)
         {
-            switch (args["comparsion_type"])
-            {
-                case "equals":
-                    return Round.ElapsedTime.TotalSeconds.Equals(float.Parse(args["value"]));
-
-                case "greater":
-                    return Round.ElapsedTime.TotalSeconds > float.Parse(args["value"]);
-
-                case "less":
-                    return Round.ElapsedTime.TotalSeconds < float.Parse(args["value"]);
-
-                case "greater_or_equals":
-                    return Round.ElapsedTime.TotalSeconds >= float.Parse(args["value"]);
-
-                case "less_or_equals":
-                    return Round.ElapsedTime.TotalSeconds <= float.Parse(args["value"]);
-
-                case "not_equals":
-                    return !Round.ElapsedTime.TotalSeconds.Equals(float.Parse(args["value"]));
-
-                default:
-                    return false;
-            }
+            float value = float.Parse(args["value"].Replace('.', ','));
+            return Utils.Utils.CompareWithType(args["comparsion_type"], (float)Round.ElapsedTime.TotalSeconds, value);
         }
     }
 }

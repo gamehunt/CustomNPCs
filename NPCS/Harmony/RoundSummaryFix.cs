@@ -24,14 +24,11 @@ namespace NPCS.Harmony
                 int count = PlayerManager.players.Count - Npc.Dictionary.Keys.Count;
                 while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || ((roundSummary._keepRoundOnOne && count < 2) && !__npc_endRequested))
                 {
-                    if (!Plugin.Instance.Config.AllowAloneNpcs)
+                    if (count == 0 && Npc.Dictionary.Keys.Count > 0)
                     {
-                        if (count == 0 && Npc.Dictionary.Keys.Count > 0)
+                        foreach (Npc n in Npc.List)
                         {
-                            foreach (Npc n in Npc.List)
-                            {
-                                n.Kill(false);
-                            }
+                            n.Kill(false);
                         }
                     }
                     count = PlayerManager.players.Count - Npc.Dictionary.Keys.Count;
@@ -41,7 +38,8 @@ namespace NPCS.Harmony
                 RoundSummary.SumInfo_ClassList newList = default;
                 foreach (GameObject player in PlayerManager.players)
                 {
-                    if (!(player == null) && !Npc.Dictionary.ContainsKey(player))
+                    Npc npc = Npc.Dictionary.ContainsKey(player) ? Npc.Dictionary[player] : null;
+                    if (!(player == null) && (npc == null || npc.AffectRoundSummary))
                     {
                         CharacterClassManager component = player.GetComponent<CharacterClassManager>();
                         if (component.Classes.CheckBounds(component.CurClass))

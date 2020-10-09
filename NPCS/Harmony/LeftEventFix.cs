@@ -31,7 +31,7 @@ namespace NPCS.Harmony
                 Exiled.Events.Handlers.Player.OnLeft(ev);
 
                 Player.IdsCache.Remove(player.Id);
-                if (!Npc.Dictionary.ContainsKey(__instance.gameObject) || Plugin.Instance.Config.DisplayNpcInPlayerList)
+                if (!player.IsNPC())
                 {
                     Player.UserIdsCache.Remove(player.UserId);
                 }

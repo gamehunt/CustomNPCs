@@ -45,4 +45,35 @@ namespace NPCS.Utils
             return new Vector3(x, y, z);
         }
     }
+
+    public class Utils
+    {
+
+        public static bool CompareWithType(string type, float a, float b)
+        {
+            switch (type)
+            {
+                case "equals":
+                    return a.Equals(b);
+
+                case "greater":
+                    return a > b;
+
+                case "less":
+                    return a < b;
+
+                case "greater_or_equals":
+                    return a >= b;
+
+                case "less_or_equals":
+                    return a <= b;
+
+                case "not_equals":
+                    return !a.Equals(b);
+
+                default:
+                    return false;
+            }
+        }
+    }
 }

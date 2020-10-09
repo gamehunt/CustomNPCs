@@ -10,29 +10,8 @@ namespace NPCS.Conditions
 
         public override bool Check(Player player, Dictionary<string, string> args)
         {
-            switch (args["comparsion_type"])
-            {
-                case "equals":
-                    return player.AdrenalineHealth.Equals(float.Parse(args["value"]));
-
-                case "greater":
-                    return player.AdrenalineHealth > float.Parse(args["value"]);
-
-                case "less":
-                    return player.AdrenalineHealth < float.Parse(args["value"]);
-
-                case "greater_or_equals":
-                    return player.AdrenalineHealth >= float.Parse(args["value"]);
-
-                case "less_or_equals":
-                    return player.AdrenalineHealth <= float.Parse(args["value"]);
-
-                case "not_equals":
-                    return !player.AdrenalineHealth.Equals(float.Parse(args["value"]));
-
-                default:
-                    return false;
-            }
+            float value = float.Parse(args["value"].Replace('.', ','));
+            return Utils.Utils.CompareWithType(args["comparsion_type"], player.AdrenalineHealth, value);
         }
     }
 }

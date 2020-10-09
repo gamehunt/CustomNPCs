@@ -765,6 +765,8 @@ namespace NPCS
 
         public bool DontCleanup { get; set; } = false;
 
+        public bool AffectRoundSummary { get; set; } = false;
+
         #endregion API
 
         public void TalkWith(Player p)

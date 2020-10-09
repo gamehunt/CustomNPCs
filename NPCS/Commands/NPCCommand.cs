@@ -70,7 +70,10 @@ namespace NPCS.Commands
                     case "clean":
                         foreach (Npc npc in Npc.List)
                         {
-                            npc.Kill(false);
+                            if (!npc.DontCleanup)
+                            {
+                                npc.Kill(false);
+                            }
                         }
                         response = "NPCs cleaned";
                         break;

@@ -13,14 +13,8 @@ namespace NPCS
         [Description("Enables debug output (Spams trash in console)")]
         public bool VerboseOutput { get; set; } = false;
 
-        [Description("Should PlayerList contain NPCs?")]
-        public bool DisplayNpcInPlayerList { get; set; } = false;
-
         [Description("Should RA contain NPCs?")]
         public bool DisplayNpcInRemoteAdmin { get; set; } = false;
-
-        [Description("If false NPCs will be cleaned if they are alone on server")]
-        public bool AllowAloneNpcs { get; set; } = true;
 
         [Description("Maximum distance between NPC and follow target. If it's reached NPC will tp to target")]
         public float MaxFollowDistance { get; set; } = 15f;
@@ -28,7 +22,7 @@ namespace NPCS
         [Description("Enable this if you will use nav system (not neccessary for following)")]
         public bool GenerateNavigationGraph { get; set; } = false;
 
-        [Description("Ajust this if NPCs with custom scale are \"flying\"")]
+        [Description("Adjust this if NPCs with custom scale are \"flying\"")]
         public float NpcSizePositionMultiplier { get; set; } = 1.3f;
 
         //TRANSLATIONS
@@ -89,6 +83,7 @@ ai: []
 
         public static string DefaultNavMappings =
 @"---
+{}
 ";
     }
 }
