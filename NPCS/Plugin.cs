@@ -52,10 +52,6 @@ namespace NPCS
                     {
                         Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
                     }
-                    else if (bas.DeclaringType.Name.Equals("ReferenceHub") && bas.Name.Equals("OnDestroy"))
-                    {
-                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
-                    }
                     else if (bas.Name.Equals("BanUser"))
                     {
                         Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);

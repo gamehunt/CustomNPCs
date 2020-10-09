@@ -38,37 +38,40 @@ namespace NPCS.Harmony
                 RoundSummary.SumInfo_ClassList newList = default;
                 foreach (GameObject player in PlayerManager.players)
                 {
-                    Npc npc = Npc.Dictionary.ContainsKey(player) ? Npc.Dictionary[player] : null;
-                    if (!(player == null) && (npc == null || npc.AffectRoundSummary))
+                    if (!(player == null))
                     {
-                        CharacterClassManager component = player.GetComponent<CharacterClassManager>();
-                        if (component.Classes.CheckBounds(component.CurClass))
+                        Npc npc = Npc.Dictionary.ContainsKey(player) ? Npc.Dictionary[player] : null;
+                        if (npc == null || npc.AffectRoundSummary)
                         {
-                            switch (component.Classes.SafeGet(component.CurClass).team)
+                            CharacterClassManager component = player.GetComponent<CharacterClassManager>();
+                            if (component.Classes.CheckBounds(component.CurClass))
                             {
-                                case Team.SCP:
-                                    if (component.CurClass == RoleType.Scp0492)
-                                    {
-                                        ++newList.zombies;
-                                        continue;
-                                    }
+                                switch (component.Classes.SafeGet(component.CurClass).team)
+                                {
+                                    case Team.SCP:
+                                        if (component.CurClass == RoleType.Scp0492)
+                                        {
+                                            ++newList.zombies;
+                                            continue;
+                                        }
 
-                                    ++newList.scps_except_zombies;
-                                    continue;
-                                case Team.MTF:
-                                    ++newList.mtf_and_guards;
-                                    continue;
-                                case Team.CHI:
-                                    ++newList.chaos_insurgents;
-                                    continue;
-                                case Team.RSC:
-                                    ++newList.scientists;
-                                    continue;
-                                case Team.CDP:
-                                    ++newList.class_ds;
-                                    continue;
-                                default:
-                                    continue;
+                                        ++newList.scps_except_zombies;
+                                        continue;
+                                    case Team.MTF:
+                                        ++newList.mtf_and_guards;
+                                        continue;
+                                    case Team.CHI:
+                                        ++newList.chaos_insurgents;
+                                        continue;
+                                    case Team.RSC:
+                                        ++newList.scientists;
+                                        continue;
+                                    case Team.CDP:
+                                        ++newList.class_ds;
+                                        continue;
+                                    default:
+                                        continue;
+                                }
                             }
                         }
                     }

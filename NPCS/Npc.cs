@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using Exiled.Events.EventArgs;
 using MEC;
 using NPCS.AI;
 using NPCS.Events;
@@ -814,7 +815,14 @@ namespace NPCS
             Dictionary.Remove(this.gameObject);
             Timing.KillCoroutines(MovementCoroutines);
             Timing.KillCoroutines(AttachedCoroutines);
-            Log.Debug("Destroyed NPC component", Plugin.Instance.Config.VerboseOutput);
+            var ev = new LeftEventArgs(NPCPlayer);
+
+            Log.SendRaw($"NPC {ev.Player.Nickname} ({NPCPlayer.Id}) deconstructed", ConsoleColor.Green);
+
+            Exiled.Events.Handlers.Player.OnLeft(ev);
+
+            Player.IdsCache.Remove(NPCPlayer.Id);
+            Player.Dictionary.Remove(NPCPlayer.GameObject);
         }
 
         private void Awake()

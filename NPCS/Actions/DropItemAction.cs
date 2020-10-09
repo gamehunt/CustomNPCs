@@ -1,4 +1,5 @@
-﻿using Exiled.API.Features;
+﻿using Exiled.API.Extensions;
+using Exiled.API.Features;
 using NPCS.Talking;
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace NPCS.Actions
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
-            PlayerManager.localPlayer.GetComponent<Inventory>().SetPickup((ItemType)int.Parse(args["item_type"]), -4.656647E+11f, npc.NPCPlayer.Position, Quaternion.identity, 0, 0, 0);
+            ((ItemType)int.Parse(args["item_type"])).Spawn(-4.656647E+11f, npc.NPCPlayer.Position, Quaternion.identity, 0, 0, 0);
         }
     }
 }

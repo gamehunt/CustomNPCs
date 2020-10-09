@@ -110,8 +110,10 @@ namespace NPCS.Commands
                         {
                             if (!manual_mappings.ContainsKey(node.Room.RemoveBracketsOnEndOfName()))
                             {
-                                List<NavigationNode.NavNodeSerializationInfo> nodes = new List<NavigationNode.NavNodeSerializationInfo>();
-                                nodes.Add(node.SInfo);
+                                List<NavigationNode.NavNodeSerializationInfo> nodes = new List<NavigationNode.NavNodeSerializationInfo>
+                                {
+                                    node.SInfo
+                                };
                                 manual_mappings.Add(node.Room.RemoveBracketsOnEndOfName(), nodes);
                             }
                             else
@@ -130,7 +132,7 @@ namespace NPCS.Commands
                     case "show":
                         foreach(NavigationNode node in NavigationNode.AllNodes.Values)
                         {
-                            ItemType.SCP018.Spawn(1f, node.Position + new UnityEngine.Vector3(0, 1, 0));
+                            Pickup pickup = ItemType.SCP018.Spawn(1f, node.Position + new UnityEngine.Vector3(0, 1, 0));
                         }
                         response = "Marked nodes!";
                         break;
