@@ -6,6 +6,7 @@ using NPCS.AI;
 using NPCS.Events;
 using NPCS.Navigation;
 using NPCS.Talking;
+using NPCS.Utils;
 using RemoteAdmin;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,8 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.TypeInspectors;
 using YamlDotNet.Serialization.NamingConventions;
-using NPCS.Utils;
+using YamlDotNet.Serialization.TypeInspectors;
 
 namespace NPCS
 {
@@ -180,6 +180,28 @@ namespace NPCS
             var deserializer = new DeserializerBuilder().Build();
             Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>> manual_mappings = deserializer.Deserialize<Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>>>(sr);
             sr.Close();
+
+            Log.Info("[NAV] Mapping lifts...");
+            foreach (Lift lift in Map.Lifts)
+            {
+                int i = 0;
+                NavigationNode prev_node = null;
+                foreach (Lift.Elevator elevator in lift.elevators)
+                {
+                    NavigationNode node = NavigationNode.Create(elevator.target.position, $"AUTO_Elevator_{lift.elevatorName}_{i}".Replace(' ', '_'));
+                    node.AttachedElevator = new KeyValuePair<Lift.Elevator, Lift>(elevator, lift);
+                    i++;
+                    if(prev_node != null)
+                    {
+                        prev_node.LinkedNodes.Add(node);
+                        node.LinkedNodes.Add(prev_node);
+                    }
+                    else
+                    {
+                        prev_node = node;
+                    }
+                }
+            }
             foreach (Room r in Map.Rooms)
             {
                 string rname = r.Name.RemoveBracketsOnEndOfName();
@@ -207,7 +229,7 @@ namespace NPCS
                 }
                 else
                 {
-                    Log.Debug($"Loading manual mappings for room {r.Name}");
+                    Log.Debug($"Loading manual mappings for room {r.Name}", Plugin.Instance.Config.VerboseOutput);
                     List<NavigationNode.NavNodeSerializationInfo> nodes = manual_mappings[rname];
                     int i = 0;
                     foreach (Door d in r.Doors)
@@ -229,12 +251,12 @@ namespace NPCS
                     foreach (NavigationNode.NavNodeSerializationInfo info in nodes)
                     {
                         NavigationNode node = NavigationNode.Create(info, $"MANUAL_Room_{r.Name}_{i}", rname);
-                        foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => nd != node && Vector3.Distance(nd.Position, node.Position) < 3f))
+                        foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => nd != node && Vector3.Distance(nd.Position, node.Position) < Plugin.Instance.Config.NavNodeMapperMaxDistance))
                         {
                             node.LinkedNodes.Add(d);
                             d.LinkedNodes.Add(node);
 
-                            Log.Info($"Linked {node.Name} and {d.Name}");
+                            Log.Debug($"Linked {node.Name} and {d.Name}", Plugin.Instance.Config.VerboseOutput);
                         }
                         i++;
                     }

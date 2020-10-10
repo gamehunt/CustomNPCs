@@ -1,18 +1,16 @@
 ﻿using Exiled.API.Features;
+using NPCS.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.TypeInspectors;
 using YamlDotNet.Serialization.NamingConventions;
-using NPCS.Utils;
+using YamlDotNet.Serialization.TypeInspectors;
 
 namespace NPCS.Talking
 {
     public class TalkNode
     {
-
         private class TalkNodeSerializationInfo
         {
             public string Description { get; set; }
@@ -54,7 +52,8 @@ namespace NPCS.Talking
                 //   args:
                 //    some_arg: some_value
                 //    some_arg1: some_value1
-                foreach (NpcNodeWithArgsSerializationInfo info in raw_node.Conditions){
+                foreach (NpcNodeWithArgsSerializationInfo info in raw_node.Conditions)
+                {
                     NodeCondition cond = NodeCondition.GetFromToken(info.Token);
                     if (cond != null)
                     {

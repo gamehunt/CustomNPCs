@@ -34,6 +34,8 @@ namespace NPCS.Navigation
 
         public Door AttachedDoor { get; set; }
 
+        public KeyValuePair<Lift.Elevator, Lift>? AttachedElevator { get; set; } = null;
+
         public static Dictionary<string, NavigationNode> AllNodes = new Dictionary<string, NavigationNode>();
 
         public static NavigationNode Create(Vector3 pos, string name = "DefaultNavNode", string room = "")
@@ -57,7 +59,7 @@ namespace NPCS.Navigation
             }
             go.transform.position = pos;
             AllNodes.Add(node.Name, node);
-            Log.Debug($"Node created: {name}", Plugin.Instance.Config.VerboseOutput);
+            Log.Debug($"Node created: {name} at {pos}", Plugin.Instance.Config.VerboseOutput);
             return node;
         }
 

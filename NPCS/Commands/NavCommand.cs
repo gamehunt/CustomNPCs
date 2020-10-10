@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using YamlDotNet.Serialization;
+using UnityEngine;
 
 namespace NPCS.Commands
 {
@@ -20,6 +21,8 @@ namespace NPCS.Commands
         public string[] Aliases => new string[] { "nav" };
 
         public string Description => "Master command for NPCs navigation";
+
+        private static int new_node_id = 0;
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
@@ -41,25 +44,40 @@ namespace NPCS.Commands
                     response = "Available subcommands: [create, list, remove, clean, rebuild, sav, show]";
                     return false;
                 }
+                NavigationNode created_node;
+                Pickup pickup;
                 switch (arguments.At(0))
                 {
                     case "create":
+                        string name = "";
                         if (arguments.Count <= 1)
                         {
-                            response = "You need to provide node name!";
-                            return false;
+                            name = (++new_node_id).ToString();
+                        }
+                        else
+                        {
+                            name = arguments.At(1);
                         }
                         if (!s.IsAlive)
                         {
                             response = "You must be alive to use this!";
                             return false;
                         }
-                        if (NavigationNode.Get(arguments.At(1)) != null)
+                        if (NavigationNode.Get(name) != null)
                         {
                             response = "Node with this name already exists!";
                             return false;
                         }
-                        NavigationNode.Create(s.Position, arguments.At(1), s.CurrentRoom.Name);
+                        created_node = NavigationNode.Create(s.Position, name, s.CurrentRoom.Name);
+                        pickup = ItemType.SCP018.Spawn(1f, created_node.Position + new UnityEngine.Vector3(0, 0.5f, 0));
+                        pickup.Locked = true;
+                        foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => nd != created_node && Vector3.Distance(nd.Position, created_node.Position) < Plugin.Instance.Config.NavNodeMapperMaxDistance))
+                        {
+                            created_node.LinkedNodes.Add(d);
+                            d.LinkedNodes.Add(created_node);
+
+                            Log.Info($"Linked {created_node.Name} and {d.Name}");
+                        }
                         response = "Created node!";
                         break;
 
@@ -133,8 +151,8 @@ namespace NPCS.Commands
                     case "show":
                         foreach (NavigationNode node in NavigationNode.AllNodes.Values)
                         {
-                            Pickup pickup = ItemType.SCP018.Spawn(1f, node.Position + new UnityEngine.Vector3(0, 0.5f, 0));
-                            pickup.Rb.isKinematic = true;
+                            pickup = ItemType.SCP018.Spawn(1f, node.Position + new UnityEngine.Vector3(0, 0.5f, 0));
+                            pickup.Locked = true;
                         }
                         response = "Marked nodes!";
                         break;

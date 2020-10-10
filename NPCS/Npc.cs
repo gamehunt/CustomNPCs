@@ -377,6 +377,29 @@ namespace NPCS
                                 CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
                             }
                         }
+
+                        if (distance < 6f)
+                        {
+                            //If there is an elevator, try to call it
+                            if (CurrentNavTarget.AttachedElevator != null)
+                            {
+                                if (!CurrentNavTarget.AttachedElevator.Value.Key.door.GetBool("isOpen"))
+                                {
+                                    CurrentNavTarget.AttachedElevator.Value.Value.UseLift();
+
+                                    Timing.KillCoroutines(MovementCoroutines);
+                                    Move(MovementDirection.NONE);
+
+                                    while (!CurrentNavTarget.AttachedElevator.Value.Value.operative)
+                                    {
+                                        yield return 0.0f;
+                                    }
+
+                                    GoTo(CurrentNavTarget.Position);
+                                }
+                            }
+                        }
+
                         if (CurMovementDirection == MovementDirection.NONE)
                         {
                             //Target reached - force position to it so we wont stuck
@@ -389,7 +412,18 @@ namespace NPCS
                     {
                         //No current, but there are pending targets
                         CurrentNavTarget = NavigationQueue.Dequeue();
-                        GoTo(CurrentNavTarget.Position);
+                        if(CurrentNavTarget.AttachedElevator != null && Math.Abs(CurrentNavTarget.AttachedElevator.Value.Key.target.position.y - NPCPlayer.Position.y) > 2f)
+                        {
+                            CurrentNavTarget.AttachedElevator.Value.Value.UseLift();
+                            while (CurrentNavTarget.AttachedElevator.Value.Value.status == Lift.Status.Moving)
+                            {
+                                yield return 0f;
+                            }
+                        }
+                        else
+                        {
+                            GoTo(CurrentNavTarget.Position);
+                        }
                     }
                     else if (CurrentAIRoomTarget != null)
                     {

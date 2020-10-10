@@ -25,7 +25,10 @@ namespace NPCS
         {
             if (Plugin.Instance.Config.GenerateNavigationGraph)
             {
-                Methods.GenerateNavGraph();
+                Timing.CallDelayed(0.1f, () =>
+                {
+                    Methods.GenerateNavGraph();
+                });
             }
         }
 
