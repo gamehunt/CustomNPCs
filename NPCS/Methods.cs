@@ -15,6 +15,7 @@ using UnityEngine;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.TypeInspectors;
 using YamlDotNet.Serialization.NamingConventions;
+using NPCS.Utils;
 
 namespace NPCS
 {
@@ -90,48 +91,6 @@ namespace NPCS
         //events: []
         //ai_enabled: false
         //ai: []
-
-        private class NpcNodeSerializationInfo
-        {
-            public string Token { get; set; }
-        }
-
-        private class NpcEventSerializationInfo : NpcNodeSerializationInfo
-        {
-            public List<NpcNodeWithArgsSerializationInfo> Actions { get; set; }
-        }
-
-        private class NpcNodeWithArgsSerializationInfo : NpcNodeSerializationInfo
-        {
-            public Dictionary<string, string> Args { get; set; }
-        }
-
-        private class NpcSerializationInfo
-        {
-            public string Name { get; set; }
-            public int Health { get; set; }
-            public RoleType Role { get; set; }
-            public float[] Scale { get; set; }
-
-            [YamlMember(Alias = "item_held")]
-            public ItemType ItemHeld { get; set; }
-
-            [YamlMember(Alias = "root_node")]
-            public string RootNode { get; set; }
-
-            [YamlMember(Alias = "god_mode")]
-            public bool GodMode { get; set; }
-
-            [YamlMember(Alias = "is_exclusive")]
-            public bool IsExclusive { get; set; }
-
-            public NpcEventSerializationInfo[] Events { get; set; }
-
-            [YamlMember(Alias = "ai_enabled")]
-            public bool AiEnabled { get; set; }
-
-            public NpcNodeWithArgsSerializationInfo[] Ai { get; set; }
-        }
 
         public static Npc CreateNPC(Vector3 pos, Vector2 rot, string path)
         {

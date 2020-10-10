@@ -3,12 +3,27 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-using YamlDotNet.RepresentationModel;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.TypeInspectors;
+using YamlDotNet.Serialization.NamingConventions;
+using NPCS.Utils;
 
 namespace NPCS.Talking
 {
     public class TalkNode
     {
+
+        private class TalkNodeSerializationInfo
+        {
+            public string Description { get; set; }
+            public string Reply { get; set; }
+            public List<NPCS.Utils.NpcNodeWithArgsSerializationInfo> Conditions { get; set; }
+            public List<NPCS.Utils.NpcNodeWithArgsSerializationInfo> Actions { get; set; }
+
+            [YamlMember(Alias = "next_nodes")]
+            public string[] NextNodes { get; set; }
+        }
+
         public TalkNode(string path)
         {
             Log.Debug($"Parsing node {path}", Plugin.Instance.Config.VerboseOutput);
@@ -16,17 +31,20 @@ namespace NPCS.Talking
             try
             {
                 var input = new StringReader(File.ReadAllText(path));
+                var deserializer = new DeserializerBuilder()
+                                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                                    // Workaround to remove YamlAttributesTypeInspector
+                                    .WithTypeInspector(inner => inner, s => s.InsteadOf<YamlAttributesTypeInspector>())
+                                    .WithTypeInspector(
+                                        inner => new YamlAttributesTypeInspector(inner),
+                                        s => s.Before<NamingConventionTypeInspector>()
+                                    )
+                                    .Build();
 
-                var yaml = new YamlStream();
-                yaml.Load(input);
+                TalkNodeSerializationInfo raw_node = deserializer.Deserialize<TalkNodeSerializationInfo>(input);
 
-                var mapping =
-                    (YamlMappingNode)yaml.Documents[0].RootNode;
-
-                Log.Debug("Parsing base info...", Plugin.Instance.Config.VerboseOutput);
-
-                this.Desc = (string)mapping.Children[new YamlScalarNode("description")];
-                this.Reply = (string)mapping.Children[new YamlScalarNode("reply")];
+                Desc = raw_node.Description;
+                Reply = raw_node.Reply;
 
                 //Parse conditions
                 //Format:
@@ -36,27 +54,16 @@ namespace NPCS.Talking
                 //   args:
                 //    some_arg: some_value
                 //    some_arg1: some_value1
-
-                Log.Debug("Parsing conditions...", Plugin.Instance.Config.VerboseOutput);
-                var conditions = (YamlSequenceNode)mapping.Children[new YamlScalarNode("conditions")];
-                Log.Debug($"{conditions.Children.Count} entries found", Plugin.Instance.Config.VerboseOutput);
-                foreach (YamlMappingNode item in conditions)
-                {
-                    NodeCondition cond = NodeCondition.GetFromToken((string)item.Children[new YamlScalarNode("token")]);
+                foreach (NpcNodeWithArgsSerializationInfo info in raw_node.Conditions){
+                    NodeCondition cond = NodeCondition.GetFromToken(info.Token);
                     if (cond != null)
                     {
                         Log.Debug($"Recognized token: {cond.Name}", Plugin.Instance.Config.VerboseOutput);
-                        var yml_args = (YamlMappingNode)item.Children[new YamlScalarNode("args")];
-                        Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
-                        foreach (YamlScalarNode arg in yml_args.Children.Keys)
-                        {
-                            arg_bindings.Add((string)arg, (string)yml_args.Children[arg]);
-                        }
-                        Conditions.Add(cond, arg_bindings);
+                        Conditions.Add(cond, info.Args);
                     }
                     else
                     {
-                        Log.Error($"Failed to parse condition: {(string)item.Children[new YamlScalarNode("token")]} (invalid token)");
+                        Log.Error($"Failed to parse condition: {info.Token} (invalid token)");
                     }
                 }
 
@@ -68,27 +75,17 @@ namespace NPCS.Talking
                 //   args:
                 //    some_arg: some_value
                 //    some_arg1: some_value1
-
-                Log.Debug("Parsing actions...", Plugin.Instance.Config.VerboseOutput);
-                var actions = (YamlSequenceNode)mapping.Children[new YamlScalarNode("actions")];
-                Log.Debug($"{actions.Children.Count} entries found", Plugin.Instance.Config.VerboseOutput);
-                foreach (YamlMappingNode item in actions)
+                foreach (NpcNodeWithArgsSerializationInfo info in raw_node.Actions)
                 {
-                    NodeAction act = NodeAction.GetFromToken((string)item.Children[new YamlScalarNode("token")]);
-                    if (act != null)
+                    NodeAction cond = NodeAction.GetFromToken(info.Token);
+                    if (cond != null)
                     {
-                        Log.Debug($"Recognized token: {act.Name}", Plugin.Instance.Config.VerboseOutput);
-                        var yml_args = (YamlMappingNode)item.Children[new YamlScalarNode("args")];
-                        Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
-                        foreach (YamlScalarNode arg in yml_args.Children.Keys)
-                        {
-                            arg_bindings.Add((string)arg.Value, (string)yml_args.Children[arg]);
-                        }
-                        Actions.Add(act, arg_bindings);
+                        Log.Debug($"Recognized token: {cond.Name}", Plugin.Instance.Config.VerboseOutput);
+                        Actions.Add(cond, info.Args);
                     }
                     else
                     {
-                        Log.Error($"Failed to parse action: {(string)item.Children[new YamlScalarNode("token")]} (invalid token)");
+                        Log.Error($"Failed to parse action: {info.Token} (invalid token)");
                     }
                 }
 
@@ -98,10 +95,9 @@ namespace NPCS.Talking
                 //next_nodes:
                 // - /relative/path/to/node
                 Log.Debug("Parsing next nodes...", Plugin.Instance.Config.VerboseOutput);
-                var next = (YamlSequenceNode)mapping.Children[new YamlScalarNode("next_nodes")];
-                foreach (YamlScalarNode item in next)
+                foreach (string item in raw_node.NextNodes)
                 {
-                    NextNodes.Add(TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, (string)item.Value)));
+                    NextNodes.Add(TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, item)));
                 }
             }
             catch (Exception e)
