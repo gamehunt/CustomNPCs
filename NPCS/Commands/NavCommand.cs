@@ -36,14 +36,9 @@ namespace NPCS.Commands
                     response = "Round is not started!";
                     return false;
                 }
-                if (!s.IsAlive)
-                {
-                    response = "You must be alive to use this!";
-                    return false;
-                }
                 if (arguments.Count == 0)
                 {
-                    response = "Available subcommands: [create, list, remove, clean]";
+                    response = "Available subcommands: [create, list, remove, clean, rebuild, sav, show]";
                     return false;
                 }
                 switch (arguments.At(0))
@@ -52,6 +47,11 @@ namespace NPCS.Commands
                         if (arguments.Count <= 1)
                         {
                             response = "You need to provide node name!";
+                            return false;
+                        }
+                        if (!s.IsAlive)
+                        {
+                            response = "You must be alive to use this!";
                             return false;
                         }
                         if (NavigationNode.Get(arguments.At(1)) != null)
@@ -129,13 +129,16 @@ namespace NPCS.Commands
                         sw.Close();
                         response = "Saved manual navigation mappings!";
                         break;
+
                     case "show":
-                        foreach(NavigationNode node in NavigationNode.AllNodes.Values)
+                        foreach (NavigationNode node in NavigationNode.AllNodes.Values)
                         {
-                            Pickup pickup = ItemType.SCP018.Spawn(1f, node.Position + new UnityEngine.Vector3(0, 1, 0));
+                            Pickup pickup = ItemType.SCP018.Spawn(1f, node.Position + new UnityEngine.Vector3(0, 0.5f, 0));
+                            pickup.Rb.isKinematic = true;
                         }
                         response = "Marked nodes!";
                         break;
+
                     default:
                         response = "Unknown subcommand!";
                         return false;

@@ -12,8 +12,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.TypeInspectors;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace NPCS
 {
@@ -90,33 +91,76 @@ namespace NPCS
         //ai_enabled: false
         //ai: []
 
-        //TODO use deserializers, this shit is really stupid
+        private class NpcNodeSerializationInfo
+        {
+            public string Token { get; set; }
+        }
+
+        private class NpcEventSerializationInfo : NpcNodeSerializationInfo
+        {
+            public List<NpcNodeWithArgsSerializationInfo> Actions { get; set; }
+        }
+
+        private class NpcNodeWithArgsSerializationInfo : NpcNodeSerializationInfo
+        {
+            public Dictionary<string, string> Args { get; set; }
+        }
+
+        private class NpcSerializationInfo
+        {
+            public string Name { get; set; }
+            public int Health { get; set; }
+            public RoleType Role { get; set; }
+            public float[] Scale { get; set; }
+
+            [YamlMember(Alias = "item_held")]
+            public ItemType ItemHeld { get; set; }
+
+            [YamlMember(Alias = "root_node")]
+            public string RootNode { get; set; }
+
+            [YamlMember(Alias = "god_mode")]
+            public bool GodMode { get; set; }
+
+            [YamlMember(Alias = "is_exclusive")]
+            public bool IsExclusive { get; set; }
+
+            public NpcEventSerializationInfo[] Events { get; set; }
+
+            [YamlMember(Alias = "ai_enabled")]
+            public bool AiEnabled { get; set; }
+
+            public NpcNodeWithArgsSerializationInfo[] Ai { get; set; }
+        }
+
         public static Npc CreateNPC(Vector3 pos, Vector2 rot, string path)
         {
             try
             {
                 var input = new StringReader(File.ReadAllText(Path.Combine(Config.NPCs_root_path, path)));
 
-                var yaml = new YamlStream();
-                yaml.Load(input);
+                var deserializer = new DeserializerBuilder()
+                                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                                    // Workaround to remove YamlAttributesTypeInspector
+                                    .WithTypeInspector(inner => inner, s => s.InsteadOf<YamlAttributesTypeInspector>())
+                                    .WithTypeInspector(
+                                        inner => new YamlAttributesTypeInspector(inner),
+                                        s => s.Before<NamingConventionTypeInspector>()
+                                    )
+                                    .Build();
 
-                var mapping =
-                    (YamlMappingNode)yaml.Documents[0].RootNode;
+                NpcSerializationInfo raw_npc = deserializer.Deserialize<NpcSerializationInfo>(input);
 
-                YamlSequenceNode scale = (YamlSequenceNode)mapping.Children[new YamlScalarNode("scale")];
-                float x = float.Parse(((string)scale.Children[0]).Replace('.', ','));
-                float y = float.Parse(((string)scale.Children[1]).Replace('.', ','));
-                float z = float.Parse(((string)scale.Children[2]).Replace('.', ','));
+                Npc n = CreateNPC(pos, rot, new Vector3(raw_npc.Scale[0], raw_npc.Scale[1], raw_npc.Scale[2]), raw_npc.Role, raw_npc.ItemHeld, raw_npc.Name, raw_npc.RootNode);
 
-                Npc n = CreateNPC(pos, rot, new Vector3(x, y, z), (RoleType)Enum.Parse(typeof(RoleType), (string)mapping.Children[new YamlScalarNode("role")]), (ItemType)Enum.Parse(typeof(ItemType), (string)mapping.Children[new YamlScalarNode("item_held")]), (string)mapping.Children[new YamlScalarNode("name")], (string)mapping.Children[new YamlScalarNode("root_node")]);
+                n.NPCPlayer.IsGodModeEnabled = raw_npc.GodMode;
 
-                n.NPCPlayer.IsGodModeEnabled = bool.Parse((string)mapping.Children[new YamlScalarNode("god_mode")]);
-
-                n.IsExclusive = bool.Parse((string)mapping.Children[new YamlScalarNode("is_exclusive")]);
-
-                int health = int.Parse((string)mapping.Children[new YamlScalarNode("health")]);
+                n.IsExclusive = raw_npc.IsExclusive;
 
                 n.SaveFile = path;
+
+                int health = raw_npc.Health;
+
                 if (health > 0)
                 {
                     n.NPCPlayer.MaxHealth = health;
@@ -125,57 +169,41 @@ namespace NPCS
 
                 Log.Info("Parsing events...");
 
-                YamlSequenceNode events = (YamlSequenceNode)mapping.Children[new YamlScalarNode("events")];
-
-                foreach (YamlMappingNode event_node in events.Children)
+                foreach (NpcEventSerializationInfo info in raw_npc.Events)
                 {
-                    var actions = (YamlSequenceNode)event_node.Children[new YamlScalarNode("actions")];
                     Dictionary<NodeAction, Dictionary<string, string>> actions_mapping = new Dictionary<NodeAction, Dictionary<string, string>>();
-                    foreach (YamlMappingNode action_node in actions)
+                    foreach (NpcNodeWithArgsSerializationInfo action in info.Actions)
                     {
-                        NodeAction act = NodeAction.GetFromToken((string)action_node.Children[new YamlScalarNode("token")]);
+                        NodeAction act = NodeAction.GetFromToken(action.Token);
                         if (act != null)
                         {
-                            Log.Debug($"Recognized action: {act.Name}", Plugin.Instance.Config.VerboseOutput);
-                            var yml_args = (YamlMappingNode)action_node.Children[new YamlScalarNode("args")];
-                            Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
-                            foreach (YamlScalarNode arg in yml_args.Children.Keys)
-                            {
-                                arg_bindings.Add((string)arg.Value, (string)yml_args.Children[arg]);
-                            }
-                            actions_mapping.Add(act, arg_bindings);
+                            actions_mapping.Add(act, action.Args);
                         }
                         else
                         {
-                            Log.Error($"Failed to parse action: {(string)action_node.Children[new YamlScalarNode("token")]} (invalid token)");
+                            Log.Error($"Failed to event action: {info.Token} (invalid token)");
                         }
                     }
-                    n.Events.Add((string)event_node.Children[new YamlScalarNode("token")], actions_mapping);
+                    n.Events.Add(info.Token, actions_mapping);
                 }
 
-                n.AIEnabled = bool.Parse((string)mapping.Children[new YamlScalarNode("ai_enabled")]);
+                n.AIEnabled = raw_npc.AiEnabled;
 
-                YamlSequenceNode ai_targets = (YamlSequenceNode)mapping.Children[new YamlScalarNode("ai")];
-
-                foreach (YamlMappingNode ai_node in ai_targets.Children)
+                foreach (NpcNodeWithArgsSerializationInfo info in raw_npc.Ai)
                 {
-                    AI.AITarget act = AITarget.GetFromToken((string)ai_node.Children[new YamlScalarNode("token")]);
+                    AI.AITarget act = AITarget.GetFromToken(info.Token);
                     if (act != null)
                     {
                         Log.Debug($"Recognized ai target: {act.Name}", Plugin.Instance.Config.VerboseOutput);
-                        var yml_args = (YamlMappingNode)ai_node.Children[new YamlScalarNode("args")];
-                        Dictionary<string, string> arg_bindings = new Dictionary<string, string>();
-                        foreach (YamlScalarNode arg in yml_args.Children.Keys)
-                        {
-                            act.Arguments.Add((string)arg.Value, (string)yml_args.Children[arg]);
-                        }
+                        act.Arguments = info.Args;
                         n.AIQueue.AddLast(act);
                     }
                     else
                     {
-                        Log.Error($"Failed to parse ai node: {(string)ai_node.Children[new YamlScalarNode("token")]} (invalid token)");
+                        Log.Error($"Failed to parse ai node: {info.Token} (invalid token)");
                     }
                 }
+
                 return n;
             }
             catch (Exception e)

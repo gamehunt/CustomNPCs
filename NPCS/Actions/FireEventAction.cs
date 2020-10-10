@@ -14,7 +14,7 @@ namespace NPCS.Actions
             NPCCustomEvent ev = new NPCCustomEvent(npc, player, args["event_name"]);
             if (bool.Parse(args["global"]))
             {
-                foreach(Npc n in Npc.List)
+                foreach (Npc n in Npc.List)
                 {
                     n.FireEvent(ev);
                 }

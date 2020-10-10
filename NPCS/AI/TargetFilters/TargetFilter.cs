@@ -2,7 +2,7 @@
 
 namespace NPCS.AI.TargetFilters
 {
-    abstract class TargetFilter
+    internal abstract class TargetFilter
     {
         public abstract bool Check(Npc n, Player p);
     }

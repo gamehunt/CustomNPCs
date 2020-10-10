@@ -1,5 +1,4 @@
-﻿using Exiled.API.Extensions;
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,8 +118,8 @@ namespace NPCS.Navigation
 
         private void OnDestroy()
         {
-            Log.Debug("Node destroyed", Plugin.Instance.Config.VerboseOutput);
-            AllNodes.Remove(this.Name);
+            Log.Debug($"Node destroyed: {Name}", Plugin.Instance.Config.VerboseOutput);
+            AllNodes.Remove(Name);
         }
     }
 }

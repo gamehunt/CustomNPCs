@@ -1,6 +1,5 @@
 ﻿using Exiled.API.Features;
 using NPCS.Talking;
-using NPCS.Utils;
 using System.Collections.Generic;
 
 namespace NPCS.Conditions

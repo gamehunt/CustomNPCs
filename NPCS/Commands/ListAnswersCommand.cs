@@ -13,7 +13,7 @@ namespace NPCS.Commands
 
         public string[] Aliases => new string[] { "lsa" };
 
-        public string Description => "Command which allows u to get answers from NPCs";
+        public string Description => "Command which allows u to get answers list from NPCs";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {

@@ -33,7 +33,7 @@ namespace NPCS
         {
             foreach (Npc npc in Npc.List)
             {
-                    npc.Kill(false);
+                npc.Kill(false);
             }
             RoundSummaryFix.__npc_endRequested = false;
             NavigationNode.Clear();
@@ -59,7 +59,6 @@ namespace NPCS
 
         public void OnDying(DyingEventArgs ev)
         {
-            
             if (ev.Target.IsNPC())
             {
                 Npc cmp = Npc.Dictionary[ev.Target.GameObject];
@@ -72,7 +71,6 @@ namespace NPCS
 
         public void OnHurt(HurtingEventArgs ev)
         {
-            
             if (ev.Target.IsNPC())
             {
                 Npc npc = Npc.Dictionary[ev.Target.GameObject];
@@ -84,7 +82,6 @@ namespace NPCS
         {
             foreach (Player p in ev.TargetToDamages.Keys)
             {
-                
                 if (p.IsNPC())
                 {
                     Npc component = Npc.Dictionary[p.GameObject];

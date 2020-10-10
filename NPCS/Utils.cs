@@ -48,7 +48,6 @@ namespace NPCS.Utils
 
     public class Utils
     {
-
         public static bool CompareWithType(string type, float a, float b)
         {
             switch (type)
