@@ -21,6 +21,9 @@
     <Reference Include="0Harmony">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="0NPCS">
+      <HintPath>..\..\..\NPCS\bin\Release\net472\0NPCS.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
@@ -41,9 +44,6 @@
     </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
-    </Reference>
-    <Reference Include="NPCS">
-      <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\NPCS.dll</HintPath>
     </Reference>
     <Reference Include="Stalky106V2.1.0.0">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\publicized_assemblies\Stalky106V2.1.0.0_publicized.dll</HintPath>

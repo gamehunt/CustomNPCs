@@ -6,6 +6,7 @@
     <Authors>gamehunt</Authors>
     <Version>1.4.6</Version>
     <Product>CustomNPCS</Product>
+    <AssemblyName>0NPCS</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

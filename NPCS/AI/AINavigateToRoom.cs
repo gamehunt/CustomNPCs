@@ -1,6 +1,8 @@
 ﻿using Exiled.API.Features;
+using Exiled.API.Extensions;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace NPCS.AI
 {
@@ -10,15 +12,17 @@ namespace NPCS.AI
 
         public override bool Check(Npc npc)
         {
-            return npc.CurrentAIRoomTarget == null && !string.IsNullOrEmpty(Arguments["room"]) && (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null);
+            return npc.CurrentAIRoomTarget == null && !string.IsNullOrEmpty(Arguments["room"]) && (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.RemoveBracketsOnEndOfName().Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null);
         }
 
         public override float Process(Npc npc)
         {
             if (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase))
             {
-                Room r = Map.Rooms[Plugin.Random.Next(0, Map.Rooms.Count)];
+                List<Room> valid_rooms = Map.Rooms.Where(rm => rm.Zone != Exiled.API.Enums.ZoneType.LightContainment || !Map.IsLCZDecontaminated).ToList();
+                Room r = valid_rooms[Plugin.Random.Next(0, valid_rooms.Count)];
                 Log.Debug($"[AI] Room selected: {r.Name}", Plugin.Instance.Config.VerboseOutput);
+                npc.Stop();
                 if (npc.GotoRoom(r))
                 {
                     npc.CurrentAIRoomTarget = r;

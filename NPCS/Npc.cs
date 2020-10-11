@@ -178,7 +178,7 @@ namespace NPCS
 
         public Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>> Events { get; } = new Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>>();
 
-        public Queue<NavigationNode> NavigationQueue { get; private set; } = new Queue<NavigationNode>();
+        public LinkedList<NavigationNode> NavigationQueue { get; private set; } = new LinkedList<NavigationNode>();
 
         public NavigationNode CurrentNavTarget { get; set; } = null;
 
@@ -266,7 +266,7 @@ namespace NPCS
                         }
                         catch (Exception e)
                         {
-                            Log.Warn($"Error while scheduling AI target: {e}");
+                            Log.Debug($"Error while scheduling AI target: {e}", Plugin.Instance.Config.VerboseOutput);
                         }
                         yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                     }
@@ -369,6 +369,7 @@ namespace NPCS
                     {
                         //There is current
                         float distance = Vector3.Distance(CurrentNavTarget.Position, NPCPlayer.Position);
+
                         if (distance < 3f)
                         {
                             //Open the door if there is one, so we wont collide with it
@@ -380,22 +381,24 @@ namespace NPCS
 
                         if (distance < 6f)
                         {
+                            NavigationNode NextNavTarget = NavigationQueue.First?.Previous?.Value;
+                            NavigationNode lift_node = CurrentNavTarget.AttachedElevator != null ? CurrentNavTarget : NextNavTarget;
                             //If there is an elevator, try to call it
-                            if (CurrentNavTarget.AttachedElevator != null)
+                            if (lift_node != null && lift_node.AttachedElevator != null)
                             {
-                                if (!CurrentNavTarget.AttachedElevator.Value.Key.door.GetBool("isOpen"))
+                                if (!lift_node.AttachedElevator.Value.Key.door.GetBool("isOpen"))
                                 {
-                                    CurrentNavTarget.AttachedElevator.Value.Value.UseLift();
+                                    lift_node.AttachedElevator.Value.Value.UseLift();
 
                                     Timing.KillCoroutines(MovementCoroutines);
                                     Move(MovementDirection.NONE);
 
-                                    while (!CurrentNavTarget.AttachedElevator.Value.Value.operative)
+                                    while (!lift_node.AttachedElevator.Value.Value.operative)
                                     {
                                         yield return 0.0f;
                                     }
 
-                                    GoTo(CurrentNavTarget.Position);
+                                    GoTo(lift_node.Position);
                                 }
                             }
                         }
@@ -411,8 +414,9 @@ namespace NPCS
                     else if (NavigationQueue.Count > 0)
                     {
                         //No current, but there are pending targets
-                        CurrentNavTarget = NavigationQueue.Dequeue();
-                        if(CurrentNavTarget.AttachedElevator != null && Math.Abs(CurrentNavTarget.AttachedElevator.Value.Key.target.position.y - NPCPlayer.Position.y) > 2f)
+                        CurrentNavTarget = NavigationQueue.First.Value;
+                        NavigationQueue.RemoveFirst();
+                        if (CurrentNavTarget.AttachedElevator != null && Math.Abs(CurrentNavTarget.AttachedElevator.Value.Key.target.position.y - NPCPlayer.Position.y) > 2f)
                         {
                             CurrentNavTarget.AttachedElevator.Value.Value.UseLift();
                             while (CurrentNavTarget.AttachedElevator.Value.Value.status == Lift.Status.Moving)
@@ -662,7 +666,7 @@ namespace NPCS
 
         public void AddNavTarget(NavigationNode node)
         {
-            NavigationQueue.Enqueue(node);
+            NavigationQueue.AddLast(node);
         }
 
         public void ClearNavTargets()
@@ -762,7 +766,7 @@ namespace NPCS
                     foreach (NavigationNode node in reversed_stack)
                     {
                         Log.Debug(node.Name, Plugin.Instance.Config.VerboseOutput);
-                        NavigationQueue.Enqueue(node);
+                        NavigationQueue.AddLast(node);
                     }
                     return true;
                 }

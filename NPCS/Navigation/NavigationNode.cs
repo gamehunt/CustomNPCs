@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using Exiled.API.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace NPCS.Navigation
             NavigationNode node = go.AddComponent<NavigationNode>();
             node.Name = name;
             node.Room = room;
-            Room r = Map.Rooms.Where(rm => rm.Name.Equals(room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            Room r = Map.Rooms.Where(rm => rm.Name.RemoveBracketsOnEndOfName().Equals(room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (r != null)
             {
                 node.SInfo = new NavNodeSerializationInfo
@@ -74,13 +75,13 @@ namespace NPCS.Navigation
             node.Name = name;
             node.Room = room;
             node.SInfo = info;
-            Room r = Map.Rooms.Where(rm => rm.Name.Equals(room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            Room r = Map.Rooms.Where(rm => rm.Name.RemoveBracketsOnEndOfName().Equals(room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (r != null)
             {
                 go.transform.position = r.Position + Quaternion.Euler(0, r.Transform.localRotation.eulerAngles.y - info.RoomRotation, 0) * info.Relative.ToVector3();
             }
             AllNodes.Add(node.Name, node);
-            Log.Debug($"Node created: {name}", Plugin.Instance.Config.VerboseOutput);
+            Log.Debug($"Node created: {name} at {go.transform.position}", Plugin.Instance.Config.VerboseOutput);
             return node;
         }
 
