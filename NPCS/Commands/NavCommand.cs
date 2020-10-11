@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using YamlDotNet.Serialization;
 using UnityEngine;
+using YamlDotNet.Serialization;
 
 namespace NPCS.Commands
 {

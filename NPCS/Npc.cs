@@ -207,7 +207,8 @@ namespace NPCS
         public Pickup CurrentAIItemTarget { get; set; } = null;
         public Room CurrentAIRoomTarget { get; set; } = null;
 
-        public ItemType[] AvailableItems { get; set; } = new ItemType[8] {ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None};
+        public ItemType[] AvailableItems { get; set; } = new ItemType[8] { ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None };
+
         public int FreeSlots
         {
             get
@@ -401,7 +402,6 @@ namespace NPCS
 
                         if (distance < 3f)
                         {
-
                             //Try to open the door if there is one, so we wont collide with it
                             if (CurrentNavTarget.AttachedDoor != null && !CurrentNavTarget.AttachedDoor.NetworkisOpen)
                             {
@@ -425,7 +425,7 @@ namespace NPCS
                                 }
                                 if (open)
                                 {
-                                    //All is good 
+                                    //All is good
                                     Timing.KillCoroutines(MovementCoroutines);
                                     Move(MovementDirection.NONE);
                                     yield return Timing.WaitForSeconds(0.5f);
@@ -777,11 +777,11 @@ namespace NPCS
             {
                 return true;
             }
-            if(Map.IsLCZDecontaminated && current.Position.y < 200f && current.Position.y > -200f)
+            if (Map.IsLCZDecontaminated && current.Position.y < 200f && current.Position.y > -200f)
             {
                 return false;
             }
-            if(current.AttachedDoor != null && !current.AttachedDoor.CanBeOpenedWith(ItemHeld) && AvailableKeycards.Where(ItemHeld => current.AttachedDoor.CanBeOpenedWith(ItemHeld)).FirstOrDefault() != ItemType.None)
+            if (current.AttachedDoor != null && !current.AttachedDoor.CanBeOpenedWith(ItemHeld) && AvailableKeycards.Where(ItemHeld => current.AttachedDoor.CanBeOpenedWith(ItemHeld)).FirstOrDefault() != ItemType.None)
             {
                 return false;
             }
@@ -886,6 +886,7 @@ namespace NPCS
                 item.Delete();
             }
         }
+
         public void TalkWith(Player p)
         {
             AttachedCoroutines.Add(Timing.RunCoroutine(StartTalkCoroutine(p)));

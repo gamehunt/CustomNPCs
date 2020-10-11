@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using YamlDotNet.Serialization;
-using System.Collections.Generic;
 
 namespace NPCS.Utils
 {

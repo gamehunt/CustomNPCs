@@ -83,6 +83,7 @@ events: []
 ai_enabled: false
 ai: []
 ";
+
         // OH YEAAAAAH 44KB HARDCODED STRINGS XD
         public static string DefaultNavMappings =
 @"---

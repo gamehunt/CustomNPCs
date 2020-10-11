@@ -191,7 +191,7 @@ namespace NPCS
                     NavigationNode node = NavigationNode.Create(elevator.target.position, $"AUTO_Elevator_{lift.elevatorName}_{i}".Replace(' ', '_'));
                     node.AttachedElevator = new KeyValuePair<Lift.Elevator, Lift>(elevator, lift);
                     i++;
-                    if(prev_node != null)
+                    if (prev_node != null)
                     {
                         prev_node.LinkedNodes.Add(node);
                         node.LinkedNodes.Add(prev_node);

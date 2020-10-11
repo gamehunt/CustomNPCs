@@ -1,8 +1,8 @@
-﻿using Exiled.API.Features;
-using Exiled.API.Extensions;
+﻿using Exiled.API.Extensions;
+using Exiled.API.Features;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NPCS.AI
 {
@@ -13,7 +13,7 @@ namespace NPCS.AI
 
         public override bool Check(Npc npc)
         {
-            return npc.CurrentAIRoomTarget == null && npc.FollowTarget == null && !string.IsNullOrEmpty(Arguments["room"]) && !string.IsNullOrEmpty(Arguments["safe"]) &&  (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.RemoveBracketsOnEndOfName().Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null);
+            return npc.CurrentAIRoomTarget == null && npc.FollowTarget == null && !string.IsNullOrEmpty(Arguments["room"]) && !string.IsNullOrEmpty(Arguments["safe"]) && (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.RemoveBracketsOnEndOfName().Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null);
         }
 
         public override float Process(Npc npc)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NPCS.AI
 {
-    class AIFindItemTarget : AITarget
+    internal class AIFindItemTarget : AITarget
     {
         public override string Name => "AIFindItemTarget";
 
@@ -18,7 +18,7 @@ namespace NPCS.AI
             IsFinished = true;
             float range = float.Parse(Arguments["range"].Replace(".", ","));
             Pickup pickup = UnityEngine.Object.FindObjectsOfType<Pickup>().Where(p => !p.Locked && !p.InUse && Vector3.Distance(npc.NPCPlayer.Position, p.position) < range).FirstOrDefault();
-            if(pickup != null)
+            if (pickup != null)
             {
                 npc.Stop();
                 npc.CurrentAIItemTarget = pickup;
