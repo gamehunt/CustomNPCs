@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace NPCS.AI
 {
-    internal class AIFindTarget : AITarget
+    internal class AIFindPlayerTarget : AITarget
     {
-        public override string Name => "AIFindTarget";
+        public override string Name => "AIFindPlayerTarget";
 
         private static readonly Scp939TargetFilter scp939_filter = new Scp939TargetFilter(); //TODO make registry for target filters
 
@@ -45,7 +45,7 @@ namespace NPCS.AI
 
         protected override AITarget CreateInstance()
         {
-            return new AIFindTarget();
+            return new AIFindPlayerTarget();
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace NPCS.AI
 {
+    //Resets nav
     internal class AINavigateToRoom : AITarget
     {
         public override string Name => "AINavigateToRoom";

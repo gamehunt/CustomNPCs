@@ -203,6 +203,7 @@ namespace NPCS
 
         public Player CurrentAIPlayerTarget { get; set; } = null;
 
+        public Pickup CurrentAIItemTarget { get; set; } = null;
         public Room CurrentAIRoomTarget { get; set; } = null;
 
         #endregion Properties
@@ -530,6 +531,7 @@ namespace NPCS
             ClearNavTargets();
             FollowTarget = null;
             CurrentAIRoomTarget = null;
+            CurrentAIItemTarget = null;
             Timing.KillCoroutines(MovementCoroutines);
             Move(MovementDirection.NONE);
         }
@@ -701,6 +703,11 @@ namespace NPCS
                 {
                     NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(position, 0f, true);
                 }
+                if (CurrentAIItemTarget != null)
+                {
+                    CurrentAIItemTarget.Delete();
+                    CurrentAIItemTarget = null;
+                }
                 IsActionLocked = false;
             }));
             return eta;
@@ -761,7 +768,7 @@ namespace NPCS
                 HashSet<NavigationNode> visited = new HashSet<NavigationNode>();
                 if (!TryProcessNode(target_node, nearest_node, ref new_nav_queue, ref visited))
                 {
-                    Log.Error("[NAV] Failed to build way");
+                    Log.Debug("[NAV] Failed to build way", Plugin.Instance.Config.VerboseOutput);
                     return false;
                 }
                 else

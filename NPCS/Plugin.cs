@@ -171,10 +171,11 @@ namespace NPCS
                 Log.Info("Registering AI targets...");
 
                 AITarget.Register(new AITestTarget());
-                AITarget.Register(new AIFindTarget());
+                AITarget.Register(new AIFindPlayerTarget());
                 AITarget.Register(new AIShootTarget());
                 AITarget.Register(new AINavigateToRoom());
                 AITarget.Register(new AIFollowTarget());
+                AITarget.Register(new AIFindItemTarget());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }
