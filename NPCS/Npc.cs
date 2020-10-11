@@ -718,6 +718,10 @@ namespace NPCS
             {
                 return true;
             }
+            if(Map.IsLCZDecontaminated && current.Position.y < 200f && current.Position.y > -200f)
+            {
+                return false;
+            }
             foreach (NavigationNode node in current.LinkedNodes)
             {
                 if (visited_nodes.Contains(node))

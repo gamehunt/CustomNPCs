@@ -12,14 +12,15 @@ namespace NPCS.AI
 
         public override bool Check(Npc npc)
         {
-            return npc.CurrentAIRoomTarget == null && npc.FollowTarget == null && !string.IsNullOrEmpty(Arguments["room"]) && (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.RemoveBracketsOnEndOfName().Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null);
+            return npc.CurrentAIRoomTarget == null && npc.FollowTarget == null && !string.IsNullOrEmpty(Arguments["room"]) && !string.IsNullOrEmpty(Arguments["safe"]) &&  (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.RemoveBracketsOnEndOfName().Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null);
         }
 
         public override float Process(Npc npc)
         {
+            bool safe = bool.Parse(Arguments["safe"]);
             if (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase))
             {
-                List<Room> valid_rooms = Map.Rooms.Where(rm => rm.Zone != Exiled.API.Enums.ZoneType.LightContainment || !Map.IsLCZDecontaminated).ToList();
+                List<Room> valid_rooms = Map.Rooms.Where(rm => rm.Zone != Exiled.API.Enums.ZoneType.LightContainment || (safe ? Round.ElapsedTime.Minutes < 10 : !Map.IsLCZDecontaminated)).ToList();
                 Room r = valid_rooms[Plugin.Random.Next(0, valid_rooms.Count)];
                 Log.Debug($"[AI] Room selected: {r.Name}", Plugin.Instance.Config.VerboseOutput);
                 npc.Stop();
