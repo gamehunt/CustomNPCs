@@ -38,7 +38,6 @@ namespace NPCS.AI
                         {
                             case RoleType.Scp106:
                                 npc.NPCPlayer.GameObject.GetComponent<Scp106PlayerScript>().CallCmdMovePlayer(npc.CurrentAIPlayerTarget.GameObject, ServerTime.time);
-                                npc.Stop();
                                 break;
 
                             case RoleType.Scp173:
@@ -55,6 +54,7 @@ namespace NPCS.AI
                                 break;
                         }
                     }
+                    npc.Stop();
                 }
             }
             return npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;

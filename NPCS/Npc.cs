@@ -310,6 +310,8 @@ namespace NPCS
                             else
                             {
                                 //Otherwise just lost the target and reset nav
+                                FollowTargetPosCache.Clear();
+                                eta = 0;
                                 Stop();
                             }
                         }
@@ -787,7 +789,7 @@ namespace NPCS
             }
             else
             {
-                Log.Error("[NAV] Specified room has null navnode");
+                Log.Debug("[NAV] Specified room has null navnode", Plugin.Instance.Config.VerboseOutput);
                 return false;
             }
         }

@@ -12,7 +12,7 @@ namespace NPCS.AI
 
         public override bool Check(Npc npc)
         {
-            return npc.CurrentAIRoomTarget == null && !string.IsNullOrEmpty(Arguments["room"]) && (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.RemoveBracketsOnEndOfName().Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null);
+            return npc.CurrentAIRoomTarget == null && npc.FollowTarget == null && !string.IsNullOrEmpty(Arguments["room"]) && (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.RemoveBracketsOnEndOfName().Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null);
         }
 
         public override float Process(Npc npc)
