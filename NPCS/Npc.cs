@@ -1,4 +1,5 @@
-﻿using Exiled.API.Features;
+﻿using Exiled.API.Extensions;
+using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using MEC;
 using NPCS.AI;
@@ -206,6 +207,31 @@ namespace NPCS
         public Pickup CurrentAIItemTarget { get; set; } = null;
         public Room CurrentAIRoomTarget { get; set; } = null;
 
+        public ItemType[] AvailableItems { get; set; } = new ItemType[8] {ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None};
+        public int FreeSlots
+        {
+            get
+            {
+                return 8 - AvailableItems.Where(it => it == ItemType.None).Count();
+            }
+        }
+
+        public ItemType[] AvailableWeapons
+        {
+            get
+            {
+                return AvailableItems.Where(it => it.IsWeapon(false)).ToArray();
+            }
+        }
+
+        public ItemType[] AvailableKeycards
+        {
+            get
+            {
+                return AvailableItems.Where(it => it.IsKeycard()).ToArray();
+            }
+        }
+
         #endregion Properties
 
         #region Coroutines
@@ -375,15 +401,46 @@ namespace NPCS
 
                         if (distance < 3f)
                         {
-                            //Open the door if there is one, so we wont collide with it
-                            if (CurrentNavTarget.AttachedDoor != null)
-                            {
-                                CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
-                            }
-                        }
 
-                        if (distance < 6f)
-                        {
+                            //Try to open the door if there is one, so we wont collide with it
+                            if (CurrentNavTarget.AttachedDoor != null && !CurrentNavTarget.AttachedDoor.NetworkisOpen)
+                            {
+                                ItemType prev = ItemHeld;
+                                bool open = false;
+                                if (!CurrentNavTarget.AttachedDoor.CanBeOpenedWith(ItemHeld))
+                                {
+                                    foreach (ItemType keycard in AvailableKeycards)
+                                    {
+                                        if (CurrentNavTarget.AttachedDoor.CanBeOpenedWith(keycard))
+                                        {
+                                            ItemHeld = keycard;
+                                            open = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    open = true;
+                                }
+                                if (open)
+                                {
+                                    //All is good 
+                                    Timing.KillCoroutines(MovementCoroutines);
+                                    Move(MovementDirection.NONE);
+                                    yield return Timing.WaitForSeconds(0.5f);
+                                    CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
+                                    yield return Timing.WaitForSeconds(0.1f);
+                                    GoTo(CurrentNavTarget.Position);
+                                    ItemHeld = prev;
+                                }
+                                else
+                                {
+                                    //Stop otherwise
+                                    Stop();
+                                }
+                            }
+
                             NavigationNode NextNavTarget = NavigationQueue.First?.Previous?.Value;
                             NavigationNode lift_node = CurrentNavTarget.AttachedElevator != null ? CurrentNavTarget : NextNavTarget;
                             //If there is an elevator, try to call it
@@ -703,11 +760,6 @@ namespace NPCS
                 {
                     NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(position, 0f, true);
                 }
-                if (CurrentAIItemTarget != null)
-                {
-                    CurrentAIItemTarget.Delete();
-                    CurrentAIItemTarget = null;
-                }
                 IsActionLocked = false;
             }));
             return eta;
@@ -726,6 +778,10 @@ namespace NPCS
                 return true;
             }
             if(Map.IsLCZDecontaminated && current.Position.y < 200f && current.Position.y > -200f)
+            {
+                return false;
+            }
+            if(current.AttachedDoor != null && !current.AttachedDoor.CanBeOpenedWith(ItemHeld) && AvailableKeycards.Where(ItemHeld => current.AttachedDoor.CanBeOpenedWith(ItemHeld)).FirstOrDefault() != ItemType.None)
             {
                 return false;
             }
@@ -821,6 +877,15 @@ namespace NPCS
 
         #endregion API
 
+        public void TakeItem(Pickup item)
+        {
+            if (FreeSlots > 0)
+            {
+                int free_slot = AvailableItems.Where(it => it == ItemType.None).Select((it, index) => index).FirstOrDefault();
+                AvailableItems[free_slot] = item.itemId;
+                item.Delete();
+            }
+        }
         public void TalkWith(Player p)
         {
             AttachedCoroutines.Add(Timing.RunCoroutine(StartTalkCoroutine(p)));
