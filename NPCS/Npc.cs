@@ -2,7 +2,6 @@
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using MEC;
-using Mirror;
 using NPCS.AI;
 using NPCS.Events;
 using NPCS.Navigation;
@@ -445,12 +444,21 @@ namespace NPCS
                                 }
                             }
 
-                            NavigationNode NextNavTarget = NavigationQueue.First?.Previous?.Value;
-                            NavigationNode lift_node = CurrentNavTarget.AttachedElevator != null ? CurrentNavTarget : NextNavTarget;
-                            //If there is an elevator, try to call it
-                            if (lift_node != null && lift_node.AttachedElevator != null)
+                            NavigationNode NextNavTarget = NavigationQueue?.First.Value;
+
+                            NavigationNode lift_node = null;
+                            if (NextNavTarget != null)
                             {
-                                if (!lift_node.AttachedElevator.Value.Key.door.GetBool("isOpen"))
+                                if (NextNavTarget.AttachedElevator != null)
+                                {
+                                    lift_node = NextNavTarget;
+                                }
+                            }
+                            //If there is an elevator, try to call it
+                            if (CurrentNavTarget.AttachedElevator == null && lift_node != null)
+                            {
+                                bool val = lift_node.AttachedElevator.Value.Value.IsClosed(lift_node.AttachedElevator.Value.Key);
+                                if (val)
                                 {
                                     lift_node.AttachedElevator.Value.Value.UseLift();
 
@@ -462,7 +470,7 @@ namespace NPCS
                                         yield return 0.0f;
                                     }
 
-                                    GoTo(lift_node.Position);
+                                    GoTo(CurrentNavTarget.Position);
                                 }
                             }
                         }
@@ -487,6 +495,8 @@ namespace NPCS
                             {
                                 yield return 0f;
                             }
+
+                            CurrentNavTarget = null;
                         }
                         else
                         {
@@ -774,7 +784,7 @@ namespace NPCS
 
         #region Navigation
 
-        private void TryProcessNode(NavigationNode target, NavigationNode current, int prev_value, ref Dictionary<NavigationNode,int> visited_nodes)
+        private void TryProcessNode(NavigationNode target, NavigationNode current, int prev_value, ref Dictionary<NavigationNode, int> visited_nodes)
         {
             if (Map.IsLCZDecontaminated && current.Position.y < 200f && current.Position.y > -200f)
             {
@@ -787,7 +797,7 @@ namespace NPCS
                 return;
             }
             visited_nodes.Add(current, prev_value + 1);
-            if(current == target)
+            if (current == target)
             {
                 return;
             }
@@ -803,9 +813,9 @@ namespace NPCS
 
         private NavigationNode FindNextNode(NavigationNode current, Dictionary<NavigationNode, int> visited)
         {
-            foreach(NavigationNode node in current.LinkedNodes)
+            foreach (NavigationNode node in current.LinkedNodes)
             {
-                if(visited.ContainsKey(node) && visited[node] == visited[current] - 1)
+                if (visited.ContainsKey(node) && visited[node] == visited[current] - 1)
                 {
                     return node;
                 }
@@ -833,7 +843,7 @@ namespace NPCS
             {
                 Log.Debug($"[NAV] Selected nearest node: {nearest_node.Name}", Plugin.Instance.Config.VerboseOutput);
 
-                Dictionary<NavigationNode,int> visited = new Dictionary<NavigationNode,int>();
+                Dictionary<NavigationNode, int> visited = new Dictionary<NavigationNode, int>();
                 TryProcessNode(target_node, nearest_node, -1, ref visited);
                 if (!visited.ContainsKey(target_node))
                 {
