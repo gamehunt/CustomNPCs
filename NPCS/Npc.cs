@@ -2,6 +2,7 @@
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using MEC;
+using Mirror;
 using NPCS.AI;
 using NPCS.Events;
 using NPCS.Navigation;
@@ -330,7 +331,7 @@ namespace NPCS
                         {
                             if (!DisableFollowAutoTeleport)
                             {
-                                //... Teleport to player is Allowed
+                                //... Teleport to player if allowed
                                 NPCPlayer.Position = FollowTarget.Position;
                                 eta = 0;
                                 FollowTargetPosCache.Clear();
@@ -338,6 +339,9 @@ namespace NPCS
                             else
                             {
                                 //Otherwise just lost the target and reset nav
+
+                                FireEvent(new NPCTargetLostEvent(this, FollowTarget));
+
                                 FollowTargetPosCache.Clear();
                                 eta = 0;
                                 Stop();
@@ -428,7 +432,7 @@ namespace NPCS
                                     //All is good
                                     Timing.KillCoroutines(MovementCoroutines);
                                     Move(MovementDirection.NONE);
-                                    yield return Timing.WaitForSeconds(0.5f);
+                                    yield return Timing.WaitForSeconds(0.2f);
                                     CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
                                     yield return Timing.WaitForSeconds(0.1f);
                                     GoTo(CurrentNavTarget.Position);
@@ -769,35 +773,43 @@ namespace NPCS
 
         #region Navigation
 
-        private bool TryProcessNode(NavigationNode target, NavigationNode current, ref Stack<NavigationNode> queue, ref HashSet<NavigationNode> visited_nodes)
+        private void TryProcessNode(NavigationNode target, NavigationNode current, int prev_value, ref Dictionary<NavigationNode,int> visited_nodes)
         {
-            queue.Push(current);
-            visited_nodes.Add(current);
-            if (current == target)
-            {
-                return true;
-            }
             if (Map.IsLCZDecontaminated && current.Position.y < 200f && current.Position.y > -200f)
             {
-                return false;
+                visited_nodes.Add(current, int.MinValue);
+                return;
             }
             if (current.AttachedDoor != null && !current.AttachedDoor.CanBeOpenedWith(ItemHeld) && AvailableKeycards.Where(ItemHeld => current.AttachedDoor.CanBeOpenedWith(ItemHeld)).FirstOrDefault() != ItemType.None)
             {
-                return false;
+                visited_nodes.Add(current, int.MinValue);
+                return;
+            }
+            visited_nodes.Add(current, prev_value + 1);
+            if(current == target)
+            {
+                return;
             }
             foreach (NavigationNode node in current.LinkedNodes)
             {
-                if (visited_nodes.Contains(node))
+                if (visited_nodes.ContainsKey(node))
                 {
                     continue;
                 }
-                if (TryProcessNode(target, node, ref queue, ref visited_nodes))
+                TryProcessNode(target, node, prev_value + 1, ref visited_nodes);
+            }
+        }
+
+        private NavigationNode FindNextNode(NavigationNode current, Dictionary<NavigationNode, int> visited)
+        {
+            foreach(NavigationNode node in current.LinkedNodes)
+            {
+                if(visited.ContainsKey(node) && visited[node] == visited[current] - 1)
                 {
-                    return true;
+                    return node;
                 }
             }
-            queue.Pop();
-            return false;
+            return null;
         }
 
         public bool GotoNode(NavigationNode target_node)
@@ -820,23 +832,25 @@ namespace NPCS
             {
                 Log.Debug($"[NAV] Selected nearest node: {nearest_node.Name}", Plugin.Instance.Config.VerboseOutput);
 
-                Stack<NavigationNode> new_nav_queue = new Stack<NavigationNode>();
-                HashSet<NavigationNode> visited = new HashSet<NavigationNode>();
-                if (!TryProcessNode(target_node, nearest_node, ref new_nav_queue, ref visited))
+                Dictionary<NavigationNode,int> visited = new Dictionary<NavigationNode,int>();
+                TryProcessNode(target_node, nearest_node, -1, ref visited);
+                if (!visited.ContainsKey(target_node))
                 {
                     Log.Debug("[NAV] Failed to build way", Plugin.Instance.Config.VerboseOutput);
                     return false;
                 }
                 else
                 {
-                    Log.Debug("[NAV] Built way:", Plugin.Instance.Config.VerboseOutput);
                     NavigationQueue.Clear();
-                    IEnumerable<NavigationNode> reversed_stack = new_nav_queue.Reverse();
-                    foreach (NavigationNode node in reversed_stack)
+                    NavigationNode cur = target_node;
+                    Log.Debug("[NAV] Built way:", Plugin.Instance.Config.VerboseOutput);
+                    do
                     {
-                        Log.Debug(node.Name, Plugin.Instance.Config.VerboseOutput);
-                        NavigationQueue.AddLast(node);
-                    }
+                        Log.Debug($"[NAV] {cur.Name}", Plugin.Instance.Config.VerboseOutput);
+                        NavigationQueue.AddFirst(cur);
+                        cur = FindNextNode(cur, visited);
+                    } while (cur != null);
+
                     return true;
                 }
             }

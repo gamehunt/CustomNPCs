@@ -1,4 +1,5 @@
-﻿using Exiled.API.Features;
+﻿using Exiled.API.Extensions;
+using Exiled.API.Features;
 using UnityEngine;
 
 namespace NPCS.AI
@@ -17,12 +18,24 @@ namespace NPCS.AI
         {
             if (!npc.NPCPlayer.ReferenceHub.characterClassManager.IsAnyScp())
             {
-                npc.Stop();
-                Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
-                Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
-                npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
-                npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(npc.CurrentAIPlayerTarget.GameObject, "HEAD", npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
+                if (npc.AvailableWeapons.Length > 0)
+                {
+                    if (!npc.ItemHeld.IsWeapon(false))
+                    {
+                        npc.ItemHeld = npc.AvailableWeapons[0];
+                    }
+                    npc.Stop();
+                    Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
+                    Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
+                    npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
+                    npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(npc.CurrentAIPlayerTarget.GameObject, "HEAD", npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
+                    if (!npc.CurrentAIPlayerTarget.IsAlive)
+                    {
+                        npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
+                    }
+                }
                 return npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
+
             }
             else
             {
@@ -58,6 +71,10 @@ namespace NPCS.AI
                                 cd = 1f;
                                 break;
                         }
+                    }
+                    if (!npc.CurrentAIPlayerTarget.IsAlive)
+                    {
+                        npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
                     }
                     npc.Stop();
                 }

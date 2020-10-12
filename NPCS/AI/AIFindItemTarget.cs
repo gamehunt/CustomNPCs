@@ -1,4 +1,5 @@
-﻿using MEC;
+﻿using Exiled.API.Extensions;
+using MEC;
 using System.Linq;
 using UnityEngine;
 
@@ -13,11 +14,27 @@ namespace NPCS.AI
             return npc.CurrentAIItemTarget == null && npc.FreeSlots > 0;
         }
 
+        private bool CheckType(string type, ItemType item)
+        {
+            switch (type)
+            {
+                case "keycard":
+                    return item.IsKeycard();
+
+                case "weapon":
+                    return item.IsWeapon();
+
+                default:
+                    return true;
+            }
+        }
+
         public override float Process(Npc npc)
         {
             IsFinished = true;
             float range = float.Parse(Arguments["range"].Replace(".", ","));
-            Pickup pickup = UnityEngine.Object.FindObjectsOfType<Pickup>().Where(p => !p.Locked && !p.InUse && Vector3.Distance(npc.NPCPlayer.Position, p.position) < range).FirstOrDefault();
+            string type = Arguments["type"];
+            Pickup pickup = UnityEngine.Object.FindObjectsOfType<Pickup>().Where(p => !p.Locked && !p.InUse && CheckType(type, p.itemId) && Vector3.Distance(npc.NPCPlayer.Position, p.position) < range).FirstOrDefault();
             if (pickup != null)
             {
                 npc.Stop();
