@@ -6,7 +6,9 @@ Permission node: `npc.all`
 For usage instructions see https://github.com/gamehunt/CustomNPCs/wiki/Get-started
 
 
-** AI and Nav system are experimental features, they are under development **
+** AI and Nav system are experimental features, they are under development and can work not as expected / dont work at all**
+
+Im also selling `Pets` addon for this plugin, dm me in discord if u're interested (gamehunt#6523)
 
 Known Issues:
 
