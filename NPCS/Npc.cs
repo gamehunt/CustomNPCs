@@ -443,8 +443,11 @@ namespace NPCS
                                     Stop();
                                 }
                             }
+                        }
 
-                            NavigationNode NextNavTarget = NavigationQueue?.First.Value;
+                        if (distance < 6)
+                        {
+                            NavigationNode NextNavTarget = NavigationQueue.First?.Value;
 
                             NavigationNode lift_node = null;
                             if (NextNavTarget != null)
