@@ -505,9 +505,10 @@ namespace NPCS
 
         private IEnumerator<float> UpdateTalking()
         {
+            List<Player> invalid_players = new List<Player>();
             for (; ; )
             {
-                List<Player> invalid_players = new List<Player>();
+                invalid_players.Clear();
                 foreach (Player p in TalkingStates.Keys)
                 {
                     if (!p.IsAlive || !Player.Dictionary.ContainsKey(p.GameObject))
