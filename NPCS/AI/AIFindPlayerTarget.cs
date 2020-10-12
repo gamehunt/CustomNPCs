@@ -20,14 +20,15 @@ namespace NPCS.AI
 
         private readonly HashSet<RoleType> allowed_roles = new HashSet<RoleType>();
         private readonly HashSet<RoleType> disallowed_roles = new HashSet<RoleType>();
-        float range;
+        float range = 0f;
+        bool allow_self_select = false;
 
         public override float Process(Npc npc)
         {
             IsFinished = true;
             string target_filter = Arguments["filter"];
 
-            foreach (Player p in Player.List.Where(pl => pl != npc.NPCPlayer && (allowed_roles.Count == 0 || allowed_roles.Contains(pl.Role)) && (disallowed_roles.Count == 0 || !disallowed_roles.Contains(pl.Role))))
+            foreach (Player p in Player.List.Where(pl => (pl != npc.NPCPlayer || allow_self_select) && (allowed_roles.Count == 0 || allowed_roles.Contains(pl.Role)) && (disallowed_roles.Count == 0 || !disallowed_roles.Contains(pl.Role))))
             {
                 if (Vector3.Distance(p.Position, npc.NPCPlayer.Position) < range && !Physics.Linecast(npc.NPCPlayer.Position, p.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                 {
@@ -57,6 +58,7 @@ namespace NPCS.AI
         public override void Construct()
         {
             range = float.Parse(Arguments["range"].Replace(".", ","));
+            allow_self_select = bool.Parse(Arguments["allow_self_select"]);
 
             string[] raw_allowed_roles = Arguments["role_whitelist"].Split(',');
             foreach (string role in raw_allowed_roles)
@@ -64,7 +66,7 @@ namespace NPCS.AI
                 if (role.Length != 0)
                 {
                     RoleType erole = (RoleType)Enum.Parse(typeof(RoleType), role.Trim());
-                    Log.Debug($"Added {erole:g} as allowed");
+                    Log.Debug($"Added {erole:g} as allowed", Plugin.Instance.Config.VerboseOutput);
                     allowed_roles.Add(erole);
                 }
             }
@@ -75,7 +77,7 @@ namespace NPCS.AI
                 if (role.Length != 0)
                 {
                     RoleType erole = (RoleType)Enum.Parse(typeof(RoleType), role.Trim());
-                    Log.Debug($"Added {erole:g} as disallowed");
+                    Log.Debug($"Added {erole:g} as disallowed", Plugin.Instance.Config.VerboseOutput);
                     disallowed_roles.Add(erole);
                 }
             }

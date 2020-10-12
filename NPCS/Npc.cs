@@ -413,22 +413,25 @@ namespace NPCS
                             if (CurrentNavTarget.AttachedDoor != null && !CurrentNavTarget.AttachedDoor.NetworkisOpen)
                             {
                                 ItemType prev = ItemHeld;
-                                bool open = false;
-                                if (!CurrentNavTarget.AttachedDoor.CanBeOpenedWith(ItemHeld))
+                                bool open = NPCPlayer.IsBypassModeEnabled;
+                                if (!NPCPlayer.IsBypassModeEnabled)
                                 {
-                                    foreach (ItemType keycard in AvailableKeycards)
+                                    if (!CurrentNavTarget.AttachedDoor.CanBeOpenedWith(ItemHeld))
                                     {
-                                        if (CurrentNavTarget.AttachedDoor.CanBeOpenedWith(keycard))
+                                        foreach (ItemType keycard in AvailableKeycards)
                                         {
-                                            ItemHeld = keycard;
-                                            open = true;
-                                            break;
+                                            if (CurrentNavTarget.AttachedDoor.CanBeOpenedWith(keycard))
+                                            {
+                                                ItemHeld = keycard;
+                                                open = true;
+                                                break;
+                                            }
                                         }
                                     }
-                                }
-                                else
-                                {
-                                    open = true;
+                                    else
+                                    {
+                                        open = true;
+                                    }
                                 }
                                 if (open)
                                 {
@@ -798,7 +801,7 @@ namespace NPCS
                 visited_nodes.Add(current, int.MinValue);
                 return;
             }
-            if (current.AttachedDoor != null && !current.AttachedDoor.CanBeOpenedWith(ItemHeld) && AvailableKeycards.Where(ItemHeld => current.AttachedDoor.CanBeOpenedWith(ItemHeld)).FirstOrDefault() != ItemType.None)
+            if (!NPCPlayer.IsBypassModeEnabled && current.AttachedDoor != null && !current.AttachedDoor.CanBeOpenedWith(ItemHeld) && AvailableKeycards.Where(ItemHeld => current.AttachedDoor.CanBeOpenedWith(ItemHeld)).FirstOrDefault() != ItemType.None)
             {
                 visited_nodes.Add(current, int.MinValue);
                 return;
