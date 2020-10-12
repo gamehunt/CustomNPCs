@@ -19,6 +19,7 @@ Known Issues:
 FAQ:
 
  - Q: NPC is not walking with AINavigateToRoomTarget/GoToRoomAction
+ 
    A: Make sure u've enabled `generate_navigation_graph` in your `<port>-config.yml`
    
 Todo:
