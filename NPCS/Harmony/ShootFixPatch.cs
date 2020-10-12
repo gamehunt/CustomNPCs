@@ -26,9 +26,6 @@ namespace NPCS.Harmony
                     if (itemIndex < 0
                         || itemIndex >= __instance._hub.inventory.items.Count
                         || __instance.curWeapon < 0
-                        || ((__instance._reloadCooldown > 0f
-                                || __instance._fireCooldown > 0f)
-                            && !__instance.isLocalPlayer)
                         || __instance._hub.inventory.curItem != __instance.weapons[__instance.curWeapon].inventoryID
                         || __instance._hub.inventory.items[itemIndex].durability <= 0.0)
                     {
@@ -52,6 +49,11 @@ namespace NPCS.Harmony
                         __instance.GetComponent<CharacterClassManager>().TargetConsolePrint(__instance.connectionToClient, "Shot rejected - Code W.8 (|Y| axis difference between real position and provided source position is too big)", "gray");
                         return false;
                     }
+                }
+
+                if ((__instance._reloadCooldown > 0f || __instance._fireCooldown > 0f) && !__instance.isLocalPlayer)
+                {
+                    return false;
                 }
 
                 Log.Debug("Invoking shooting event", Loader.ShouldDebugBeShown);

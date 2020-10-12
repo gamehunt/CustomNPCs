@@ -16,7 +16,6 @@ namespace NPCS.AI
 
         public override void Construct()
         {
-            
         }
 
         public override float Process(Npc npc)
@@ -40,7 +39,6 @@ namespace NPCS.AI
                     }
                 }
                 return npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
-
             }
             else
             {
