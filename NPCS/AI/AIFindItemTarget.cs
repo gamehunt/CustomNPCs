@@ -58,7 +58,7 @@ namespace NPCS.AI
             return new AIFindItemTarget();
         }
 
-        public override void Contruct()
+        public override void Construct()
         {
             range = float.Parse(Arguments["range"].Replace(".", ","));
         }

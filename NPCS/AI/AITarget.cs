@@ -1,6 +1,6 @@
 ﻿using Exiled.API.Features;
 using System.Collections.Generic;
-using YamlDotNet.Core.Tokens;
+using System;
 
 namespace NPCS.AI
 {
@@ -19,7 +19,13 @@ namespace NPCS.AI
             set
             {
                 __args = value;
-                Contruct();
+                try
+                {
+                    Construct();
+                }catch(Exception e)
+                {
+                    Log.Warn($"Error while constructing AI target: {e}");
+                }
             }
         }
 
@@ -29,7 +35,7 @@ namespace NPCS.AI
 
         public abstract bool Check(Npc npc);
 
-        public abstract void Contruct();
+        public abstract void Construct();
 
         private static readonly Dictionary<string, AITarget> registry = new Dictionary<string, AITarget>();
 

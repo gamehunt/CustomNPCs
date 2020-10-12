@@ -11,7 +11,7 @@ namespace NPCS.AI
             return true;
         }
 
-        public override void Contruct()
+        public override void Construct()
         {
 
         }

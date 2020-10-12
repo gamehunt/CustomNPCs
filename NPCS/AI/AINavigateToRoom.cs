@@ -21,7 +21,7 @@ namespace NPCS.AI
         private bool random = false;
         private Room room;
 
-        public override void Contruct()
+        public override void Construct()
         {
             safe = bool.Parse(Arguments["safe"]);
             random = Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase);

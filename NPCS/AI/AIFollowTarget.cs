@@ -11,7 +11,7 @@ namespace NPCS.AI
             return npc.CurrentAIPlayerTarget != null && Player.Dictionary.ContainsKey(npc.CurrentAIPlayerTarget.GameObject);
         }
 
-        public override void Contruct()
+        public override void Construct()
         {
             
         }
