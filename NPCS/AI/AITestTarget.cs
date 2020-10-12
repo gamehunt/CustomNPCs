@@ -11,6 +11,11 @@ namespace NPCS.AI
             return true;
         }
 
+        public override void Contruct()
+        {
+
+        }
+
         public override float Process(Npc npc)
         {
             Log.Info("PROCESSING AI");

@@ -29,10 +29,12 @@ namespace NPCS.AI
             }
         }
 
+        private float range;
+
         public override float Process(Npc npc)
         {
             IsFinished = true;
-            float range = float.Parse(Arguments["range"].Replace(".", ","));
+             
             string type = Arguments["type"];
             Pickup pickup = UnityEngine.Object.FindObjectsOfType<Pickup>().Where(p => !p.Locked && !p.InUse && CheckType(type, p.itemId) && Vector3.Distance(npc.NPCPlayer.Position, p.position) < range).FirstOrDefault();
             if (pickup != null)
@@ -54,6 +56,11 @@ namespace NPCS.AI
         protected override AITarget CreateInstance()
         {
             return new AIFindItemTarget();
+        }
+
+        public override void Contruct()
+        {
+            range = float.Parse(Arguments["range"].Replace(".", ","));
         }
     }
 }

@@ -87,6 +87,1317 @@ ai: []
         // OH YEAAAAAH 44KB HARDCODED STRINGS XD
         public static string DefaultNavMappings =
 @"---
+LCZ_ClassDSpawn:
+- Relative:
+    x: -13.6654587
+    y: 1.32998943
+    z: 0.0308570862
+  RoomRotation: 0
+- Relative:
+    x: -20.618948
+    y: 1.32998943
+    z: 0.0321273804
+  RoomRotation: 0
+- Relative:
+    x: -4.31236267
+    y: 1.32998943
+    z: -0.0232620239
+  RoomRotation: 0
+- Relative:
+    x: 3.96270752
+    y: 1.32998955
+    z: -0.0899963379
+  RoomRotation: 0
+- Relative:
+    x: -22.0027294
+    y: 1.32998943
+    z: -0.0255661011
+  RoomRotation: 0
+- Relative:
+    x: -16.1327991
+    y: 1.32998943
+    z: -0.147258759
+  RoomRotation: 0
+- Relative:
+    x: -23.7887459
+    y: 1.32998955
+    z: 0.067276001
+  RoomRotation: 0
+- Relative:
+    x: -11.8187923
+    y: 1.32998943
+    z: -0.0985641479
+  RoomRotation: 0
+- Relative:
+    x: -2.55533981
+    y: 1.32998955
+    z: -0.0513725281
+  RoomRotation: 0
+- Relative:
+    x: -8.44454193
+    y: 1.32998943
+    z: -0.142353058
+  RoomRotation: 0
+- Relative:
+    x: -6.211586
+    y: 1.32998955
+    z: 0.0823059082
+  RoomRotation: 0
+- Relative:
+    x: 6.9235611
+    y: 1.32998943
+    z: -0.087059021
+  RoomRotation: 0
+- Relative:
+    x: 1.57239151
+    y: 1.32998955
+    z: 0.0718383789
+  RoomRotation: 0
+- Relative:
+    x: 9.15747452
+    y: 1.32998943
+    z: 0.101947784
+  RoomRotation: 0
+- Relative:
+    x: -18.635994
+    y: 1.32998943
+    z: -0.0779380798
+  RoomRotation: 0
+- Relative:
+    x: -9.92858505
+    y: 1.32976961
+    z: -0.233802795
+  RoomRotation: 0
+LCZ_173:
+- Relative:
+    x: -11.0862045
+    y: 17.0600014
+    z: -3.67159271
+  RoomRotation: 180
+- Relative:
+    x: -23.8351135
+    y: 17.0600014
+    z: -11.0752373
+  RoomRotation: 180
+- Relative:
+    x: -8.984478
+    y: 17.0599995
+    z: -0.137954712
+  RoomRotation: 180
+- Relative:
+    x: 9.40809631
+    y: 15.2360983
+    z: -1.57136536
+  RoomRotation: 180
+- Relative:
+    x: 8.93378448
+    y: 1.34000015
+    z: 0.132980347
+  RoomRotation: 180
+- Relative:
+    x: -5.13800049
+    y: 17.1021385
+    z: 0.0421524048
+  RoomRotation: 180
+- Relative:
+    x: 9.21072388
+    y: 4.65918064
+    z: -3.30419159
+  RoomRotation: 180
+- Relative:
+    x: 5.628685
+    y: 9.08956814
+    z: 3.41664886
+  RoomRotation: 180
+- Relative:
+    x: 3.04965973
+    y: 17.0908947
+    z: 1.63037109
+  RoomRotation: 180
+- Relative:
+    x: 9.47005463
+    y: 7.27638483
+    z: 3.30250549
+  RoomRotation: 180
+- Relative:
+    x: -20.7551842
+    y: 17.0600014
+    z: -10.8964157
+  RoomRotation: 180
+- Relative:
+    x: 6.65187836
+    y: 1.34000015
+    z: 0.255584717
+  RoomRotation: 180
+- Relative:
+    x: -22.5412941
+    y: 17.0600014
+    z: -11.0001183
+  RoomRotation: 180
+- Relative:
+    x: 6.83810425
+    y: 1.34000015
+    z: 2.52984619
+  RoomRotation: 180
+- Relative:
+    x: 9.20801544
+    y: 6.53137922
+    z: 0.67502594
+  RoomRotation: 180
+- Relative:
+    x: 6.31439209
+    y: 8.74768829
+    z: 3.34676361
+  RoomRotation: 180
+- Relative:
+    x: -19.2048912
+    y: 17.0599995
+    z: -10.8064079
+  RoomRotation: 180
+- Relative:
+    x: 8.67372131
+    y: 7.57136583
+    z: 3.37805939
+  RoomRotation: 180
+- Relative:
+    x: -1.59569931
+    y: 17.0908928
+    z: 0.120559692
+  RoomRotation: 180
+- Relative:
+    x: -11.0059166
+    y: 17.0600014
+    z: -5.61662292
+  RoomRotation: 180
+- Relative:
+    x: -6.77793503
+    y: 17.1240292
+    z: 0.0488891602
+  RoomRotation: 180
+- Relative:
+    x: 4.82324219
+    y: 12.7294016
+    z: -3.37247467
+  RoomRotation: 180
+- Relative:
+    x: -13.2346764
+    y: 17.0599995
+    z: -8.18081665
+  RoomRotation: 180
+- Relative:
+    x: -14.5175133
+    y: 17.0599995
+    z: -10.5324402
+  RoomRotation: 180
+- Relative:
+    x: 3.4331131
+    y: 11.546586
+    z: -0.87134552
+  RoomRotation: 180
+- Relative:
+    x: 3.42531586
+    y: 10.4224863
+    z: 1.383255
+  RoomRotation: 180
+- Relative:
+    x: 3.64354706
+    y: 12.1836386
+    z: -3.34848022
+  RoomRotation: 180
+- Relative:
+    x: 9.37771606
+    y: 14.4736919
+    z: -3.34578705
+  RoomRotation: 180
+- Relative:
+    x: 9.43733215
+    y: 16.3375359
+    z: 0.637771606
+  RoomRotation: 180
+- Relative:
+    x: 0.37922287
+    y: 17.0908928
+    z: 1.04329681
+  RoomRotation: 180
+- Relative:
+    x: 6.72518921
+    y: 3.95065522
+    z: -3.30883026
+  RoomRotation: 180
+- Relative:
+    x: 9.2122879
+    y: 5.50430965
+    z: -1.38494873
+  RoomRotation: 180
+- Relative:
+    x: 4.82049561
+    y: 3.00100899
+    z: -3.31306458
+  RoomRotation: 180
+- Relative:
+    x: 3.65979004
+    y: 1.86454034
+    z: -1.13574982
+  RoomRotation: 180
+- Relative:
+    x: 6.56069946
+    y: 13.5956707
+    z: -3.34442139
+  RoomRotation: 180
+- Relative:
+    x: 3.42437744
+    y: 9.56643581
+    z: 3.34577179
+  RoomRotation: 180
+- Relative:
+    x: -10.9783554
+    y: 17.0599995
+    z: -1.77765656
+  RoomRotation: 180
+- Relative:
+    x: 4.98997498
+    y: 17.0908947
+    z: 2.96898651
+  RoomRotation: 180
+- Relative:
+    x: 9.21381378
+    y: 5.18575573
+    z: -2.02387238
+  RoomRotation: 180
+- Relative:
+    x: 3.64349365
+    y: 2.3691287
+    z: -3.348526
+  RoomRotation: 180
+- Relative:
+    x: 8.49181366
+    y: 17.0908947
+    z: 3.29634094
+  RoomRotation: 180
+LCZ_ChkpB:
+- Relative:
+    x: -6.71865463
+    y: 1.32999742
+    z: 0.442207336
+  RoomRotation: 180
+- Relative:
+    x: -1.97130966
+    y: 1.32999933
+    z: 3.52241516
+  RoomRotation: 180
+- Relative:
+    x: 20.5498047
+    y: 1.33000004
+    z: 2.08695984
+  RoomRotation: 0
+- Relative:
+    x: 0.530136108
+    y: 1.32999992
+    z: -20.980217
+  RoomRotation: 90
+- Relative:
+    x: 0.504547119
+    y: 1.3300004
+    z: -15.9694443
+  RoomRotation: 90
+- Relative:
+    x: 0.918613434
+    y: 1.33000028
+    z: -0.752174377
+  RoomRotation: 180
+- Relative:
+    x: 0.0681991577
+    y: 1.330001
+    z: -10.8226852
+  RoomRotation: 90
+- Relative:
+    x: 20.460434
+    y: 1.32999992
+    z: -3.17723846
+  RoomRotation: 0
+- Relative:
+    x: 19.1833801
+    y: 1.33000016
+    z: -0.347145081
+  RoomRotation: 0
+- Relative:
+    x: 6.05387878
+    y: 1.30859363
+    z: -20.979126
+  RoomRotation: 90
+- Relative:
+    x: -5.63908386
+    y: 1.30359387
+    z: -20.8698196
+  RoomRotation: 90
+- Relative:
+    x: 2.47844696
+    y: 1.32999992
+    z: -21.0150833
+  RoomRotation: 90
+- Relative:
+    x: -2.13183594
+    y: 1.32999921
+    z: -0.375282288
+  RoomRotation: 180
+- Relative:
+    x: 20.503479
+    y: 1.33000004
+    z: 3.61854553
+  RoomRotation: 0
+- Relative:
+    x: 20.8283386
+    y: 1.33000004
+    z: -2.08548737
+  RoomRotation: 0
+- Relative:
+    x: 7.76702881
+    y: 1.33000302
+    z: -0.078086853
+  RoomRotation: 180
+- Relative:
+    x: -1.12428665
+    y: 1.32999957
+    z: -0.39717865
+  RoomRotation: 180
+- Relative:
+    x: 16.9468231
+    y: 1.33000052
+    z: -0.358558655
+  RoomRotation: 0
+- Relative:
+    x: 12.2246552
+    y: 1.33000088
+    z: -0.38293457
+  RoomRotation: 0
+- Relative:
+    x: -3.41131592
+    y: 1.32999873
+    z: 3.51589203
+  RoomRotation: 180
+- Relative:
+    x: 3.48148346
+    y: 1.33000135
+    z: -0.903564453
+  RoomRotation: 180
+- Relative:
+    x: 0.263015747
+    y: 1.33000016
+    z: -18.5182571
+  RoomRotation: 90
+- Relative:
+    x: -7.81328201
+    y: 1.32999694
+    z: -0.0653076172
+  RoomRotation: 180
+- Relative:
+    x: 20.4222565
+    y: 1.30359375
+    z: -5.32620239
+  RoomRotation: 0
+- Relative:
+    x: 5.38754272
+    y: 1.33000207
+    z: -0.00485229492
+  RoomRotation: 180
+- Relative:
+    x: -3.44501877
+    y: 1.32999873
+    z: -0.381233215
+  RoomRotation: 180
+- Relative:
+    x: -1.75939941
+    y: 1.32999992
+    z: -20.9392471
+  RoomRotation: 90
+- Relative:
+    x: 0.463039398
+    y: 1.33000016
+    z: 3.61940765
+  RoomRotation: 180
+- Relative:
+    x: 1.47141647
+    y: 1.33000052
+    z: 2.11810303
+  RoomRotation: 180
+- Relative:
+    x: 20.4950256
+    y: 1.30859387
+    z: 5.25466919
+  RoomRotation: 0
+- Relative:
+    x: 3.84596252
+    y: 1.32999992
+    z: -20.9830475
+  RoomRotation: 90
+- Relative:
+    x: 3.30599976
+    y: 1.33000124
+    z: 1.67932892
+  RoomRotation: 180
+- Relative:
+    x: -3.74217987
+    y: 1.32999992
+    z: -20.9037628
+  RoomRotation: 90
+- Relative:
+    x: 14.5537415
+    y: 1.33000076
+    z: -0.370910645
+  RoomRotation: 0
+- Relative:
+    x: 0.483131409
+    y: 1.33000076
+    z: -13.376091
+  RoomRotation: 90
+- Relative:
+    x: -5.86936569
+    y: 1.32999778
+    z: 2.37589264
+  RoomRotation: 180
+LCZ_ChkpA:
+- Relative:
+    x: 10.9662933
+    y: 1.330001
+    z: -0.0258331299
+  RoomRotation: 0
+- Relative:
+    x: -0.628852844
+    y: 1.32999969
+    z: -0.683273315
+  RoomRotation: 180
+- Relative:
+    x: -6.74664307
+    y: 1.32999742
+    z: 1.41120911
+  RoomRotation: 180
+- Relative:
+    x: 17.6842346
+    y: 1.33000028
+    z: -0.100440979
+  RoomRotation: 0
+- Relative:
+    x: 4.96073914
+    y: 1.33000195
+    z: 0.613189697
+  RoomRotation: 180
+- Relative:
+    x: 20.7129059
+    y: 1.32999992
+    z: 1.50901794
+  RoomRotation: 0
+- Relative:
+    x: 2.24821472
+    y: 1.33000088
+    z: -0.264907837
+  RoomRotation: 180
+- Relative:
+    x: 5.21832275
+    y: 1.3125937
+    z: 20.4966431
+  RoomRotation: 270
+- Relative:
+    x: -5.2117691
+    y: 1.32999802
+    z: 1.40461731
+  RoomRotation: 180
+- Relative:
+    x: 20.8301239
+    y: 1.32999992
+    z: -2.60928345
+  RoomRotation: 0
+- Relative:
+    x: -0.130828857
+    y: 1.33000016
+    z: 19.4803467
+  RoomRotation: 270
+- Relative:
+    x: 20.0313416
+    y: 1.33000004
+    z: -0.434257507
+  RoomRotation: 0
+- Relative:
+    x: 2.83948517
+    y: 1.33000004
+    z: 20.5379486
+  RoomRotation: 270
+- Relative:
+    x: -0.0924377441
+    y: 1.33000052
+    z: 15.9560699
+  RoomRotation: 270
+- Relative:
+    x: 1.75716782
+    y: 1.33000064
+    z: 3.56471252
+  RoomRotation: 180
+- Relative:
+    x: -8.15708923
+    y: 1.32999682
+    z: 0.0772857666
+  RoomRotation: 180
+- Relative:
+    x: 2.08575439
+    y: 1.33000004
+    z: 19.7142181
+  RoomRotation: 270
+- Relative:
+    x: 20.803833
+    y: 1.31259382
+    z: -5.49567413
+  RoomRotation: 0
+- Relative:
+    x: 7.31793976
+    y: 1.3300029
+    z: 0.110717773
+  RoomRotation: 180
+- Relative:
+    x: -0.104614258
+    y: 1.330001
+    z: 11.9569855
+  RoomRotation: 270
+- Relative:
+    x: -4.21505356
+    y: 1.32999837
+    z: -0.612762451
+  RoomRotation: 180
+- Relative:
+    x: 3.3628006
+    y: 1.33000135
+    z: 1.36004639
+  RoomRotation: 180
+- Relative:
+    x: -0.297737122
+    y: 1.33000076
+    z: 13.7874451
+  RoomRotation: 270
+- Relative:
+    x: -4.73256683
+    y: 1.35359383
+    z: 20.703949
+  RoomRotation: 270
+- Relative:
+    x: -2.80644989
+    y: 1.32999885
+    z: -0.618804932
+  RoomRotation: 180
+- Relative:
+    x: 20.6226654
+    y: 1.32999992
+    z: 3.57446289
+  RoomRotation: 0
+- Relative:
+    x: -0.293159485
+    y: 1.33000028
+    z: 17.8585205
+  RoomRotation: 270
+- Relative:
+    x: 9.27780151
+    y: 1.33000362
+    z: 0.0388336182
+  RoomRotation: 180
+- Relative:
+    x: -1.08643723
+    y: 1.32999957
+    z: 3.48114014
+  RoomRotation: 180
+- Relative:
+    x: -2.24250793
+    y: 1.33000004
+    z: 20.4846954
+  RoomRotation: 270
+- Relative:
+    x: -3.78412628
+    y: 1.32999849
+    z: 3.34396362
+  RoomRotation: 180
+- Relative:
+    x: 12.7595367
+    y: 1.33000076
+    z: -0.0719985962
+  RoomRotation: 0
+- Relative:
+    x: 20.6378632
+    y: 1.35359371
+    z: 5.67886353
+  RoomRotation: 0
+- Relative:
+    x: 14.980545
+    y: 1.33000064
+    z: -0.0491104126
+  RoomRotation: 0
+- Relative:
+    x: 20.7169342
+    y: 1.32999992
+    z: -3.82156372
+  RoomRotation: 0
+HCZ_ChkpA:
+- Relative:
+    x: -0.0936584473
+    y: 1.30664063
+    z: 6.12310791
+  RoomRotation: 0
+- Relative:
+    x: -0.120819092
+    y: 1.32995605
+    z: 3.73337555
+  RoomRotation: 0
+- Relative:
+    x: 0.0492248535
+    y: 1.3236084
+    z: -5.44057465
+  RoomRotation: 0
+- Relative:
+    x: -5.59857941
+    y: 1.33001709
+    z: 0.0106887817
+  RoomRotation: 0
+- Relative:
+    x: -9.65596771
+    y: 1.33001709
+    z: -0.0898513794
+  RoomRotation: 0
+- Relative:
+    x: -7.44050598
+    y: 1.33001709
+    z: 0.0147247314
+  RoomRotation: 0
+- Relative:
+    x: 0.29119873
+    y: 1.33001709
+    z: -2.66277313
+  RoomRotation: 0
+- Relative:
+    x: 0.643310547
+    y: 1.33001709
+    z: -0.310302734
+  RoomRotation: 0
+- Relative:
+    x: -3.09784698
+    y: 1.32995605
+    z: -0.0331039429
+  RoomRotation: 0
+- Relative:
+    x: 0.157089233
+    y: 1.33001709
+    z: 2.26720428
+  RoomRotation: 0
+- Relative:
+    x: -1.00643921
+    y: 1.32995605
+    z: -0.0266723633
+  RoomRotation: 0
+HCZ_Room3ar:
+- Relative:
+    x: 2.00482178
+    y: 1.32995605
+    z: -3.05593872
+  RoomRotation: 270
+- Relative:
+    x: -5.99225616
+    y: 1.33001709
+    z: 0.338760376
+  RoomRotation: 270
+- Relative:
+    x: -4.14115143
+    y: 1.32995605
+    z: -1.44430542
+  RoomRotation: 270
+- Relative:
+    x: -8.16208649
+    y: 1.33001709
+    z: -0.010055542
+  RoomRotation: 270
+- Relative:
+    x: 0.0369720459
+    y: 1.33001709
+    z: -9.29681396
+  RoomRotation: 270
+- Relative:
+    x: 0.0415725708
+    y: 1.33001709
+    z: -5.85154724
+  RoomRotation: 270
+- Relative:
+    x: 0.0686340332
+    y: 1.33001709
+    z: -7.64035034
+  RoomRotation: 270
+- Relative:
+    x: -2.04932404
+    y: 1.33001709
+    z: -2.55508423
+  RoomRotation: 270
+- Relative:
+    x: 0.0528488159
+    y: 1.33001709
+    z: -3.94943237
+  RoomRotation: 270
+- Relative:
+    x: 4.04431152
+    y: 1.33001709
+    z: -1.57688904
+  RoomRotation: 270
+- Relative:
+    x: 6.10572052
+    y: 1.32995605
+    z: 0.103820801
+  RoomRotation: 270
+- Relative:
+    x: 8.08287048
+    y: 1.33001709
+    z: 0.105300903
+  RoomRotation: 270
+HCZ_Hid:
+- Relative:
+    x: 0.0884857178
+    y: 1.32995605
+    z: -0.947479248
+  RoomRotation: 90
+- Relative:
+    x: -5.72784805
+    y: 1.33001709
+    z: 0.0774841309
+  RoomRotation: 90
+- Relative:
+    x: -0.184356689
+    y: 1.33001709
+    z: -8.39909363
+  RoomRotation: 90
+- Relative:
+    x: -0.880767822
+    y: 1.33001709
+    z: 5.84965515
+  RoomRotation: 90
+- Relative:
+    x: -1.29706573
+    y: 1.33001709
+    z: -6.76550293
+  RoomRotation: 90
+- Relative:
+    x: 0.278686523
+    y: 1.33001709
+    z: 4.24728394
+  RoomRotation: 90
+- Relative:
+    x: -0.00127410889
+    y: 1.33001709
+    z: -3.39909363
+  RoomRotation: 90
+- Relative:
+    x: -5.85365677
+    y: 1.33001709
+    z: -2.89697266
+  RoomRotation: 90
+- Relative:
+    x: -0.259216309
+    y: 1.33001709
+    z: 7.36878967
+  RoomRotation: 90
+- Relative:
+    x: -5.60203934
+    y: 1.32995605
+    z: 3.05194092
+  RoomRotation: 90
+- Relative:
+    x: -4.8012085
+    y: 1.33001709
+    z: 5.46232605
+  RoomRotation: 90
+- Relative:
+    x: -0.0944061279
+    y: 1.33001709
+    z: -5.94239807
+  RoomRotation: 90
+- Relative:
+    x: -4.71335602
+    y: 1.32995605
+    z: -6.1260376
+  RoomRotation: 90
+- Relative:
+    x: 0.18951416
+    y: 1.33001709
+    z: 1.8117981
+  RoomRotation: 90
+- Relative:
+    x: -0.196960449
+    y: 1.32995605
+    z: 9.19781494
+  RoomRotation: 90
+HCZ_Servers:
+- Relative:
+    x: 8.34857941
+    y: 1.32983398
+    z: -5.52711487
+  RoomRotation: 0
+- Relative:
+    x: -6.12164307
+    y: -6.59008789
+    z: -4.20254517
+  RoomRotation: 0
+- Relative:
+    x: -1.368927
+    y: -5.20874023
+    z: -8.07887268
+  RoomRotation: 0
+- Relative:
+    x: -5.91334534
+    y: -6.59008789
+    z: -1.88276672
+  RoomRotation: 0
+- Relative:
+    x: -2.680336
+    y: -1.45758057
+    z: -3.08709717
+  RoomRotation: 0
+- Relative:
+    x: -0.252365112
+    y: -6.59008789
+    z: 0.204818726
+  RoomRotation: 0
+- Relative:
+    x: 5.03116608
+    y: 1.05712891
+    z: -7.80780029
+  RoomRotation: 0
+- Relative:
+    x: 4.56148529
+    y: -6.59008789
+    z: -0.370513916
+  RoomRotation: 0
+- Relative:
+    x: 2.19876099
+    y: -6.23443604
+    z: -2.717453
+  RoomRotation: 0
+- Relative:
+    x: 8.57671356
+    y: 1.32983398
+    z: -3.40039063
+  RoomRotation: 0
+- Relative:
+    x: -3.56481934
+    y: -6.59008789
+    z: -8.15844727
+  RoomRotation: 0
+- Relative:
+    x: 8.56697083
+    y: 1.32983398
+    z: -1.01213074
+  RoomRotation: 0
+- Relative:
+    x: 1.44449615
+    y: -6.59008789
+    z: 0.450897217
+  RoomRotation: 0
+- Relative:
+    x: -3.29452515
+    y: -6.59008789
+    z: 0.244873047
+  RoomRotation: 0
+- Relative:
+    x: 8.24423218
+    y: 1.32983398
+    z: -7.64880371
+  RoomRotation: 0
+- Relative:
+    x: 3.25196075
+    y: -0.684753418
+    z: -7.64363098
+  RoomRotation: 0
+- Relative:
+    x: 6.78085327
+    y: 1.32977295
+    z: -7.720047
+  RoomRotation: 0
+- Relative:
+    x: 1.75305176
+    y: -2.15228271
+    z: -7.78120422
+  RoomRotation: 0
+- Relative:
+    x: 3.27366638
+    y: -6.59008789
+    z: -2.65823364
+  RoomRotation: 0
+- Relative:
+    x: 2.97380829
+    y: -6.59008789
+    z: -0.43838501
+  RoomRotation: 0
+- Relative:
+    x: -6.0306015
+    y: -6.59014893
+    z: -8.55345154
+  RoomRotation: 0
+- Relative:
+    x: -4.28691101
+    y: 0.11529541
+    z: -3.20147705
+  RoomRotation: 0
+- Relative:
+    x: -6.79877472
+    y: 1.32983398
+    z: -3.35646057
+  RoomRotation: 0
+- Relative:
+    x: -5.80250549
+    y: -6.59008789
+    z: 0.130172729
+  RoomRotation: 0
+- Relative:
+    x: -0.99671936
+    y: -3.105896
+    z: -2.96626282
+  RoomRotation: 0
+- Relative:
+    x: -9.29979706
+    y: 1.32983398
+    z: -2.53762817
+  RoomRotation: 0
+- Relative:
+    x: -9.4065094
+    y: 1.32983398
+    z: -0.043762207
+  RoomRotation: 0
+- Relative:
+    x: 0.624290466
+    y: -4.69293213
+    z: -2.83041382
+  RoomRotation: 0
+- Relative:
+    x: 0.363876343
+    y: -3.51226807
+    z: -7.91365051
+  RoomRotation: 0
+- Relative:
+    x: -1.82377625
+    y: -6.59008789
+    z: 0.312149048
+  RoomRotation: 0
+HCZ_Nuke:
+- Relative:
+    x: 6.48225403
+    y: 401.330017
+    z: 8.7885437
+  RoomRotation: 90
+- Relative:
+    x: -5.26094818
+    y: 401.330017
+    z: -2.83363342
+  RoomRotation: 90
+- Relative:
+    x: -0.45451355
+    y: 1.3302002
+    z: 0.044670105
+  RoomRotation: 90
+- Relative:
+    x: -0.215553284
+    y: 1.3302002
+    z: -4.53642273
+  RoomRotation: 90
+- Relative:
+    x: -0.86844635
+    y: 401.330017
+    z: -6.81573486
+  RoomRotation: 90
+- Relative:
+    x: 13.6330032
+    y: 401.330017
+    z: 4.34431458
+  RoomRotation: 90
+- Relative:
+    x: -1.29503632
+    y: 1.3302002
+    z: 1.67939758
+  RoomRotation: 90
+- Relative:
+    x: -2.99155426
+    y: 401.329956
+    z: -4.71757507
+  RoomRotation: 90
+- Relative:
+    x: 11.2720413
+    y: 401.329956
+    z: -3.45744324
+  RoomRotation: 90
+- Relative:
+    x: 12.2819672
+    y: 401.330017
+    z: -0.76864624
+  RoomRotation: 90
+- Relative:
+    x: -1.26968384
+    y: 1.3302002
+    z: 4.2381897
+  RoomRotation: 90
+- Relative:
+    x: 0.534126282
+    y: 401.330017
+    z: -8.04154968
+  RoomRotation: 90
+- Relative:
+    x: 9.34706879
+    y: 401.329956
+    z: -8.39518738
+  RoomRotation: 90
+- Relative:
+    x: -6.74239349
+    y: 401.330017
+    z: -0.00386047363
+  RoomRotation: 90
+- Relative:
+    x: 0.112350464
+    y: 1.3302002
+    z: 8.14442444
+  RoomRotation: 90
+- Relative:
+    x: 3.4911499
+    y: 401.330017
+    z: 8.89826965
+  RoomRotation: 90
+- Relative:
+    x: -2.44281769
+    y: 401.330017
+    z: 5.99201965
+  RoomRotation: 90
+- Relative:
+    x: -3.3033371
+    y: 401.330017
+    z: 4.79634094
+  RoomRotation: 90
+- Relative:
+    x: 11.441246
+    y: 401.329956
+    z: -8.99482727
+  RoomRotation: 90
+- Relative:
+    x: -5.27842712
+    y: 401.330017
+    z: -0.061920166
+  RoomRotation: 90
+- Relative:
+    x: -0.774269104
+    y: 1.33013916
+    z: 6.63850403
+  RoomRotation: 90
+- Relative:
+    x: 12.9394455
+    y: 401.330017
+    z: 2.16490173
+  RoomRotation: 90
+- Relative:
+    x: -0.249588013
+    y: 1.3302002
+    z: -9.2459259
+  RoomRotation: 90
+- Relative:
+    x: 11.3662186
+    y: 401.330017
+    z: -7.23744202
+  RoomRotation: 90
+- Relative:
+    x: -0.19556427
+    y: 1.3302002
+    z: -1.76982117
+  RoomRotation: 90
+- Relative:
+    x: -0.23197937
+    y: 1.3302002
+    z: -6.80899048
+  RoomRotation: 90
+- Relative:
+    x: 12.6849823
+    y: 401.330017
+    z: 0.908187866
+  RoomRotation: 90
+- Relative:
+    x: -8.29452515
+    y: 401.30365
+    z: -0.0572509766
+  RoomRotation: 90
+- Relative:
+    x: -5.15836334
+    y: 1.34362793
+    z: -0.0155792236
+  RoomRotation: 90
+- Relative:
+    x: 1.90196991
+    y: 401.330017
+    z: -8.71578979
+  RoomRotation: 90
+- Relative:
+    x: 7.45233917
+    y: 401.329956
+    z: -9.15693665
+  RoomRotation: 90
+- Relative:
+    x: -5.29653168
+    y: 401.329956
+    z: 2.77142334
+  RoomRotation: 90
+- Relative:
+    x: 4.75319672
+    y: 401.330017
+    z: -8.99880981
+  RoomRotation: 90
+- Relative:
+    x: 11.1653519
+    y: 401.330017
+    z: -5.89538574
+  RoomRotation: 90
+- Relative:
+    x: 0.940574646
+    y: 401.330017
+    z: 9.00692749
+  RoomRotation: 90
+- Relative:
+    x: -1.12773895
+    y: 401.330017
+    z: 6.94512939
+  RoomRotation: 90
+- Relative:
+    x: -2.77867126
+    y: 1.33013916
+    z: -0.6302948
+  RoomRotation: 90
+HCZ_Testroom:
+- Relative:
+    x: 0.119613647
+    y: 1.33001709
+    z: -9.31639099
+  RoomRotation: 90
+- Relative:
+    x: 9.38111115
+    y: 1.33001709
+    z: 6.62803268
+  RoomRotation: 90
+- Relative:
+    x: 8.40641785
+    y: 1.33001709
+    z: -8.2526207
+  RoomRotation: 90
+- Relative:
+    x: 2.74467468
+    y: 1.33001709
+    z: 9.61941147
+  RoomRotation: 90
+- Relative:
+    x: 6.63430023
+    y: 1.33001709
+    z: -9.27035522
+  RoomRotation: 90
+- Relative:
+    x: 2.87330627
+    y: 1.32995605
+    z: -9.28757858
+  RoomRotation: 90
+- Relative:
+    x: 5.27719879
+    y: 1.33001709
+    z: -9.27656555
+  RoomRotation: 90
+- Relative:
+    x: 9.23417664
+    y: 1.33001709
+    z: -2.24155045
+  RoomRotation: 90
+- Relative:
+    x: 9.28992462
+    y: 1.32995605
+    z: -0.718963623
+  RoomRotation: 90
+- Relative:
+    x: 4.96572876
+    y: 1.33001709
+    z: 9.61940384
+  RoomRotation: 90
+- Relative:
+    x: -0.0830459595
+    y: 1.33001709
+    z: 9.69942856
+  RoomRotation: 90
+- Relative:
+    x: 9.4056015
+    y: 1.33001709
+    z: 3.36631775
+  RoomRotation: 90
+- Relative:
+    x: 7.78990936
+    y: 1.32995605
+    z: 9.00191116
+  RoomRotation: 90
+- Relative:
+    x: 9.43813324
+    y: 1.33001709
+    z: -5.62234497
+  RoomRotation: 90
+- Relative:
+    x: 9.49707031
+    y: 1.33001709
+    z: -3.93678665
+  RoomRotation: 90
+- Relative:
+    x: 9.39544678
+    y: 1.33001709
+    z: 4.71231461
+  RoomRotation: 90
+- Relative:
+    x: 9.3470993
+    y: 1.33001709
+    z: 0.841491699
+  RoomRotation: 90
+HCZ_ChkpB:
+- Relative:
+    x: 0.119270325
+    y: 1.33001709
+    z: -3.30712891
+  RoomRotation: 180
+- Relative:
+    x: 5.43154907
+    y: 1.33001709
+    z: 0.0337982178
+  RoomRotation: 180
+- Relative:
+    x: 0.0179748535
+    y: 1.3135376
+    z: 5.09552002
+  RoomRotation: 180
+- Relative:
+    x: 0.508132935
+    y: 1.33001709
+    z: 2.62957764
+  RoomRotation: 180
+- Relative:
+    x: 3.05418396
+    y: 1.33001709
+    z: -0.0906066895
+  RoomRotation: 180
+- Relative:
+    x: 8.81179047
+    y: 1.33001709
+    z: 0.210403442
+  RoomRotation: 180
+- Relative:
+    x: -0.0301971436
+    y: 1.3036499
+    z: -5.58668518
+  RoomRotation: 180
+- Relative:
+    x: 0.360794067
+    y: 1.33001709
+    z: 0.376586914
+  RoomRotation: 180
+- Relative:
+    x: 0.233390808
+    y: 1.33001709
+    z: -1.56785583
+  RoomRotation: 180
+- Relative:
+    x: 6.78669739
+    y: 1.33001709
+    z: 0.104721069
+  RoomRotation: 180
 Root_*&*Outside Cams:
 - Relative:
     x: 111.573776
@@ -1102,1317 +2413,6 @@ Root_*&*Outside Cams:
     x: 100.763
     y: -5.90936279
     z: -50.4837074
-  RoomRotation: 0
-HCZ_ChkpB:
-- Relative:
-    x: 0.119270325
-    y: 1.33001709
-    z: -3.30712891
-  RoomRotation: 180
-- Relative:
-    x: 5.43154907
-    y: 1.33001709
-    z: 0.0337982178
-  RoomRotation: 180
-- Relative:
-    x: 0.0179748535
-    y: 1.3135376
-    z: 5.09552002
-  RoomRotation: 180
-- Relative:
-    x: 0.508132935
-    y: 1.33001709
-    z: 2.62957764
-  RoomRotation: 180
-- Relative:
-    x: 3.05418396
-    y: 1.33001709
-    z: -0.0906066895
-  RoomRotation: 180
-- Relative:
-    x: 8.81179047
-    y: 1.33001709
-    z: 0.210403442
-  RoomRotation: 180
-- Relative:
-    x: -0.0301971436
-    y: 1.3036499
-    z: -5.58668518
-  RoomRotation: 180
-- Relative:
-    x: 0.360794067
-    y: 1.33001709
-    z: 0.376586914
-  RoomRotation: 180
-- Relative:
-    x: 0.233390808
-    y: 1.33001709
-    z: -1.56785583
-  RoomRotation: 180
-- Relative:
-    x: 6.78669739
-    y: 1.33001709
-    z: 0.104721069
-  RoomRotation: 180
-HCZ_Servers:
-- Relative:
-    x: 8.34857941
-    y: 1.32983398
-    z: -5.52711487
-  RoomRotation: 0
-- Relative:
-    x: -6.12164307
-    y: -6.59008789
-    z: -4.20254517
-  RoomRotation: 0
-- Relative:
-    x: -1.368927
-    y: -5.20874023
-    z: -8.07887268
-  RoomRotation: 0
-- Relative:
-    x: -5.91334534
-    y: -6.59008789
-    z: -1.88276672
-  RoomRotation: 0
-- Relative:
-    x: -2.680336
-    y: -1.45758057
-    z: -3.08709717
-  RoomRotation: 0
-- Relative:
-    x: -0.252365112
-    y: -6.59008789
-    z: 0.204818726
-  RoomRotation: 0
-- Relative:
-    x: 5.03116608
-    y: 1.05712891
-    z: -7.80780029
-  RoomRotation: 0
-- Relative:
-    x: 4.56148529
-    y: -6.59008789
-    z: -0.370513916
-  RoomRotation: 0
-- Relative:
-    x: 2.19876099
-    y: -6.23443604
-    z: -2.717453
-  RoomRotation: 0
-- Relative:
-    x: 8.57671356
-    y: 1.32983398
-    z: -3.40039063
-  RoomRotation: 0
-- Relative:
-    x: -3.56481934
-    y: -6.59008789
-    z: -8.15844727
-  RoomRotation: 0
-- Relative:
-    x: 8.56697083
-    y: 1.32983398
-    z: -1.01213074
-  RoomRotation: 0
-- Relative:
-    x: 1.44449615
-    y: -6.59008789
-    z: 0.450897217
-  RoomRotation: 0
-- Relative:
-    x: -3.29452515
-    y: -6.59008789
-    z: 0.244873047
-  RoomRotation: 0
-- Relative:
-    x: 8.24423218
-    y: 1.32983398
-    z: -7.64880371
-  RoomRotation: 0
-- Relative:
-    x: 3.25196075
-    y: -0.684753418
-    z: -7.64363098
-  RoomRotation: 0
-- Relative:
-    x: 6.78085327
-    y: 1.32977295
-    z: -7.720047
-  RoomRotation: 0
-- Relative:
-    x: 1.75305176
-    y: -2.15228271
-    z: -7.78120422
-  RoomRotation: 0
-- Relative:
-    x: 3.27366638
-    y: -6.59008789
-    z: -2.65823364
-  RoomRotation: 0
-- Relative:
-    x: 2.97380829
-    y: -6.59008789
-    z: -0.43838501
-  RoomRotation: 0
-- Relative:
-    x: -6.0306015
-    y: -6.59014893
-    z: -8.55345154
-  RoomRotation: 0
-- Relative:
-    x: -4.28691101
-    y: 0.11529541
-    z: -3.20147705
-  RoomRotation: 0
-- Relative:
-    x: -6.79877472
-    y: 1.32983398
-    z: -3.35646057
-  RoomRotation: 0
-- Relative:
-    x: -5.80250549
-    y: -6.59008789
-    z: 0.130172729
-  RoomRotation: 0
-- Relative:
-    x: -0.99671936
-    y: -3.105896
-    z: -2.96626282
-  RoomRotation: 0
-- Relative:
-    x: -9.29979706
-    y: 1.32983398
-    z: -2.53762817
-  RoomRotation: 0
-- Relative:
-    x: -9.4065094
-    y: 1.32983398
-    z: -0.043762207
-  RoomRotation: 0
-- Relative:
-    x: 0.624290466
-    y: -4.69293213
-    z: -2.83041382
-  RoomRotation: 0
-- Relative:
-    x: 0.363876343
-    y: -3.51226807
-    z: -7.91365051
-  RoomRotation: 0
-- Relative:
-    x: -1.82377625
-    y: -6.59008789
-    z: 0.312149048
-  RoomRotation: 0
-LCZ_ClassDSpawn:
-- Relative:
-    x: -13.6654587
-    y: 1.32998943
-    z: 0.0308570862
-  RoomRotation: 0
-- Relative:
-    x: -20.618948
-    y: 1.32998943
-    z: 0.0321273804
-  RoomRotation: 0
-- Relative:
-    x: -4.31236267
-    y: 1.32998943
-    z: -0.0232620239
-  RoomRotation: 0
-- Relative:
-    x: 3.96270752
-    y: 1.32998955
-    z: -0.0899963379
-  RoomRotation: 0
-- Relative:
-    x: -22.0027294
-    y: 1.32998943
-    z: -0.0255661011
-  RoomRotation: 0
-- Relative:
-    x: -16.1327991
-    y: 1.32998943
-    z: -0.147258759
-  RoomRotation: 0
-- Relative:
-    x: -23.7887459
-    y: 1.32998955
-    z: 0.067276001
-  RoomRotation: 0
-- Relative:
-    x: -11.8187923
-    y: 1.32998943
-    z: -0.0985641479
-  RoomRotation: 0
-- Relative:
-    x: -2.55533981
-    y: 1.32998955
-    z: -0.0513725281
-  RoomRotation: 0
-- Relative:
-    x: -8.44454193
-    y: 1.32998943
-    z: -0.142353058
-  RoomRotation: 0
-- Relative:
-    x: -6.211586
-    y: 1.32998955
-    z: 0.0823059082
-  RoomRotation: 0
-- Relative:
-    x: 6.9235611
-    y: 1.32998943
-    z: -0.087059021
-  RoomRotation: 0
-- Relative:
-    x: 1.57239151
-    y: 1.32998955
-    z: 0.0718383789
-  RoomRotation: 0
-- Relative:
-    x: 9.15747452
-    y: 1.32998943
-    z: 0.101947784
-  RoomRotation: 0
-- Relative:
-    x: -18.635994
-    y: 1.32998943
-    z: -0.0779380798
-  RoomRotation: 0
-- Relative:
-    x: -9.92858505
-    y: 1.32976961
-    z: -0.233802795
-  RoomRotation: 0
-HCZ_Testroom:
-- Relative:
-    x: 0.119613647
-    y: 1.33001709
-    z: -9.31639099
-  RoomRotation: 90
-- Relative:
-    x: 9.38111115
-    y: 1.33001709
-    z: 6.62803268
-  RoomRotation: 90
-- Relative:
-    x: 8.40641785
-    y: 1.33001709
-    z: -8.2526207
-  RoomRotation: 90
-- Relative:
-    x: 2.74467468
-    y: 1.33001709
-    z: 9.61941147
-  RoomRotation: 90
-- Relative:
-    x: 6.63430023
-    y: 1.33001709
-    z: -9.27035522
-  RoomRotation: 90
-- Relative:
-    x: 2.87330627
-    y: 1.32995605
-    z: -9.28757858
-  RoomRotation: 90
-- Relative:
-    x: 5.27719879
-    y: 1.33001709
-    z: -9.27656555
-  RoomRotation: 90
-- Relative:
-    x: 9.23417664
-    y: 1.33001709
-    z: -2.24155045
-  RoomRotation: 90
-- Relative:
-    x: 9.28992462
-    y: 1.32995605
-    z: -0.718963623
-  RoomRotation: 90
-- Relative:
-    x: 4.96572876
-    y: 1.33001709
-    z: 9.61940384
-  RoomRotation: 90
-- Relative:
-    x: -0.0830459595
-    y: 1.33001709
-    z: 9.69942856
-  RoomRotation: 90
-- Relative:
-    x: 9.4056015
-    y: 1.33001709
-    z: 3.36631775
-  RoomRotation: 90
-- Relative:
-    x: 7.78990936
-    y: 1.32995605
-    z: 9.00191116
-  RoomRotation: 90
-- Relative:
-    x: 9.43813324
-    y: 1.33001709
-    z: -5.62234497
-  RoomRotation: 90
-- Relative:
-    x: 9.49707031
-    y: 1.33001709
-    z: -3.93678665
-  RoomRotation: 90
-- Relative:
-    x: 9.39544678
-    y: 1.33001709
-    z: 4.71231461
-  RoomRotation: 90
-- Relative:
-    x: 9.3470993
-    y: 1.33001709
-    z: 0.841491699
-  RoomRotation: 90
-LCZ_ChkpA:
-- Relative:
-    x: 10.9662933
-    y: 1.330001
-    z: -0.0258331299
-  RoomRotation: 0
-- Relative:
-    x: -0.628852844
-    y: 1.32999969
-    z: -0.683273315
-  RoomRotation: 180
-- Relative:
-    x: -6.74664307
-    y: 1.32999742
-    z: 1.41120911
-  RoomRotation: 180
-- Relative:
-    x: 17.6842346
-    y: 1.33000028
-    z: -0.100440979
-  RoomRotation: 0
-- Relative:
-    x: 4.96073914
-    y: 1.33000195
-    z: 0.613189697
-  RoomRotation: 180
-- Relative:
-    x: 20.7129059
-    y: 1.32999992
-    z: 1.50901794
-  RoomRotation: 0
-- Relative:
-    x: 2.24821472
-    y: 1.33000088
-    z: -0.264907837
-  RoomRotation: 180
-- Relative:
-    x: 5.21832275
-    y: 1.3125937
-    z: 20.4966431
-  RoomRotation: 270
-- Relative:
-    x: -5.2117691
-    y: 1.32999802
-    z: 1.40461731
-  RoomRotation: 180
-- Relative:
-    x: 20.8301239
-    y: 1.32999992
-    z: -2.60928345
-  RoomRotation: 0
-- Relative:
-    x: -0.130828857
-    y: 1.33000016
-    z: 19.4803467
-  RoomRotation: 270
-- Relative:
-    x: 20.0313416
-    y: 1.33000004
-    z: -0.434257507
-  RoomRotation: 0
-- Relative:
-    x: 2.83948517
-    y: 1.33000004
-    z: 20.5379486
-  RoomRotation: 270
-- Relative:
-    x: -0.0924377441
-    y: 1.33000052
-    z: 15.9560699
-  RoomRotation: 270
-- Relative:
-    x: 1.75716782
-    y: 1.33000064
-    z: 3.56471252
-  RoomRotation: 180
-- Relative:
-    x: -8.15708923
-    y: 1.32999682
-    z: 0.0772857666
-  RoomRotation: 180
-- Relative:
-    x: 2.08575439
-    y: 1.33000004
-    z: 19.7142181
-  RoomRotation: 270
-- Relative:
-    x: 20.803833
-    y: 1.31259382
-    z: -5.49567413
-  RoomRotation: 0
-- Relative:
-    x: 7.31793976
-    y: 1.3300029
-    z: 0.110717773
-  RoomRotation: 180
-- Relative:
-    x: -0.104614258
-    y: 1.330001
-    z: 11.9569855
-  RoomRotation: 270
-- Relative:
-    x: -4.21505356
-    y: 1.32999837
-    z: -0.612762451
-  RoomRotation: 180
-- Relative:
-    x: 3.3628006
-    y: 1.33000135
-    z: 1.36004639
-  RoomRotation: 180
-- Relative:
-    x: -0.297737122
-    y: 1.33000076
-    z: 13.7874451
-  RoomRotation: 270
-- Relative:
-    x: -4.73256683
-    y: 1.35359383
-    z: 20.703949
-  RoomRotation: 270
-- Relative:
-    x: -2.80644989
-    y: 1.32999885
-    z: -0.618804932
-  RoomRotation: 180
-- Relative:
-    x: 20.6226654
-    y: 1.32999992
-    z: 3.57446289
-  RoomRotation: 0
-- Relative:
-    x: -0.293159485
-    y: 1.33000028
-    z: 17.8585205
-  RoomRotation: 270
-- Relative:
-    x: 9.27780151
-    y: 1.33000362
-    z: 0.0388336182
-  RoomRotation: 180
-- Relative:
-    x: -1.08643723
-    y: 1.32999957
-    z: 3.48114014
-  RoomRotation: 180
-- Relative:
-    x: -2.24250793
-    y: 1.33000004
-    z: 20.4846954
-  RoomRotation: 270
-- Relative:
-    x: -3.78412628
-    y: 1.32999849
-    z: 3.34396362
-  RoomRotation: 180
-- Relative:
-    x: 12.7595367
-    y: 1.33000076
-    z: -0.0719985962
-  RoomRotation: 0
-- Relative:
-    x: 20.6378632
-    y: 1.35359371
-    z: 5.67886353
-  RoomRotation: 0
-- Relative:
-    x: 14.980545
-    y: 1.33000064
-    z: -0.0491104126
-  RoomRotation: 0
-- Relative:
-    x: 20.7169342
-    y: 1.32999992
-    z: -3.82156372
-  RoomRotation: 0
-LCZ_ChkpB:
-- Relative:
-    x: -6.71865463
-    y: 1.32999742
-    z: 0.442207336
-  RoomRotation: 180
-- Relative:
-    x: -1.97130966
-    y: 1.32999933
-    z: 3.52241516
-  RoomRotation: 180
-- Relative:
-    x: 20.5498047
-    y: 1.33000004
-    z: 2.08695984
-  RoomRotation: 0
-- Relative:
-    x: 0.530136108
-    y: 1.32999992
-    z: -20.980217
-  RoomRotation: 90
-- Relative:
-    x: 0.504547119
-    y: 1.3300004
-    z: -15.9694443
-  RoomRotation: 90
-- Relative:
-    x: 0.918613434
-    y: 1.33000028
-    z: -0.752174377
-  RoomRotation: 180
-- Relative:
-    x: 0.0681991577
-    y: 1.330001
-    z: -10.8226852
-  RoomRotation: 90
-- Relative:
-    x: 20.460434
-    y: 1.32999992
-    z: -3.17723846
-  RoomRotation: 0
-- Relative:
-    x: 19.1833801
-    y: 1.33000016
-    z: -0.347145081
-  RoomRotation: 0
-- Relative:
-    x: 6.05387878
-    y: 1.30859363
-    z: -20.979126
-  RoomRotation: 90
-- Relative:
-    x: -5.63908386
-    y: 1.30359387
-    z: -20.8698196
-  RoomRotation: 90
-- Relative:
-    x: 2.47844696
-    y: 1.32999992
-    z: -21.0150833
-  RoomRotation: 90
-- Relative:
-    x: -2.13183594
-    y: 1.32999921
-    z: -0.375282288
-  RoomRotation: 180
-- Relative:
-    x: 20.503479
-    y: 1.33000004
-    z: 3.61854553
-  RoomRotation: 0
-- Relative:
-    x: 20.8283386
-    y: 1.33000004
-    z: -2.08548737
-  RoomRotation: 0
-- Relative:
-    x: 7.76702881
-    y: 1.33000302
-    z: -0.078086853
-  RoomRotation: 180
-- Relative:
-    x: -1.12428665
-    y: 1.32999957
-    z: -0.39717865
-  RoomRotation: 180
-- Relative:
-    x: 16.9468231
-    y: 1.33000052
-    z: -0.358558655
-  RoomRotation: 0
-- Relative:
-    x: 12.2246552
-    y: 1.33000088
-    z: -0.38293457
-  RoomRotation: 0
-- Relative:
-    x: -3.41131592
-    y: 1.32999873
-    z: 3.51589203
-  RoomRotation: 180
-- Relative:
-    x: 3.48148346
-    y: 1.33000135
-    z: -0.903564453
-  RoomRotation: 180
-- Relative:
-    x: 0.263015747
-    y: 1.33000016
-    z: -18.5182571
-  RoomRotation: 90
-- Relative:
-    x: -7.81328201
-    y: 1.32999694
-    z: -0.0653076172
-  RoomRotation: 180
-- Relative:
-    x: 20.4222565
-    y: 1.30359375
-    z: -5.32620239
-  RoomRotation: 0
-- Relative:
-    x: 5.38754272
-    y: 1.33000207
-    z: -0.00485229492
-  RoomRotation: 180
-- Relative:
-    x: -3.44501877
-    y: 1.32999873
-    z: -0.381233215
-  RoomRotation: 180
-- Relative:
-    x: -1.75939941
-    y: 1.32999992
-    z: -20.9392471
-  RoomRotation: 90
-- Relative:
-    x: 0.463039398
-    y: 1.33000016
-    z: 3.61940765
-  RoomRotation: 180
-- Relative:
-    x: 1.47141647
-    y: 1.33000052
-    z: 2.11810303
-  RoomRotation: 180
-- Relative:
-    x: 20.4950256
-    y: 1.30859387
-    z: 5.25466919
-  RoomRotation: 0
-- Relative:
-    x: 3.84596252
-    y: 1.32999992
-    z: -20.9830475
-  RoomRotation: 90
-- Relative:
-    x: 3.30599976
-    y: 1.33000124
-    z: 1.67932892
-  RoomRotation: 180
-- Relative:
-    x: -3.74217987
-    y: 1.32999992
-    z: -20.9037628
-  RoomRotation: 90
-- Relative:
-    x: 14.5537415
-    y: 1.33000076
-    z: -0.370910645
-  RoomRotation: 0
-- Relative:
-    x: 0.483131409
-    y: 1.33000076
-    z: -13.376091
-  RoomRotation: 90
-- Relative:
-    x: -5.86936569
-    y: 1.32999778
-    z: 2.37589264
-  RoomRotation: 180
-HCZ_Nuke:
-- Relative:
-    x: 6.48225403
-    y: 401.330017
-    z: 8.7885437
-  RoomRotation: 90
-- Relative:
-    x: -5.26094818
-    y: 401.330017
-    z: -2.83363342
-  RoomRotation: 90
-- Relative:
-    x: -0.45451355
-    y: 1.3302002
-    z: 0.044670105
-  RoomRotation: 90
-- Relative:
-    x: -0.215553284
-    y: 1.3302002
-    z: -4.53642273
-  RoomRotation: 90
-- Relative:
-    x: -0.86844635
-    y: 401.330017
-    z: -6.81573486
-  RoomRotation: 90
-- Relative:
-    x: 13.6330032
-    y: 401.330017
-    z: 4.34431458
-  RoomRotation: 90
-- Relative:
-    x: -1.29503632
-    y: 1.3302002
-    z: 1.67939758
-  RoomRotation: 90
-- Relative:
-    x: -2.99155426
-    y: 401.329956
-    z: -4.71757507
-  RoomRotation: 90
-- Relative:
-    x: 11.2720413
-    y: 401.329956
-    z: -3.45744324
-  RoomRotation: 90
-- Relative:
-    x: 12.2819672
-    y: 401.330017
-    z: -0.76864624
-  RoomRotation: 90
-- Relative:
-    x: -1.26968384
-    y: 1.3302002
-    z: 4.2381897
-  RoomRotation: 90
-- Relative:
-    x: 0.534126282
-    y: 401.330017
-    z: -8.04154968
-  RoomRotation: 90
-- Relative:
-    x: 9.34706879
-    y: 401.329956
-    z: -8.39518738
-  RoomRotation: 90
-- Relative:
-    x: -6.74239349
-    y: 401.330017
-    z: -0.00386047363
-  RoomRotation: 90
-- Relative:
-    x: 0.112350464
-    y: 1.3302002
-    z: 8.14442444
-  RoomRotation: 90
-- Relative:
-    x: 3.4911499
-    y: 401.330017
-    z: 8.89826965
-  RoomRotation: 90
-- Relative:
-    x: -2.44281769
-    y: 401.330017
-    z: 5.99201965
-  RoomRotation: 90
-- Relative:
-    x: -3.3033371
-    y: 401.330017
-    z: 4.79634094
-  RoomRotation: 90
-- Relative:
-    x: 11.441246
-    y: 401.329956
-    z: -8.99482727
-  RoomRotation: 90
-- Relative:
-    x: -5.27842712
-    y: 401.330017
-    z: -0.061920166
-  RoomRotation: 90
-- Relative:
-    x: -0.774269104
-    y: 1.33013916
-    z: 6.63850403
-  RoomRotation: 90
-- Relative:
-    x: 12.9394455
-    y: 401.330017
-    z: 2.16490173
-  RoomRotation: 90
-- Relative:
-    x: -0.249588013
-    y: 1.3302002
-    z: -9.2459259
-  RoomRotation: 90
-- Relative:
-    x: 11.3662186
-    y: 401.330017
-    z: -7.23744202
-  RoomRotation: 90
-- Relative:
-    x: -0.19556427
-    y: 1.3302002
-    z: -1.76982117
-  RoomRotation: 90
-- Relative:
-    x: -0.23197937
-    y: 1.3302002
-    z: -6.80899048
-  RoomRotation: 90
-- Relative:
-    x: 12.6849823
-    y: 401.330017
-    z: 0.908187866
-  RoomRotation: 90
-- Relative:
-    x: -8.29452515
-    y: 401.30365
-    z: -0.0572509766
-  RoomRotation: 90
-- Relative:
-    x: -5.15836334
-    y: 1.34362793
-    z: -0.0155792236
-  RoomRotation: 90
-- Relative:
-    x: 1.90196991
-    y: 401.330017
-    z: -8.71578979
-  RoomRotation: 90
-- Relative:
-    x: 7.45233917
-    y: 401.329956
-    z: -9.15693665
-  RoomRotation: 90
-- Relative:
-    x: -5.29653168
-    y: 401.329956
-    z: 2.77142334
-  RoomRotation: 90
-- Relative:
-    x: 4.75319672
-    y: 401.330017
-    z: -8.99880981
-  RoomRotation: 90
-- Relative:
-    x: 11.1653519
-    y: 401.330017
-    z: -5.89538574
-  RoomRotation: 90
-- Relative:
-    x: 0.940574646
-    y: 401.330017
-    z: 9.00692749
-  RoomRotation: 90
-- Relative:
-    x: -1.12773895
-    y: 401.330017
-    z: 6.94512939
-  RoomRotation: 90
-- Relative:
-    x: -2.77867126
-    y: 1.33013916
-    z: -0.6302948
-  RoomRotation: 90
-LCZ_173:
-- Relative:
-    x: -11.0862045
-    y: 17.0600014
-    z: -3.67159271
-  RoomRotation: 180
-- Relative:
-    x: -23.8351135
-    y: 17.0600014
-    z: -11.0752373
-  RoomRotation: 180
-- Relative:
-    x: -8.984478
-    y: 17.0599995
-    z: -0.137954712
-  RoomRotation: 180
-- Relative:
-    x: 9.40809631
-    y: 15.2360983
-    z: -1.57136536
-  RoomRotation: 180
-- Relative:
-    x: 8.93378448
-    y: 1.34000015
-    z: 0.132980347
-  RoomRotation: 180
-- Relative:
-    x: -5.13800049
-    y: 17.1021385
-    z: 0.0421524048
-  RoomRotation: 180
-- Relative:
-    x: 9.21072388
-    y: 4.65918064
-    z: -3.30419159
-  RoomRotation: 180
-- Relative:
-    x: 5.628685
-    y: 9.08956814
-    z: 3.41664886
-  RoomRotation: 180
-- Relative:
-    x: 3.04965973
-    y: 17.0908947
-    z: 1.63037109
-  RoomRotation: 180
-- Relative:
-    x: 9.47005463
-    y: 7.27638483
-    z: 3.30250549
-  RoomRotation: 180
-- Relative:
-    x: -20.7551842
-    y: 17.0600014
-    z: -10.8964157
-  RoomRotation: 180
-- Relative:
-    x: 6.65187836
-    y: 1.34000015
-    z: 0.255584717
-  RoomRotation: 180
-- Relative:
-    x: -22.5412941
-    y: 17.0600014
-    z: -11.0001183
-  RoomRotation: 180
-- Relative:
-    x: 6.83810425
-    y: 1.34000015
-    z: 2.52984619
-  RoomRotation: 180
-- Relative:
-    x: 9.20801544
-    y: 6.53137922
-    z: 0.67502594
-  RoomRotation: 180
-- Relative:
-    x: 6.31439209
-    y: 8.74768829
-    z: 3.34676361
-  RoomRotation: 180
-- Relative:
-    x: -19.2048912
-    y: 17.0599995
-    z: -10.8064079
-  RoomRotation: 180
-- Relative:
-    x: 8.67372131
-    y: 7.57136583
-    z: 3.37805939
-  RoomRotation: 180
-- Relative:
-    x: -1.59569931
-    y: 17.0908928
-    z: 0.120559692
-  RoomRotation: 180
-- Relative:
-    x: -11.0059166
-    y: 17.0600014
-    z: -5.61662292
-  RoomRotation: 180
-- Relative:
-    x: -6.77793503
-    y: 17.1240292
-    z: 0.0488891602
-  RoomRotation: 180
-- Relative:
-    x: 4.82324219
-    y: 12.7294016
-    z: -3.37247467
-  RoomRotation: 180
-- Relative:
-    x: -13.2346764
-    y: 17.0599995
-    z: -8.18081665
-  RoomRotation: 180
-- Relative:
-    x: -14.5175133
-    y: 17.0599995
-    z: -10.5324402
-  RoomRotation: 180
-- Relative:
-    x: 3.4331131
-    y: 11.546586
-    z: -0.87134552
-  RoomRotation: 180
-- Relative:
-    x: 3.42531586
-    y: 10.4224863
-    z: 1.383255
-  RoomRotation: 180
-- Relative:
-    x: 3.64354706
-    y: 12.1836386
-    z: -3.34848022
-  RoomRotation: 180
-- Relative:
-    x: 9.37771606
-    y: 14.4736919
-    z: -3.34578705
-  RoomRotation: 180
-- Relative:
-    x: 9.43733215
-    y: 16.3375359
-    z: 0.637771606
-  RoomRotation: 180
-- Relative:
-    x: 0.37922287
-    y: 17.0908928
-    z: 1.04329681
-  RoomRotation: 180
-- Relative:
-    x: 6.72518921
-    y: 3.95065522
-    z: -3.30883026
-  RoomRotation: 180
-- Relative:
-    x: 9.2122879
-    y: 5.50430965
-    z: -1.38494873
-  RoomRotation: 180
-- Relative:
-    x: 4.82049561
-    y: 3.00100899
-    z: -3.31306458
-  RoomRotation: 180
-- Relative:
-    x: 3.65979004
-    y: 1.86454034
-    z: -1.13574982
-  RoomRotation: 180
-- Relative:
-    x: 6.56069946
-    y: 13.5956707
-    z: -3.34442139
-  RoomRotation: 180
-- Relative:
-    x: 3.42437744
-    y: 9.56643581
-    z: 3.34577179
-  RoomRotation: 180
-- Relative:
-    x: -10.9783554
-    y: 17.0599995
-    z: -1.77765656
-  RoomRotation: 180
-- Relative:
-    x: 4.98997498
-    y: 17.0908947
-    z: 2.96898651
-  RoomRotation: 180
-- Relative:
-    x: 9.21381378
-    y: 5.18575573
-    z: -2.02387238
-  RoomRotation: 180
-- Relative:
-    x: 3.64349365
-    y: 2.3691287
-    z: -3.348526
-  RoomRotation: 180
-- Relative:
-    x: 8.49181366
-    y: 17.0908947
-    z: 3.29634094
-  RoomRotation: 180
-HCZ_Room3ar:
-- Relative:
-    x: 2.00482178
-    y: 1.32995605
-    z: -3.05593872
-  RoomRotation: 270
-- Relative:
-    x: -5.99225616
-    y: 1.33001709
-    z: 0.338760376
-  RoomRotation: 270
-- Relative:
-    x: -4.14115143
-    y: 1.32995605
-    z: -1.44430542
-  RoomRotation: 270
-- Relative:
-    x: -8.16208649
-    y: 1.33001709
-    z: -0.010055542
-  RoomRotation: 270
-- Relative:
-    x: 0.0369720459
-    y: 1.33001709
-    z: -9.29681396
-  RoomRotation: 270
-- Relative:
-    x: 0.0415725708
-    y: 1.33001709
-    z: -5.85154724
-  RoomRotation: 270
-- Relative:
-    x: 0.0686340332
-    y: 1.33001709
-    z: -7.64035034
-  RoomRotation: 270
-- Relative:
-    x: -2.04932404
-    y: 1.33001709
-    z: -2.55508423
-  RoomRotation: 270
-- Relative:
-    x: 0.0528488159
-    y: 1.33001709
-    z: -3.94943237
-  RoomRotation: 270
-- Relative:
-    x: 4.04431152
-    y: 1.33001709
-    z: -1.57688904
-  RoomRotation: 270
-- Relative:
-    x: 6.10572052
-    y: 1.32995605
-    z: 0.103820801
-  RoomRotation: 270
-- Relative:
-    x: 8.08287048
-    y: 1.33001709
-    z: 0.105300903
-  RoomRotation: 270
-HCZ_Hid:
-- Relative:
-    x: 0.0884857178
-    y: 1.32995605
-    z: -0.947479248
-  RoomRotation: 90
-- Relative:
-    x: -5.72784805
-    y: 1.33001709
-    z: 0.0774841309
-  RoomRotation: 90
-- Relative:
-    x: -0.184356689
-    y: 1.33001709
-    z: -8.39909363
-  RoomRotation: 90
-- Relative:
-    x: -0.880767822
-    y: 1.33001709
-    z: 5.84965515
-  RoomRotation: 90
-- Relative:
-    x: -1.29706573
-    y: 1.33001709
-    z: -6.76550293
-  RoomRotation: 90
-- Relative:
-    x: 0.278686523
-    y: 1.33001709
-    z: 4.24728394
-  RoomRotation: 90
-- Relative:
-    x: -0.00127410889
-    y: 1.33001709
-    z: -3.39909363
-  RoomRotation: 90
-- Relative:
-    x: -5.85365677
-    y: 1.33001709
-    z: -2.89697266
-  RoomRotation: 90
-- Relative:
-    x: -0.259216309
-    y: 1.33001709
-    z: 7.36878967
-  RoomRotation: 90
-- Relative:
-    x: -5.60203934
-    y: 1.32995605
-    z: 3.05194092
-  RoomRotation: 90
-- Relative:
-    x: -4.8012085
-    y: 1.33001709
-    z: 5.46232605
-  RoomRotation: 90
-- Relative:
-    x: -0.0944061279
-    y: 1.33001709
-    z: -5.94239807
-  RoomRotation: 90
-- Relative:
-    x: -4.71335602
-    y: 1.32995605
-    z: -6.1260376
-  RoomRotation: 90
-- Relative:
-    x: 0.18951416
-    y: 1.33001709
-    z: 1.8117981
-  RoomRotation: 90
-- Relative:
-    x: -0.196960449
-    y: 1.32995605
-    z: 9.19781494
-  RoomRotation: 90
-HCZ_ChkpA:
-- Relative:
-    x: -0.0936584473
-    y: 1.30664063
-    z: 6.12310791
-  RoomRotation: 0
-- Relative:
-    x: -0.120819092
-    y: 1.32995605
-    z: 3.73337555
-  RoomRotation: 0
-- Relative:
-    x: 0.0492248535
-    y: 1.3236084
-    z: -5.44057465
-  RoomRotation: 0
-- Relative:
-    x: -5.59857941
-    y: 1.33001709
-    z: 0.0106887817
-  RoomRotation: 0
-- Relative:
-    x: -9.65596771
-    y: 1.33001709
-    z: -0.0898513794
-  RoomRotation: 0
-- Relative:
-    x: -7.44050598
-    y: 1.33001709
-    z: 0.0147247314
-  RoomRotation: 0
-- Relative:
-    x: 0.29119873
-    y: 1.33001709
-    z: -2.66277313
-  RoomRotation: 0
-- Relative:
-    x: 0.643310547
-    y: 1.33001709
-    z: -0.310302734
-  RoomRotation: 0
-- Relative:
-    x: -3.09784698
-    y: 1.32995605
-    z: -0.0331039429
-  RoomRotation: 0
-- Relative:
-    x: 0.157089233
-    y: 1.33001709
-    z: 2.26720428
-  RoomRotation: 0
-- Relative:
-    x: -1.00643921
-    y: 1.32995605
-    z: -0.0266723633
   RoomRotation: 0
 ";
     }

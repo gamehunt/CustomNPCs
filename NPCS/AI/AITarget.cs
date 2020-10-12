@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using System.Collections.Generic;
+using YamlDotNet.Core.Tokens;
 
 namespace NPCS.AI
 {
@@ -7,13 +8,28 @@ namespace NPCS.AI
     {
         public abstract string Name { get; }
 
-        public Dictionary<string, string> Arguments { get; set; } = new Dictionary<string, string>();
+        private Dictionary<string, string> __args = new Dictionary<string, string>();
+
+        public Dictionary<string, string> Arguments
+        {
+            get
+            {
+                return __args;
+            }
+            set
+            {
+                __args = value;
+                Contruct();
+            }
+        }
 
         public bool IsFinished { get; protected set; } = false;
 
         public abstract float Process(Npc npc);
 
         public abstract bool Check(Npc npc);
+
+        public abstract void Contruct();
 
         private static readonly Dictionary<string, AITarget> registry = new Dictionary<string, AITarget>();
 
