@@ -25,6 +25,9 @@ namespace NPCS
         [Description("Adjust this if NPCs with custom scale are \"flying\"")]
         public float NpcSizePositionMultiplier { get; set; } = 1.3f;
 
+        [Description("Adjust it if u feel that NPCs shoot too fast or too slow (higher = slower)")]
+        public float NpcFireCooldownMultiplier { get; set; } = 1.35f;
+
         [Description("Maximum distance between manual mapped nodes for auto linking")]
         public float NavNodeMapperMaxDistance { get; set; } = 3f;
 

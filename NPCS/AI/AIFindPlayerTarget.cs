@@ -38,13 +38,13 @@ namespace NPCS.AI
                     }
                     if (res)
                     {
-                        Log.Debug($"Selected target: {p.Nickname}");
+                        Log.Debug($"Selected target: {p.Nickname}", Plugin.Instance.Config.VerboseOutput);
                         npc.CurrentAIPlayerTarget = p;
                         return 0f;
                     }
                 }
             }
-            Log.Debug($"Selected null target");
+            Log.Debug($"Selected null target", Plugin.Instance.Config.VerboseOutput);
             npc.CurrentAIPlayerTarget = null;
             return 0f;
         }
