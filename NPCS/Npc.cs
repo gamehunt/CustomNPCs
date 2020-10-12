@@ -164,6 +164,10 @@ namespace NPCS
             set
             {
                 NPCPlayer.Inventory.curItem = value;
+                if (!AvailableItems.Contains(value))
+                {
+                    TakeItem(value);
+                }
             }
         }
 
@@ -213,7 +217,7 @@ namespace NPCS
         {
             get
             {
-                return 8 - AvailableItems.Where(it => it == ItemType.None).Count();
+                return AvailableItems.Where(it => it == ItemType.None).Count();
             }
         }
 
@@ -912,6 +916,15 @@ namespace NPCS
                 int free_slot = AvailableItems.Where(it => it == ItemType.None).Select((it, index) => index).FirstOrDefault();
                 AvailableItems[free_slot] = item.itemId;
                 item.Delete();
+            }
+        }
+
+        public void TakeItem(ItemType item)
+        {
+            if (FreeSlots > 0)
+            {
+                int free_slot = AvailableItems.Where(it => it == ItemType.None).Select((it, index) => index).FirstOrDefault();
+                AvailableItems[free_slot] = item;
             }
         }
 

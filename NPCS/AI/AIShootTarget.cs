@@ -38,7 +38,7 @@ namespace NPCS.AI
                         npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
                     }
                 }
-                return npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
+                return 1.2f * npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
             }
             else
             {
