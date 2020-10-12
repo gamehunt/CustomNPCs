@@ -16,6 +16,11 @@ Known Issues:
  ~~- Well, I've made it little better with manual mappings. Now bad room is HCZ_Armory. Next task: Learn them how to use lifts~~
  - Navigation finally fixed (no)
 
+FAQ:
+
+ - Q: NPC is not walking with AINavigateToRoomTarget/GoToRoomAction
+   A: Make sure u've enabled `generate_navigation_graph` in your `<port>-config.yml`
+   
 Todo:
 
 - Add more events
