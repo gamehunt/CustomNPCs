@@ -22,6 +22,10 @@ FAQ:
  
    A: Make sure u've enabled `generate_navigation_graph` in your `<port>-config.yml`
    
+ - Q: Console commands dont work
+   
+   A: Try updating all plugins to their latest versions (especially `scpswap` !!!) 
+   
 Todo:
 
 - Add more events
