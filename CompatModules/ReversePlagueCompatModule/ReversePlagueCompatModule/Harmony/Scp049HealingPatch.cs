@@ -17,7 +17,7 @@ namespace ReversePlagueCompatModule.Harmony
             while (__instance.isRoundStarted)
             {
                 foreach (ReferenceHub referenceHub in from x in Player.List
-                                                      where x.Role == RoleType.Scp049
+                                                      where !x.IsNPC() && x.Role == RoleType.Scp049
                                                       select x into p
                                                       select p.ReferenceHub)
                 {

@@ -9,6 +9,8 @@ namespace NPCS.AI
     {
         public override string Name => "AIShootTarget";
 
+        public override string[] RequiredArguments => new string[] { };
+
         public override bool Check(Npc npc)
         {
             return npc.CurrentAIPlayerTarget != null && Player.Dictionary.ContainsKey(npc.CurrentAIPlayerTarget.GameObject) && npc.CurrentAIPlayerTarget.IsAlive && !Physics.Linecast(npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces);
@@ -16,6 +18,7 @@ namespace NPCS.AI
 
         public override void Construct()
         {
+
         }
 
         public override float Process(Npc npc)

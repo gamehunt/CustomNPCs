@@ -11,6 +11,8 @@ namespace NPCS.AI
     {
         public override string Name => "AIFindPlayerTarget";
 
+        public override string[] RequiredArguments => new string[] {"range", "filter", "role_blacklist", "role_whitelist", "allow_self_select"};
+
         private static readonly Scp939TargetFilter scp939_filter = new Scp939TargetFilter(); //TODO make registry for target filters
 
         public override bool Check(Npc npc)

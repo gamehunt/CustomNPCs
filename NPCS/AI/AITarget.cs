@@ -8,6 +8,8 @@ namespace NPCS.AI
     {
         public abstract string Name { get; }
 
+        public abstract string[] RequiredArguments { get; }
+
         private Dictionary<string, string> __args = new Dictionary<string, string>();
 
         public Dictionary<string, string> Arguments
@@ -21,21 +23,40 @@ namespace NPCS.AI
                 __args = value;
                 try
                 {
-                    Construct();
+                    Verified = CheckArguments();
+                    if (Verified)
+                    {
+                        Construct();
+                    }
                 }catch(Exception e)
                 {
                     Log.Warn($"Error while constructing AI target: {e}");
+                    Verified = false;
                 }
             }
         }
 
         public bool IsFinished { get; protected set; } = false;
 
+        public bool Verified { get; protected set; } = false;
+
         public abstract float Process(Npc npc);
 
         public abstract bool Check(Npc npc);
 
         public abstract void Construct();
+
+        private bool CheckArguments()
+        {
+            foreach(string arg in RequiredArguments)
+            {
+                if (!Arguments.ContainsKey(arg))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         private static readonly Dictionary<string, AITarget> registry = new Dictionary<string, AITarget>();
 

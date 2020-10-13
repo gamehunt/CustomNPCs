@@ -6,6 +6,8 @@ namespace NPCS.AI
     {
         public override string Name => "AIFollowTarget";
 
+        public override string[] RequiredArguments => new string[] { };
+
         public override bool Check(Npc npc)
         {
             return npc.CurrentAIPlayerTarget != null && Player.Dictionary.ContainsKey(npc.CurrentAIPlayerTarget.GameObject);

@@ -9,6 +9,8 @@ namespace NPCS.AI
     {
         public override string Name => "AIFindItemTarget";
 
+        public override string[] RequiredArguments => new string[] { "range", "type" };
+
         public override bool Check(Npc npc)
         {
             return npc.CurrentAIItemTarget == null && npc.FreeSlots > 0;

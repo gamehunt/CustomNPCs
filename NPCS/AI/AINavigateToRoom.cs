@@ -1,6 +1,4 @@
-﻿using Exiled.API.Extensions;
-using Exiled.API.Features;
-using Org.BouncyCastle.Math;
+﻿using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +10,11 @@ namespace NPCS.AI
     {
         public override string Name => "AINavigateToRoom";
 
+        public override string[] RequiredArguments => new string[] { "safe", "room"};
+
         public override bool Check(Npc npc)
         {
-            return npc.CurrentAIRoomTarget == null && npc.FollowTarget == null && !string.IsNullOrEmpty(Arguments["room"]) && !string.IsNullOrEmpty(Arguments["safe"]) && (Arguments["room"].Equals("random", StringComparison.OrdinalIgnoreCase) || Map.Rooms.Where(r => r.Name.RemoveBracketsOnEndOfName().Equals(Arguments["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault() != null);
+            return npc.CurrentAIRoomTarget == null && npc.FollowTarget == null;
         }
 
         private bool safe = true;
@@ -33,7 +33,6 @@ namespace NPCS.AI
 
         public override float Process(Npc npc)
         {
-            
             if (random)
             {
                 List<Room> valid_rooms = Map.Rooms.Where(rm => rm.Zone != Exiled.API.Enums.ZoneType.LightContainment || (safe ? Round.ElapsedTime.Minutes < 10 : !Map.IsLCZDecontaminated)).ToList();
@@ -45,7 +44,7 @@ namespace NPCS.AI
                     npc.CurrentAIRoomTarget = r;
                 }
             }
-            else
+            else if(room != null)
             {
                 if (npc.GotoRoom(room))
                 {

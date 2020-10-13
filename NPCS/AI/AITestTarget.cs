@@ -6,6 +6,8 @@ namespace NPCS.AI
     {
         public override string Name => "AITestTarget";
 
+        public override string[] RequiredArguments => new string[] { };
+
         public override bool Check(Npc npc)
         {
             return true;

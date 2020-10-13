@@ -155,7 +155,14 @@ namespace NPCS
                     {
                         Log.Debug($"Recognized ai target: {act.Name}", Plugin.Instance.Config.VerboseOutput);
                         act.Arguments = info.Args;
-                        n.AIQueue.AddLast(act);
+                        if (act.Verified)
+                        {
+                            n.AIQueue.AddLast(act);
+                        }
+                        else
+                        {
+                            Log.Warn($"Failed to verify config or construct {act.Name}, it will be skipped!");
+                        }
                     }
                     else
                     {
