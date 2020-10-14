@@ -1023,6 +1023,19 @@ namespace NPCS
             }
         }
 
+        private static IEnumerator<float> NPCMappingsLoadCoroutine(List<NPCMappingInfo> infos)
+        {
+            foreach (NPCMappingInfo info in infos)
+            {
+                Room rm = Map.Rooms.Where(r => r.Name.Equals(info.Room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                if (rm != null)
+                {
+                    Methods.CreateNPC(rm.Position + Quaternion.Euler(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation, 0) * info.Relative.ToVector3(), info.Rotation.ToVector2() + new Vector2(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation), info.File);
+                    yield return Timing.WaitForSeconds(0.1f);
+                }
+            }
+        }
+
         public static void LoadNPCMappings(string path)
         {
             path = Path.Combine(Config.NPCs_mappings_path, path);
@@ -1035,14 +1048,7 @@ namespace NPCS
                 sr.Close();
                 if (infos != null)
                 {
-                    foreach (NPCMappingInfo info in infos)
-                    {
-                        Room rm = Map.Rooms.Where(r => r.Name.Equals(info.Room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                        if (rm != null)
-                        {
-                            Npc n = Methods.CreateNPC(rm.Position + Quaternion.Euler(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation, 0) * info.Relative.ToVector3(), info.Rotation.ToVector2() + new Vector2(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation), info.File);
-                        }
-                    }
+                    Timing.RunCoroutine(NPCMappingsLoadCoroutine(infos));
                 }
                 else
                 {

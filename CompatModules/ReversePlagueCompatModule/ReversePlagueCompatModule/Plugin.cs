@@ -35,7 +35,7 @@ namespace ReversePlagueCompatModule
 
                 if (Exiled.Loader.Loader.Plugins.Find(p => p.Name == "ReversePlague") == null)
                 {
-                    Log.Error("Failed to load Stalky106 compat module addon: ReversePlague not found!");
+                    Log.Error("Failed to load ReversePlague compat module addon: ReversePlague not found!");
                     return;
                 }
 

@@ -42,12 +42,16 @@
     <Reference Include="Exiled.Permissions">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
     </Reference>
+    <Reference Include="Mirror">
+      <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\Mirror.dll</HintPath>
+    </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
     </Reference>
     <Reference Include="ReversePlague">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\publicized_assemblies\ReversePlague_publicized.dll</HintPath>
     </Reference>
+    <Reference Include="System.Linq" />
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>

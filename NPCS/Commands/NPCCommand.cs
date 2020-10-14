@@ -81,9 +81,16 @@ namespace NPCS.Commands
                     case "remove":
                         if (arguments.Count > 1)
                         {
-                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
-                            obj_npc.Kill(false);
-                            response = "NPC removed!";
+                            try
+                            {
+                                obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                                obj_npc.Kill(false);
+                                response = "NPC removed!";
+                            }catch(IndexOutOfRangeException)
+                            {
+                                response = "Invalid NPC id!";
+                                return false;
+                            }
                         }
                         else
                         {
@@ -95,9 +102,17 @@ namespace NPCS.Commands
                     case "move":
                         if (arguments.Count > 4)
                         {
-                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
-                            obj_npc.NPCPlayer.Position += new UnityEngine.Vector3(float.Parse(arguments.At(2)), float.Parse(arguments.At(3)), float.Parse(arguments.At(4)));
-                            response = "NPC moved!";
+                            try
+                            {
+                                obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                                obj_npc.NPCPlayer.Position += new UnityEngine.Vector3(float.Parse(arguments.At(2)), float.Parse(arguments.At(3)), float.Parse(arguments.At(4)));
+                                response = "NPC moved!";
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                response = "Invalid NPC id!";
+                                return false;
+                            }
                         }
                         else
                         {
@@ -112,8 +127,16 @@ namespace NPCS.Commands
                             response = "You need to provide npc id and godmode value!";
                             return false;
                         }
-                        Npc.List.ToList()[int.Parse(arguments.At(1))].NPCPlayer.IsGodModeEnabled = bool.Parse(arguments.At(2));
-                        response = "God-Mode switched";
+                        try
+                        {
+                            Npc.List.ToList()[int.Parse(arguments.At(1))].NPCPlayer.IsGodModeEnabled = bool.Parse(arguments.At(2));
+                            response = "God-Mode switched";
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            response = "Invalid NPC id!";
+                            return false;
+                        }
                         break;
 
                     case "goto":
@@ -122,16 +145,24 @@ namespace NPCS.Commands
                             response = "You need to provide npc id and navnode name!";
                             return false;
                         }
-                        name = arguments.At(2);
-                        Npc npc_obj = Npc.List.ToList()[int.Parse(arguments.At(1))];
-                        node = NavigationNode.Get(name);
-                        if (node == null)
+                        try
                         {
-                            response = "Node not found!";
+                            name = arguments.At(2);
+                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                            node = NavigationNode.Get(name);
+                            if (node == null)
+                            {
+                                response = "Node not found!";
+                                return false;
+                            }
+                            obj_npc.GotoNode(node);
+                            response = "Navigating npc to node!";
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            response = "Invalid NPC id!";
                             return false;
                         }
-                        npc_obj.GotoNode(node);
-                        response = "Navigating npc to node!";
                         break;
 
                     case "queue":
@@ -140,16 +171,24 @@ namespace NPCS.Commands
                             response = "You need to provide npc id and navnode name!";
                             return false;
                         }
-                        name = arguments.At(2);
-                        npc_obj = Npc.List.ToList()[int.Parse(arguments.At(1))];
-                        node = NavigationNode.Get(name);
-                        if (node == null)
+                        try
                         {
-                            response = "Node not found!";
+                            name = arguments.At(2);
+                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                            node = NavigationNode.Get(name);
+                            if (node == null)
+                            {
+                                response = "Node not found!";
+                                return false;
+                            }
+                            obj_npc.AddNavTarget(node);
+                            response = "Navigating npc to node!";
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            response = "Invalid NPC id!";
                             return false;
                         }
-                        npc_obj.AddNavTarget(node);
-                        response = "Navigating npc to node!";
                         break;
 
                     case "follow":
@@ -158,21 +197,37 @@ namespace NPCS.Commands
                             response = "You need to provide npc id and player id!";
                             return false;
                         }
-                        int pid = int.Parse(arguments.At(2));
-                        Player p = Player.Get(pid);
-                        npc_obj = Npc.List.ToList()[int.Parse(arguments.At(1))];
-                        npc_obj.Follow(p);
-                        response = "Navigating npc to player!";
+                        try
+                        {
+                            int pid = int.Parse(arguments.At(2));
+                            Player p = Player.Get(pid);
+                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                            obj_npc.Follow(p);
+                            response = "Navigating npc to player!";
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            response = "Invalid NPC id!";
+                            return false;
+                        }
                         break;
 
                     case "room":
-                        npc_obj = Npc.List.ToList()[int.Parse(arguments.At(1))];
-                        Room r = Map.Rooms.Where(rm => rm.Name.Equals(arguments.At(2), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                        if (r != null)
+                        try
                         {
-                            npc_obj.GotoRoom(r);
+                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                            Room r = Map.Rooms.Where(rm => rm.Name.Equals(arguments.At(2), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                            if (r != null)
+                            {
+                                obj_npc.GotoRoom(r);
+                            }
+                            response = "Navigating npc to room!";
                         }
-                        response = "Navigating npc to room!";
+                        catch (IndexOutOfRangeException)
+                        {
+                            response = "Invalid NPC id!";
+                            return false;
+                        }
                         break;
 
                     case "sav_mappings":
