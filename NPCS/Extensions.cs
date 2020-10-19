@@ -1,7 +1,6 @@
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using System;
-using UnityEngine;
 
 namespace NPCS
 {

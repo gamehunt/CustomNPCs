@@ -2,6 +2,7 @@ using Exiled.API.Enums;
 using Exiled.API.Features;
 using NPCS.AI;
 using NPCS.Conditions;
+using NPCS.Navigation;
 using NPCS.Talking;
 using System;
 using System.IO;
@@ -220,6 +221,7 @@ namespace NPCS
 
         public override void OnReloaded()
         {
+            NavigationNode.Clear();
             NodeCondition.Clear();
             NodeAction.Clear();
             AITarget.Clear();

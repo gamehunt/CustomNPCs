@@ -180,6 +180,14 @@ namespace NPCS.Harmony
                     float num = Vector3.Distance(__instance.camera.transform.position, target.transform.position);
                     float num2 = __instance.weapons[__instance.curWeapon].damageOverDistance.Evaluate(num);
 
+                    //A little hack to pass our damage values from shoot action and target
+                    if (hitboxType.StartsWith("_"))
+                    {
+                        string[] splitted = hitboxType.Split(':');
+                        num2 = float.Parse(splitted[2]);
+                        hitboxType = splitted[1];
+                    }
+
                     switch (referenceHub.characterClassManager.CurClass)
                     {
                         case RoleType.Scp106:

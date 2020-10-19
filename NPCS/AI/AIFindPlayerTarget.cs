@@ -1,9 +1,9 @@
 ﻿using Exiled.API.Features;
 using NPCS.AI.TargetFilters;
-using System.Linq;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace NPCS.AI
 {
@@ -11,7 +11,7 @@ namespace NPCS.AI
     {
         public override string Name => "AIFindPlayerTarget";
 
-        public override string[] RequiredArguments => new string[] {"range", "filter", "role_blacklist", "role_whitelist", "allow_self_select"};
+        public override string[] RequiredArguments => new string[] { "range", "filter", "role_blacklist", "role_whitelist", "allow_self_select" };
 
         private static readonly Scp939TargetFilter scp939_filter = new Scp939TargetFilter(); //TODO make registry for target filters
 
@@ -22,8 +22,8 @@ namespace NPCS.AI
 
         private readonly HashSet<RoleType> allowed_roles = new HashSet<RoleType>();
         private readonly HashSet<RoleType> disallowed_roles = new HashSet<RoleType>();
-        float range = 0f;
-        bool allow_self_select = false;
+        private float range = 0f;
+        private bool allow_self_select = false;
 
         public override float Process(Npc npc)
         {

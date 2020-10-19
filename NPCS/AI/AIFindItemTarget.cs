@@ -36,7 +36,7 @@ namespace NPCS.AI
         public override float Process(Npc npc)
         {
             IsFinished = true;
-             
+
             string type = Arguments["type"];
             Pickup pickup = UnityEngine.Object.FindObjectsOfType<Pickup>().Where(p => !p.Locked && !p.InUse && CheckType(type, p.itemId) && Vector3.Distance(npc.NPCPlayer.Position, p.position) < range).FirstOrDefault();
             if (pickup != null)

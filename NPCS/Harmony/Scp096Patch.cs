@@ -17,7 +17,13 @@ namespace NPCS.Harmony
                 RaycastHit = false,
                 Looking = false
             };
-            if (npc != null && !npc.ShouldTrigger096 || Exiled.API.Features.Player.Get(__instance.Hub).IsNPC())
+            if (npc != null && !npc.ShouldTrigger096)
+            {
+                __result = visionInformation;
+                return false;
+            }
+            Exiled.API.Features.Player scp096 = Exiled.API.Features.Player.Get(__instance.Hub);
+            if (scp096.IsNPC() && !NPCS.Npc.Dictionary[__instance.Hub.gameObject].ProcessSCPLogic)
             {
                 __result = visionInformation;
                 return false;

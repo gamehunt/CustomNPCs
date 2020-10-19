@@ -7,8 +7,8 @@ namespace TeslaGateControlCompatModule
     public class Plugin : Exiled.API.Features.Plugin<TeslaGateControlCompatModule.Config>
     {
         public override string Author { get; } = "gamehunt";
-        public override string Name { get; } = "Stalky106CompatModule";
-        public override string Prefix { get; } = "Stalky106CompatModule";
+        public override string Name { get; } = "TeslaGateControlCompatModule";
+        public override string Prefix { get; } = "TeslaGateControlCompatModule";
         public override Version Version { get; } = new Version(1, 0, 0);
         public override Version RequiredExiledVersion { get; } = new Version(2, 1, 6);
 
@@ -33,16 +33,16 @@ namespace TeslaGateControlCompatModule
                     return;
                 }
 
-                if (Exiled.Loader.Loader.Plugins.Find(p => p.Prefix == "ST106") == null)
+                if (Exiled.Loader.Loader.Plugins.Find(p => p.Name == "TeslaGateControl") == null)
                 {
-                    Log.Error("Failed to load Stalky106 compat module addon: Stalky106 not found!");
+                    Log.Error("Failed to load TeslaGateControl compat module addon: TeslaGateControl not found!");
                     return;
                 }
 
-                Harmony = new HarmonyLib.Harmony("gamehunt.compat.stalky106");
+                Harmony = new HarmonyLib.Harmony("gamehunt.compat.tgc");
                 Harmony.PatchAll();
 
-                Log.Info($"Stalky106 compat module loaded. @gamehunt");
+                Log.Info($"TeslaGateControl compat module loaded. @gamehunt");
             }
             catch (Exception e)
             {

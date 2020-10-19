@@ -86,7 +86,8 @@ namespace NPCS.Commands
                                 obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
                                 obj_npc.Kill(false);
                                 response = "NPC removed!";
-                            }catch(IndexOutOfRangeException)
+                            }
+                            catch (IndexOutOfRangeException)
                             {
                                 response = "Invalid NPC id!";
                                 return false;

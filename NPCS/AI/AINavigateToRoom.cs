@@ -10,7 +10,7 @@ namespace NPCS.AI
     {
         public override string Name => "AINavigateToRoom";
 
-        public override string[] RequiredArguments => new string[] { "safe", "room"};
+        public override string[] RequiredArguments => new string[] { "safe", "room" };
 
         public override bool Check(Npc npc)
         {
@@ -44,7 +44,7 @@ namespace NPCS.AI
                     npc.CurrentAIRoomTarget = r;
                 }
             }
-            else if(room != null)
+            else if (room != null)
             {
                 if (npc.GotoRoom(room))
                 {

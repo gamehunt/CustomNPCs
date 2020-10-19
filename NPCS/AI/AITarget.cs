@@ -1,6 +1,6 @@
 ﻿using Exiled.API.Features;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace NPCS.AI
 {
@@ -28,7 +28,8 @@ namespace NPCS.AI
                     {
                         Construct();
                     }
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     Log.Warn($"Error while constructing AI target: {e}");
                     Verified = false;
@@ -48,7 +49,7 @@ namespace NPCS.AI
 
         private bool CheckArguments()
         {
-            foreach(string arg in RequiredArguments)
+            foreach (string arg in RequiredArguments)
             {
                 if (!Arguments.ContainsKey(arg))
                 {

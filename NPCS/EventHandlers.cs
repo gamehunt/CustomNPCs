@@ -12,7 +12,7 @@ namespace NPCS
         public void OnRoundStart()
         {
             RoundSummaryFix.__npc_endRequested = false;
-            Timing.CallDelayed(0.5f, () =>
+            Timing.CallDelayed(0.1f, () =>
             {
                 foreach (string mapping in Plugin.Instance.Config.InitialMappings)
                 {

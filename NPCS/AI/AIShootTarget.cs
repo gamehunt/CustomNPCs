@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NPCS.AI
@@ -9,16 +10,28 @@ namespace NPCS.AI
     {
         public override string Name => "AIShootTarget";
 
-        public override string[] RequiredArguments => new string[] { };
+        public override string[] RequiredArguments => new string[] { "accuracy", "hitboxes", "firerate", "damage" };
 
         public override bool Check(Npc npc)
         {
             return npc.CurrentAIPlayerTarget != null && Player.Dictionary.ContainsKey(npc.CurrentAIPlayerTarget.GameObject) && npc.CurrentAIPlayerTarget.IsAlive && !Physics.Linecast(npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces);
         }
 
+        private int accuracy;
+        private Dictionary<string, int> hitboxes;
+        private float firerate;
+        private int damage;
+
         public override void Construct()
         {
-
+            accuracy = int.Parse(Arguments["accuracy"]);
+            foreach (string val in Arguments["hitboxes"].Split(','))
+            {
+                string[] splitted = val.Trim().Split(':');
+                hitboxes.Add(splitted[0], int.Parse(splitted[1]));
+            }
+            firerate = float.Parse(Arguments["firerate"].Replace('.', ','));
+            damage = int.Parse(Arguments["damage"]);
         }
 
         public override float Process(Npc npc)
@@ -35,13 +48,25 @@ namespace NPCS.AI
                     Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
                     Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
                     npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
-                    npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(npc.CurrentAIPlayerTarget.GameObject, "HEAD", npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
+                    bool miss = Plugin.Random.Next(0, 100) < accuracy;
+                    int hitbox_value = Plugin.Random.Next(0, 100);
+                    string hitbox = "BODY";
+                    int min = int.MaxValue;
+                    foreach (string box in hitboxes.Keys)
+                    {
+                        if (hitbox_value < hitboxes[box] && hitboxes[box] <= min)
+                        {
+                            min = hitboxes[box];
+                            hitbox = box;
+                        }
+                    }
+                    npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(miss ? npc.gameObject : npc.CurrentAIPlayerTarget.GameObject, damage > 0 ? "_:" + hitbox + ":" + damage.ToString() : hitbox, npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
                     if (!npc.CurrentAIPlayerTarget.IsAlive)
                     {
                         npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
                     }
                 }
-                return Plugin.Instance.Config.NpcFireCooldownMultiplier * npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
+                return firerate * Plugin.Instance.Config.NpcFireCooldownMultiplier * npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
             }
             else
             {

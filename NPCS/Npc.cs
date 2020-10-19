@@ -196,6 +196,8 @@ namespace NPCS
         public bool DisableRun { get; set; } = false;
         public bool IsRunning { get; set; } = false;
 
+        public bool ProcessSCPLogic { get; set; } = false;
+
         public List<CoroutineHandle> AttachedCoroutines { get; } = new List<CoroutineHandle>();
 
         public List<CoroutineHandle> MovementCoroutines { get; } = new List<CoroutineHandle>();
@@ -993,7 +995,7 @@ namespace NPCS
             AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(AICoroutine()));
-            Dictionary.Add(this.gameObject, this);
+            Dictionary.Add(gameObject, this);
             Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
         }
 

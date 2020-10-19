@@ -15,7 +15,6 @@ namespace NPCS.AI
 
         public override void Construct()
         {
-
         }
 
         public override float Process(Npc npc)
