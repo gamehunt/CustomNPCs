@@ -236,6 +236,7 @@ namespace NPCS
                 }
                 else
                 {
+                    bool is_first = true;
                     Log.Debug($"Loading manual mappings for room {r.Name}", Plugin.Instance.Config.VerboseOutput);
                     List<NavigationNode.NavNodeSerializationInfo> nodes = manual_mappings[rname];
                     int i = 0;
@@ -257,7 +258,8 @@ namespace NPCS
                     }
                     foreach (NavigationNode.NavNodeSerializationInfo info in nodes)
                     {
-                        NavigationNode node = NavigationNode.Create(info, $"MANUAL_Room_{r.Name}_{i}", rname);
+                        NavigationNode node = NavigationNode.Create(info, is_first ? $"AUTO_Room_{r.Name}".Replace(' ', '_') :  $"MANUAL_Room_{r.Name}_{i}".Replace(' ', '_'), rname);
+                        is_first = false;
                         foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => nd != node && Vector3.Distance(nd.Position, node.Position) < Plugin.Instance.Config.NavNodeMapperMaxDistance))
                         {
                             node.LinkedNodes.Add(d);

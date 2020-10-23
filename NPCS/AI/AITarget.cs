@@ -23,10 +23,15 @@ namespace NPCS.AI
                 __args = value;
                 try
                 {
-                    Verified = CheckArguments();
+                    string missing = CheckArguments();
+                    Verified = missing.Length == 0;
                     if (Verified)
                     {
                         Construct();
+                    }
+                    else
+                    {
+                        Log.Warn($"AITarget {Name} missing required '{missing}' argument and will be skipped!");
                     }
                 }
                 catch (Exception e)
@@ -47,16 +52,16 @@ namespace NPCS.AI
 
         public abstract void Construct();
 
-        private bool CheckArguments()
+        private string CheckArguments()
         {
             foreach (string arg in RequiredArguments)
             {
                 if (!Arguments.ContainsKey(arg))
                 {
-                    return false;
+                    return arg;
                 }
             }
-            return true;
+            return "";
         }
 
         private static readonly Dictionary<string, AITarget> registry = new Dictionary<string, AITarget>();

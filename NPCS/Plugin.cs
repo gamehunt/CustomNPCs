@@ -1,7 +1,9 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using NPCS.AI;
+using NPCS.AI.TargetFilters;
 using NPCS.Conditions;
+using NPCS.Events;
 using NPCS.Navigation;
 using NPCS.Talking;
 using System;
@@ -177,6 +179,9 @@ namespace NPCS
                 AITarget.Register(new AINavigateToRoom());
                 AITarget.Register(new AIFollowTarget());
                 AITarget.Register(new AIFindItemTarget());
+
+                TargetFilter.Register(new Scp939TargetFilter());
+                TargetFilter.Register(new Scp096TargetFilter());
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }

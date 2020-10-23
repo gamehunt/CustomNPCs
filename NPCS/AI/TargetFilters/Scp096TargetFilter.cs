@@ -9,6 +9,8 @@ namespace NPCS.AI.TargetFilters
 {
     class Scp096TargetFilter : TargetFilter
     {
+        public override string Name => "scp096";
+
         public override bool Check(Npc n, Player p)
         {
             PlayableScps.Scp096 scp = n.NPCPlayer.ReferenceHub.scpsController.CurrentScp as PlayableScps.Scp096;

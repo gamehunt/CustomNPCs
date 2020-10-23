@@ -13,8 +13,6 @@ namespace NPCS.AI
 
         public override string[] RequiredArguments => new string[] { "range", "filter", "role_blacklist", "role_whitelist", "allow_self_select" };
 
-        private static readonly Scp939TargetFilter scp939_filter = new Scp939TargetFilter(); //TODO make registry for target filters
-
         public override bool Check(Npc npc)
         {
             return true;
@@ -35,9 +33,10 @@ namespace NPCS.AI
                 if (Vector3.Distance(p.Position, npc.NPCPlayer.Position) < range && !Physics.Linecast(npc.NPCPlayer.Position, p.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
                 {
                     bool res = true;
-                    if (target_filter == "scp939")
+                    TargetFilter filter = TargetFilter.GetFromToken(target_filter);
+                    if (filter != null)
                     {
-                        res = scp939_filter.Check(npc, p);
+                        res = filter.Check(npc, p);
                     }
                     if (res)
                     {
