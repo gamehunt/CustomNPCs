@@ -13,6 +13,7 @@ namespace NPCS.Harmony
     [HarmonyPriority(Priority.First)]
     internal class GhostModeFixPatch
     {
+
         private static bool Prefix(PlayerPositionManager __instance)
         {
             try
@@ -42,12 +43,15 @@ namespace NPCS.Harmony
 
                 foreach (GameObject gameObject in players)
                 {
+
                     if (Npc.Dictionary.ContainsKey(gameObject))
                     {
                         continue;
                     }
 
                     Player player = Player.Get(gameObject);
+                
+                    
                     Array.Copy(__instance._receivedData, __instance._transmitBuffer, __instance._usedData);
 
                     if (player.Role.Is939())
@@ -146,17 +150,17 @@ namespace NPCS.Harmony
 
                                         switch (player.Role)
                                         {
-                                            case RoleType.Scp173 when (!Exiled.Events.Events.Instance.Config.CanTutorialBlockScp173 && currentTarget.Role == RoleType.Tutorial) || Scp173.TurnedPlayers.Contains(currentTarget):
-                                                shouldRotate = true;
-                                                break;
-
-                                            case RoleType.Scp096 when !Exiled.Events.Events.Instance.Config.CanTutorialTriggerScp096 && currentTarget.Role == RoleType.Tutorial || Exiled.API.Features.Scp096.TurnedPlayers.Contains(currentTarget):
+                                            case RoleType.Scp173
+                                                when (!Exiled.Events.Events.Instance.Config.CanTutorialBlockScp173
+                                                    && currentTarget.Role == RoleType.Tutorial)
+                                                || Scp173.TurnedPlayers.Contains(currentTarget):
                                                 shouldRotate = true;
                                                 break;
                                         }
                                     }
                                 }
                             }
+
                             if (!canSee)
                             {
                                 ppd = new PlayerPositionData(Vector3.up * 6000f, 0f, ppd.playerID);
