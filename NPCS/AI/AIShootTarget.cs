@@ -18,7 +18,7 @@ namespace NPCS.AI
         }
 
         private int accuracy;
-        private Dictionary<string, int> hitboxes;
+        private readonly Dictionary<string, int> hitboxes = new Dictionary<string, int>();
         private float firerate;
         private int damage;
 

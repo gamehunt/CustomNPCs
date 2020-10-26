@@ -13,7 +13,7 @@ namespace NPCS.Harmony
     [HarmonyPriority(Priority.First)]
     internal class GhostModeFixPatch
     {
-
+        private static readonly Vector3 GhostPos = Vector3.up * 6000f;
         private static bool Prefix(PlayerPositionManager __instance)
         {
             try
@@ -50,8 +50,6 @@ namespace NPCS.Harmony
                     }
 
                     Player player = Player.Get(gameObject);
-                
-                    
                     Array.Copy(__instance._receivedData, __instance._transmitBuffer, __instance._usedData);
 
                     if (player.Role.Is939())
@@ -60,17 +58,15 @@ namespace NPCS.Harmony
                         {
                             if (__instance._transmitBuffer[index].position.y < 800f)
                             {
-                                ReferenceHub hub2 = ReferenceHub.GetHub(players[index]);
-
+                                ReferenceHub hub2 = ReferenceHub.GetHub(__instance._transmitBuffer[index].playerID);
                                 Npc npc = (Npc.Dictionary.ContainsKey(hub2.gameObject)) ? Npc.Dictionary[hub2.gameObject] : null;
-
                                 if ((hub2.characterClassManager.CurRole.team != Team.SCP
-                                && hub2.characterClassManager.CurRole.team != Team.RIP
-                                && !players[index]
-                                    .GetComponent<Scp939_VisionController>()
-                                    .CanSee(player.ReferenceHub.characterClassManager.Scp939)) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
+                                    && hub2.characterClassManager.CurRole.team != Team.RIP
+                                    && !hub2
+                                        .GetComponent<Scp939_VisionController>()
+                                        .CanSee(player.ReferenceHub.characterClassManager.Scp939)) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
                                 {
-                                    __instance._transmitBuffer[index] = new PlayerPositionData(Vector3.up * 6000f, 0.0f, __instance._transmitBuffer[index].playerID);
+                                    MakeGhost(index, __instance._transmitBuffer);
                                 }
                             }
                         }
@@ -80,97 +76,104 @@ namespace NPCS.Harmony
                         for (int index = 0; index < __instance._usedData; ++index)
                         {
                             PlayerPositionData ppd = __instance._transmitBuffer[index];
-                            Player currentTarget = Player.Get(players[index]);
+                            Player currentTarget = Player.Get(ppd.playerID);
                             Scp096 scp096 = player.ReferenceHub.scpsController.CurrentScp as Scp096;
-
-                            bool canSee = true;
-                            bool shouldRotate = false;
 
                             if (currentTarget?.ReferenceHub == null)
                                 continue;
 
-                            Npc npc = (Npc.Dictionary.ContainsKey(currentTarget.GameObject)) ? Npc.Dictionary[currentTarget.GameObject] : null;
-
-#pragma warning disable CS0618 // Type or member is obsolete
-                            if (currentTarget.IsInvisible || player.TargetGhostsHashSet.Contains(ppd.playerID) || player.TargetGhosts.Contains(ppd.playerID) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
-#pragma warning restore CS0618 // Type or member is obsolete
+                            Vector3 vector3 = ppd.position - player.ReferenceHub.playerMovementSync.RealModelPosition;
+                            if (Math.Abs(vector3.y) > 35f)
                             {
-                                canSee = false;
+                                MakeGhost(index, __instance._transmitBuffer);
                             }
                             else
                             {
-                                Vector3 vector3 = ppd.position - player.ReferenceHub.playerMovementSync.RealModelPosition;
-                                if (Math.Abs(vector3.y) > 35f)
+                                float sqrMagnitude = vector3.sqrMagnitude;
+                                if (player.ReferenceHub.playerMovementSync.RealModelPosition.y < 800f)
                                 {
-                                    canSee = false;
+                                    if (sqrMagnitude >= 1764f)
+                                    {
+                                        MakeGhost(index, __instance._transmitBuffer);
+                                        continue; // As the target is already ghosted
+                                    }
                                 }
-                                else
+                                else if (sqrMagnitude >= 7225f)
                                 {
-                                    float sqrMagnitude = vector3.sqrMagnitude;
-                                    if (player.ReferenceHub.playerMovementSync.RealModelPosition.y < 800f)
-                                    {
-                                        if (sqrMagnitude >= 1764f)
-                                        {
-                                            canSee = false;
-                                        }
-                                    }
-                                    else if (sqrMagnitude >= 7225f)
-                                    {
-                                        canSee = false;
-                                    }
+                                    MakeGhost(index, __instance._transmitBuffer);
+                                    continue; // As the target is already ghosted
+                                }
 
-                                    if (canSee)
-                                    {
-                                        if (ReferenceHub.TryGetHub(ppd.playerID, out ReferenceHub hub2))
-                                        {
-                                            if (scp096 != null
-                                                && scp096.Enraged
-                                                && !scp096.HasTarget(hub2)
-                                                && hub2.characterClassManager.CurRole.team != Team.SCP)
-                                            {
+                                // The code below doesn't have to follow a ELSE statement!
+                                // Otherwise Scp268 won't be processed
+
+                                if (scp096 != null
+                                    && scp096.Enraged
+                                    && !scp096.HasTarget(currentTarget.ReferenceHub)
+                                    && currentTarget.Team != Team.SCP)
+                                {
 #if DEBUG
-                                                Log.Debug($"[Scp096@GhostModePatch] {player.UserId} can't see {hub2.characterClassManager.UserId}");
+                                    Log.Debug($"[Scp096@GhostModePatch] {player.UserId} can't see {currentTarget.UserId}");
 #endif
-                                                canSee = false;
-                                            }
-                                            else if (hub2.playerEffectsController.GetEffect<Scp268>().Enabled)
-                                            {
-                                                bool flag = false;
-                                                if (scp096 != null)
-                                                    flag = scp096.HasTarget(hub2);
+                                    MakeGhost(index, __instance._transmitBuffer);
+                                }
+                                else if (currentTarget.ReferenceHub.playerEffectsController.GetEffect<Scp268>().Enabled)
+                                {
+                                    bool flag = false;
+                                    if (scp096 != null)
+                                        flag = scp096.HasTarget(currentTarget.ReferenceHub);
 
-                                                if (player.Role != RoleType.Scp079
-                                                    && player.Role != RoleType.Spectator
-                                                    && !flag)
-                                                {
-                                                    canSee = false;
-                                                }
-                                            }
-                                        }
-
-                                        switch (player.Role)
-                                        {
-                                            case RoleType.Scp173
-                                                when (!Exiled.Events.Events.Instance.Config.CanTutorialBlockScp173
-                                                    && currentTarget.Role == RoleType.Tutorial)
-                                                || Scp173.TurnedPlayers.Contains(currentTarget):
-                                                shouldRotate = true;
-                                                break;
-                                        }
+                                    if (player.Role != RoleType.Scp079
+                                        && player.Role != RoleType.Spectator
+                                        && !flag)
+                                    {
+                                        MakeGhost(index, __instance._transmitBuffer);
                                     }
                                 }
                             }
+                        }
+                    }
 
-                            if (!canSee)
-                            {
-                                ppd = new PlayerPositionData(Vector3.up * 6000f, 0f, ppd.playerID);
-                            }
-                            else if (shouldRotate)
-                            {
-                                ppd = new PlayerPositionData(ppd.position, Quaternion.LookRotation(FindLookRotation(player.Position, currentTarget.Position)).eulerAngles.y, ppd.playerID);
-                            }
+                    // We do another FOR for the ghost things
+                    // because it's hard to do it without
+                    // whole code changes in the game code
+                    for (var z = 0; z < __instance._usedData; z++)
+                    {
+                        var ppd = __instance._transmitBuffer[z];
 
-                            __instance._transmitBuffer[index] = ppd;
+                        // Do you remember the bug
+                        // when you can't pick up any item?
+                        // - Me too;
+                        // It was because for a reason
+                        // we made the source player
+                        // invisible to themself
+                        if (player.Id == ppd.playerID)
+                            continue;
+
+                        // If it's already has the ghost position
+                        if (ppd.position == GhostPos)
+                            continue;
+
+                        var target = Player.Get(ppd.playerID);
+                        // If for some reason the player/their ref hub is null
+                        if (target?.ReferenceHub == null)
+                            continue;
+
+                        Npc npc = (Npc.Dictionary.ContainsKey(target.GameObject)) ? Npc.Dictionary[target.GameObject] : null;
+
+                        if (player.IsInvisible || PlayerCannotSee(player, target.Id) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
+                        {
+                            MakeGhost(z, __instance._transmitBuffer);
+                        }
+                        // Rotate the player because
+                        // those movement checks are
+                        // in client-side
+                        else if (player.Role == RoleType.Scp173
+                            && ((!Exiled.Events.Events.Instance.Config.CanTutorialBlockScp173
+                                    && target.Role == RoleType.Tutorial)
+                                || Scp173.TurnedPlayers.Contains(target)))
+                        {
+                            RotatePlayer(z, __instance._transmitBuffer, FindLookRotation(player.Position, target.Position));
                         }
                     }
 
@@ -203,5 +206,17 @@ namespace NPCS.Harmony
         }
 
         private static Vector3 FindLookRotation(Vector3 player, Vector3 target) => (target - player).normalized;
+
+        // It's called when the player checks to see a player,
+        // as the method called that the player CANNOT see another player
+        // so an execution result will be:
+        // true -> the player can't see another player
+        // false -> the player can see another player
+        private static bool PlayerCannotSee(Player source, int playerId) => source.TargetGhostsHashSet.Contains(playerId) || source.TargetGhosts.Contains(playerId);
+
+        private static void MakeGhost(int index, PlayerPositionData[] buff) => buff[index] = new PlayerPositionData(GhostPos, buff[index].rotation, buff[index].playerID);
+
+        private static void RotatePlayer(int index, PlayerPositionData[] buff, Vector3 rotation) => buff[index]
+            = new PlayerPositionData(buff[index].position, Quaternion.LookRotation(rotation).eulerAngles.y, buff[index].playerID);
     }
 }

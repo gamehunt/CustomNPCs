@@ -126,7 +126,7 @@ namespace NPCS.Harmony
                 {
                     referenceHub = ReferenceHub.GetHub(target);
                 }
-
+                ShotPosSwapper component3;
                 if (referenceHub != null && __instance.GetShootPermission(referenceHub.characterClassManager, false))
                 {
                     if (!npc)
@@ -257,6 +257,11 @@ namespace NPCS.Harmony
 
                     __instance.RpcConfirmShot(hitmarker: true, __instance.curWeapon);
                     __instance.PlaceDecal(isBlood: true, new Ray(__instance.camera.position, dir), (int)referenceHub.characterClassManager.CurClass, num);
+                }
+                else if (target != null && hitboxType == "swap" && target.TryGetComponent(out component3))
+                {
+                    __instance.RpcConfirmShot(hitmarker: true, __instance.curWeapon);
+                    component3.ServerWasShot();
                 }
                 else if (target != null && hitboxType == "window" && target.GetComponent<BreakableWindow>() != null)
                 {
