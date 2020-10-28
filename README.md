@@ -14,7 +14,7 @@ Known Issues:
 
  ~~- Navigation is really stupid. Botz can't go in servers, they dont know about any stairs~~
  ~~- Well, I've made it little better with manual mappings. Now bad room is HCZ_Armory. Next task: Learn them how to use lifts~~
- - Navigation finally fixed (no)
+ - Navigation finally fixed (Except GateA and GateB, idfk why their mappings work only in 1/3 times. Also they sometimes can stuck in the walls while using elevators...)
 
 FAQ:
 
