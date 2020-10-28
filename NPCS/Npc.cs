@@ -982,8 +982,6 @@ namespace NPCS
 
             Log.SendRaw($"NPC {ev.Player.Nickname} ({NPCPlayer.Id}) deconstructed", ConsoleColor.Green);
 
-            Exiled.Events.Handlers.Player.OnLeft(ev);
-
             Player.IdsCache.Remove(NPCPlayer.Id);
             Player.Dictionary.Remove(NPCPlayer.GameObject);
         }

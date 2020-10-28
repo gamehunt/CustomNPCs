@@ -63,6 +63,7 @@ namespace NPCS.Utils
         public Dictionary<string, string> Args { get; set; }
     }
 
+
     public class NpcSerializationInfo
     {
         public string Name { get; set; }

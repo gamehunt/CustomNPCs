@@ -68,7 +68,7 @@ namespace NPCS.Commands
                             response = "Node with this name already exists!";
                             return false;
                         }
-                        created_node = NavigationNode.Create(s.Position, name, s.CurrentRoom.Name);
+                        created_node = NavigationNode.Create(s.Position, name, s.CurrentRoom.Name.RemoveBracketsOnEndOfName());
                         pickup = ItemType.SCP018.Spawn(1f, created_node.Position + new UnityEngine.Vector3(0, 0.5f, 0));
                         pickup.Locked = true;
                         foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => nd != created_node && Vector3.Distance(nd.Position, created_node.Position) < Plugin.Instance.Config.NavNodeMapperMaxDistance))
@@ -155,6 +155,31 @@ namespace NPCS.Commands
                             pickup.Locked = true;
                         }
                         response = "Marked nodes!";
+                        break;
+
+                    case "info":
+                        if (arguments.Count <= 1)
+                        {
+                            response = "You need to provide node name!";
+                            return false;
+                        }
+                        try
+                        {
+                            NavigationNode rnode = NavigationNode.AllNodes[arguments.At(1)];
+                            s.RemoteAdminMessage("Linked nodes:");
+                            foreach (NavigationNode node in rnode.LinkedNodes)
+                            {
+                                s.RemoteAdminMessage(node.Name);
+                            }
+                            s.RemoteAdminMessage($"Attached door: {rnode.AttachedDoor?.DoorName}");
+                            s.RemoteAdminMessage($"Attached elevator: {rnode.AttachedElevator}");
+                            response = "";
+                        }
+                        catch (KeyNotFoundException)
+                        {
+                            response = "Node not found!";
+                            return false;
+                        }
                         break;
 
                     default:

@@ -58,8 +58,10 @@ namespace NPCS.Harmony
                         {
                             if (__instance._transmitBuffer[index].position.y < 800f)
                             {
+
                                 ReferenceHub hub2 = ReferenceHub.GetHub(__instance._transmitBuffer[index].playerID);
                                 Npc npc = (Npc.Dictionary.ContainsKey(hub2.gameObject)) ? Npc.Dictionary[hub2.gameObject] : null;
+
                                 if ((hub2.characterClassManager.CurRole.team != Team.SCP
                                     && hub2.characterClassManager.CurRole.team != Team.RIP
                                     && !hub2
@@ -161,7 +163,7 @@ namespace NPCS.Harmony
 
                         Npc npc = (Npc.Dictionary.ContainsKey(target.GameObject)) ? Npc.Dictionary[target.GameObject] : null;
 
-                        if (player.IsInvisible || PlayerCannotSee(player, target.Id) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
+                        if (target.IsInvisible || PlayerCannotSee(player, target.Id) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
                         {
                             MakeGhost(z, __instance._transmitBuffer);
                         }

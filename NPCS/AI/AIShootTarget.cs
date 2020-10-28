@@ -48,7 +48,7 @@ namespace NPCS.AI
                     Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
                     Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
                     npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
-                    bool miss = Plugin.Random.Next(0, 100) < accuracy;
+                    bool miss = Plugin.Random.Next(0, 100) > accuracy;
                     int hitbox_value = Plugin.Random.Next(0, 100);
                     string hitbox = "BODY";
                     int min = int.MaxValue;
@@ -71,6 +71,7 @@ namespace NPCS.AI
             else
             {
                 float cd = 0f;
+                npc.DisableFollowAutoTeleport = true;
                 npc.Follow(npc.CurrentAIPlayerTarget);
                 if (Vector3.Distance(npc.CurrentAIPlayerTarget.Position, npc.NPCPlayer.Position) <= 1.5f)
                 {

@@ -200,9 +200,11 @@ namespace NPCS
 
             Harmony.UnpatchAll();
 
+            NavigationNode.Clear();
             NodeCondition.Clear();
             NodeAction.Clear();
             AITarget.Clear();
+            TargetFilter.Clear();
 
             Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Handlers.Server.RoundEnded -= EventHandlers.OnRoundEnd;
@@ -230,6 +232,7 @@ namespace NPCS
             NodeCondition.Clear();
             NodeAction.Clear();
             AITarget.Clear();
+            TargetFilter.Clear();
         }
     }
 }

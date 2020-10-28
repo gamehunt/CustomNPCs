@@ -20,5 +20,10 @@ namespace NPCS.AI.TargetFilters
         {
             registry.Add(f.Name, f);
         }
+
+        public static void Clear()
+        {
+            registry.Clear();
+        }
     }
 }

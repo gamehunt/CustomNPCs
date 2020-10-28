@@ -60,7 +60,7 @@ namespace NPCS.Navigation
             }
             go.transform.position = pos;
             AllNodes.Add(node.Name, node);
-            Log.Debug($"Node created: {name} at {pos}", Plugin.Instance.Config.VerboseOutput);
+            Log.Debug($"Node created: {name} at {pos} ({room})", Plugin.Instance.Config.VerboseOutput);
             return node;
         }
 
