@@ -40,7 +40,7 @@ namespace NPCS.Harmony
                 {
                     if (!(player == null))
                     {
-                        Npc npc = Npc.Dictionary.ContainsKey(player) ? Npc.Dictionary[player] : null;
+                        Npc npc = Npc.Get(player);
                         if (npc == null || npc.AffectRoundSummary)
                         {
                             CharacterClassManager component = player.GetComponent<CharacterClassManager>();

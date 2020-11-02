@@ -5,10 +5,10 @@ namespace NPCS.AI.TargetFilters
 {
     internal abstract class TargetFilter
     {
-
         public abstract string Name { get; }
 
         public abstract bool Check(Npc n, Player p);
+
         private static readonly Dictionary<string, TargetFilter> registry = new Dictionary<string, TargetFilter>();
 
         public static TargetFilter GetFromToken(string s)

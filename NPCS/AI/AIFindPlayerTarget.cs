@@ -15,28 +15,31 @@ namespace NPCS.AI
 
         public override bool Check(Npc npc)
         {
-            return true;
+            return npc.CurrentAIPlayerTarget == null || !npc.CurrentAIPlayerTarget.IsAlive;
         }
 
         private readonly HashSet<RoleType> allowed_roles = new HashSet<RoleType>();
         private readonly HashSet<RoleType> disallowed_roles = new HashSet<RoleType>();
+        private readonly List<string> filters = new List<string>();
         private float range = 0f;
         private bool allow_self_select = false;
 
         public override float Process(Npc npc)
         {
             IsFinished = true;
-            string target_filter = Arguments["filter"];
 
             foreach (Player p in Player.List.Where(pl => (pl != npc.NPCPlayer || allow_self_select) && (allowed_roles.Count == 0 || allowed_roles.Contains(pl.Role)) && (disallowed_roles.Count == 0 || !disallowed_roles.Contains(pl.Role))))
             {
-                if (Vector3.Distance(p.Position, npc.NPCPlayer.Position) < range && !Physics.Linecast(npc.NPCPlayer.Position, p.Position, npc.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                if (Vector3.Distance(p.Position, npc.NPCPlayer.Position) < range)
                 {
                     bool res = true;
-                    TargetFilter filter = TargetFilter.GetFromToken(target_filter);
-                    if (filter != null)
+                    foreach (string target_filter in filters)
                     {
-                        res = filter.Check(npc, p);
+                        TargetFilter filter = TargetFilter.GetFromToken(target_filter);
+                        if (filter != null)
+                        {
+                            res = filter.Check(npc, p);
+                        }
                     }
                     if (res)
                     {
@@ -60,6 +63,11 @@ namespace NPCS.AI
         {
             range = float.Parse(Arguments["range"].Replace(".", ","));
             allow_self_select = bool.Parse(Arguments["allow_self_select"]);
+
+            foreach (string s in Arguments["filter"].Split(','))
+            {
+                filters.Add(s.Trim());
+            }
 
             string[] raw_allowed_roles = Arguments["role_whitelist"].Split(',');
             foreach (string role in raw_allowed_roles)

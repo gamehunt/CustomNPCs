@@ -101,25 +101,23 @@ namespace NPCS.Commands
                         break;
 
                     case "move":
-                        if (arguments.Count > 4)
-                        {
-                            try
-                            {
-                                obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
-                                obj_npc.NPCPlayer.Position += new UnityEngine.Vector3(float.Parse(arguments.At(2)), float.Parse(arguments.At(3)), float.Parse(arguments.At(4)));
-                                response = "NPC moved!";
-                            }
-                            catch (IndexOutOfRangeException)
-                            {
-                                response = "Invalid NPC id!";
-                                return false;
-                            }
-                        }
-                        else
+                        if (arguments.Count < 4)
                         {
                             response = "You need to provide NPC's id and relatives to current position!";
                             return false;
                         }
+                        try
+                        {
+                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                            obj_npc.NPCPlayer.Position += new UnityEngine.Vector3(float.Parse(arguments.At(2)), float.Parse(arguments.At(3)), float.Parse(arguments.At(4)));
+                            response = "NPC moved!";
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            response = "Invalid NPC id!";
+                            return false;
+                        }
+
                         break;
 
                     case "god":
@@ -214,6 +212,11 @@ namespace NPCS.Commands
                         break;
 
                     case "room":
+                        if (arguments.Count <= 2)
+                        {
+                            response = "You need to provide npc id and room name!";
+                            return false;
+                        }
                         try
                         {
                             obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];

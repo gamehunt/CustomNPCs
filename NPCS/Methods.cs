@@ -58,8 +58,6 @@ namespace NPCS
 
             Npc npcc = obj.AddComponent<Npc>();
 
-            npcc.MovementSpeed = CharacterClassManager._staticClasses[(int)type].walkSpeed;
-
             npcc.ItemHeld = itemHeld;
             npcc.RootNode = TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node));
 
@@ -84,6 +82,7 @@ namespace NPCS
         //health: -1
         //role: Scientist
         //scale: [1, 1, 1]
+        //inventory: [KeycardO5, GunLogicer]
         //item_held: GunLogicer
         //root_node: default_node.yml
         //god_mode: false
@@ -110,7 +109,15 @@ namespace NPCS
 
                 NpcSerializationInfo raw_npc = deserializer.Deserialize<NpcSerializationInfo>(input);
 
-                Npc n = CreateNPC(pos, rot, new Vector3(raw_npc.Scale[0], raw_npc.Scale[1], raw_npc.Scale[2]), raw_npc.Role, raw_npc.ItemHeld, raw_npc.Name, raw_npc.RootNode);
+                Npc n = CreateNPC(pos, rot, new Vector3(raw_npc.Scale[0], raw_npc.Scale[1], raw_npc.Scale[2]), raw_npc.Role, ItemType.None, raw_npc.Name, raw_npc.RootNode);
+
+                foreach (ItemType type in raw_npc.Inventory)
+                {
+                    Log.Debug($"Added item: {type:g}");
+                    n.TakeItem(type);
+                }
+
+                n.ItemHeld = raw_npc.ItemHeld;
 
                 n.NPCPlayer.IsGodModeEnabled = raw_npc.GodMode;
 
@@ -182,94 +189,102 @@ namespace NPCS
         //Oh... More shitcode!
         public static void GenerateNavGraph()
         {
-            Log.Info("[NAV] Generating navigation graph...");
-            StreamReader sr = File.OpenText(Config.NPCs_nav_mappings_path);
-            var deserializer = new DeserializerBuilder().Build();
-            Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>> manual_mappings = deserializer.Deserialize<Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>>>(sr);
-            sr.Close();
-
-            Log.Info("[NAV] Mapping lifts...");
-            foreach (Lift lift in Map.Lifts)
+            try
             {
-                int i = 0;
-                NavigationNode prev_node = null;
-                foreach (Lift.Elevator elevator in lift.elevators)
+                Log.Info("[NAV] Generating navigation graph...");
+
+                StreamReader sr = File.OpenText(Config.NPCs_nav_mappings_path);
+                var deserializer = new DeserializerBuilder().IgnoreUnmatchedProperties().Build();
+                Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>> manual_mappings = deserializer.Deserialize<Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>>>(sr);
+                sr.Close();
+
+                Log.Info("[NAV] Mapping lifts...");
+                foreach (Lift lift in Map.Lifts)
                 {
-                    NavigationNode node = NavigationNode.Create(elevator.target.position, $"AUTO_Elevator_{lift.elevatorName}_{i}".Replace(' ', '_'));
-                    node.AttachedElevator = new KeyValuePair<Lift.Elevator, Lift>(elevator, lift);
-                    i++;
-                    if (prev_node != null)
+                    int i = 0;
+                    NavigationNode prev_node = null;
+                    foreach (Lift.Elevator elevator in lift.elevators)
                     {
-                        prev_node.LinkedNodes.Add(node);
-                        node.LinkedNodes.Add(prev_node);
+                        NavigationNode node = NavigationNode.Create(elevator.target.position, $"AUTO_Elevator_{lift.elevatorName}_{i}".Replace(' ', '_'));
+                        node.AttachedElevator = new KeyValuePair<Lift.Elevator, Lift>(elevator, lift);
+                        i++;
+                        if (prev_node != null)
+                        {
+                            prev_node.LinkedNodes.Add(node);
+                            node.LinkedNodes.Add(prev_node);
+                        }
+                        else
+                        {
+                            prev_node = node;
+                        }
+                    }
+                }
+                foreach (Room r in Map.Rooms)
+                {
+                    string rname = r.Name.RemoveBracketsOnEndOfName();
+                    if (!manual_mappings.ContainsKey(rname))
+                    {
+                        NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
+                        foreach (Door d in r.Doors)
+                        {
+                            if (d.gameObject.transform.position == Vector3.zero)
+                            {
+                                continue;
+                            }
+                            NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
+                            if (new_node == null)
+                            {
+                                new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
+                            }
+                            else
+                            {
+                                new_node.AttachedDoor = d;
+                            }
+                            node.LinkedNodes.Add(new_node);
+                            new_node.LinkedNodes.Add(node);
+                        }
                     }
                     else
                     {
-                        prev_node = node;
+                        bool is_first = true;
+                        Log.Debug($"Loading manual mappings for room {r.Name}", Plugin.Instance.Config.VerboseOutput);
+                        List<NavigationNode.NavNodeSerializationInfo> nodes = manual_mappings[rname];
+                        int i = 0;
+                        foreach (Door d in r.Doors)
+                        {
+                            if (d.gameObject.transform.position == Vector3.zero)
+                            {
+                                continue;
+                            }
+                            NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
+                            if (new_node != null)
+                            {
+                                new_node.AttachedDoor = d;
+                            }
+                            else
+                            {
+                                new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
+                            }
+                        }
+                        foreach (NavigationNode.NavNodeSerializationInfo info in nodes)
+                        {
+                            NavigationNode node = NavigationNode.Create(info, is_first ? $"AUTO_Room_{r.Name}".Replace(' ', '_') : $"MANUAL_Room_{r.Name}_{i}".Replace(' ', '_'), rname);
+                            is_first = false;
+                            foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => nd != node && Vector3.Distance(nd.Position, node.Position) < Plugin.Instance.Config.NavNodeMapperMaxDistance))
+                            {
+                                node.LinkedNodes.Add(d);
+                                d.LinkedNodes.Add(node);
+
+                                Log.Debug($"Linked {node.Name} and {d.Name}", Plugin.Instance.Config.VerboseOutput);
+                            }
+                            i++;
+                        }
                     }
                 }
             }
-            foreach (Room r in Map.Rooms)
+            catch (Exception e)
             {
-                string rname = r.Name.RemoveBracketsOnEndOfName();
-                if (!manual_mappings.ContainsKey(rname))
-                {
-                    NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
-                    foreach (Door d in r.Doors)
-                    {
-                        if (d.gameObject.transform.position == Vector3.zero)
-                        {
-                            continue;
-                        }
-                        NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
-                        if (new_node == null)
-                        {
-                            new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
-                        }
-                        else
-                        {
-                            new_node.AttachedDoor = d;
-                        }
-                        node.LinkedNodes.Add(new_node);
-                        new_node.LinkedNodes.Add(node);
-                    }
-                }
-                else
-                {
-                    bool is_first = true;
-                    Log.Debug($"Loading manual mappings for room {r.Name}", Plugin.Instance.Config.VerboseOutput);
-                    List<NavigationNode.NavNodeSerializationInfo> nodes = manual_mappings[rname];
-                    int i = 0;
-                    foreach (Door d in r.Doors)
-                    {
-                        if (d.gameObject.transform.position == Vector3.zero)
-                        {
-                            continue;
-                        }
-                        NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
-                        if (new_node != null)
-                        {
-                            new_node.AttachedDoor = d;
-                        }
-                        else
-                        {
-                            new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
-                        }
-                    }
-                    foreach (NavigationNode.NavNodeSerializationInfo info in nodes)
-                    {
-                        NavigationNode node = NavigationNode.Create(info, is_first ? $"AUTO_Room_{r.Name}".Replace(' ', '_') :  $"MANUAL_Room_{r.Name}_{i}".Replace(' ', '_'), rname);
-                        is_first = false;
-                        foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => nd != node && Vector3.Distance(nd.Position, node.Position) < Plugin.Instance.Config.NavNodeMapperMaxDistance))
-                        {
-                            node.LinkedNodes.Add(d);
-                            d.LinkedNodes.Add(node);
-
-                            Log.Debug($"Linked {node.Name} and {d.Name}", Plugin.Instance.Config.VerboseOutput);
-                        }
-                        i++;
-                    }
-                }
+                Log.Error($"Caught an exception while generating navigation graph: {e}/{e.StackTrace}");
             }
         }
     }

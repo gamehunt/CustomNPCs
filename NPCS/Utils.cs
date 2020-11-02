@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Exiled.API.Extensions;
+using System.Collections.Generic;
 using UnityEngine;
 using YamlDotNet.Serialization;
 
@@ -63,7 +64,6 @@ namespace NPCS.Utils
         public Dictionary<string, string> Args { get; set; }
     }
 
-
     public class NpcSerializationInfo
     {
         public string Name { get; set; }
@@ -73,6 +73,8 @@ namespace NPCS.Utils
 
         [YamlMember(Alias = "item_held")]
         public ItemType ItemHeld { get; set; }
+
+        public ItemType[] Inventory { get; set; }
 
         [YamlMember(Alias = "root_node")]
         public string RootNode { get; set; }
@@ -117,6 +119,21 @@ namespace NPCS.Utils
 
                 default:
                     return false;
+            }
+        }
+
+        public static bool CheckItemType(string type, ItemType item)
+        {
+            switch (type)
+            {
+                case "keycard":
+                    return item.IsKeycard();
+
+                case "weapon":
+                    return item.IsWeapon();
+
+                default:
+                    return item.ToString("g").Equals(type);
             }
         }
     }

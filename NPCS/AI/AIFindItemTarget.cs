@@ -1,7 +1,6 @@
-﻿using Exiled.API.Extensions;
-using MEC;
+﻿using NPCS.Navigation;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace NPCS.AI
 {
@@ -9,48 +8,48 @@ namespace NPCS.AI
     {
         public override string Name => "AIFindItemTarget";
 
-        public override string[] RequiredArguments => new string[] { "range", "type" };
+        public override string[] RequiredArguments => new string[] { "type", "smart" };
 
         public override bool Check(Npc npc)
         {
-            return npc.CurrentAIItemTarget == null && npc.FreeSlots > 0;
+            return npc.CurrentAIItemNodeTarget == null && npc.CurrentAIItemGroupTarget == null && (npc.FreeSlots > 0 || smart);
         }
 
-        private bool CheckType(string type, ItemType item)
-        {
-            switch (type)
-            {
-                case "keycard":
-                    return item.IsKeycard();
-
-                case "weapon":
-                    return item.IsWeapon();
-
-                default:
-                    return true;
-            }
-        }
-
-        private float range;
+        private Queue<NavigationNode> possible_nodes;
+        private bool smart;
 
         public override float Process(Npc npc)
         {
-            IsFinished = true;
-
             string type = Arguments["type"];
-            Pickup pickup = UnityEngine.Object.FindObjectsOfType<Pickup>().Where(p => !p.Locked && !p.InUse && CheckType(type, p.itemId) && Vector3.Distance(npc.NPCPlayer.Position, p.position) < range).FirstOrDefault();
-            if (pickup != null)
+            if (possible_nodes == null || possible_nodes.Count == 0)
             {
-                npc.Stop();
-                npc.CurrentAIItemTarget = pickup;
-                npc.MovementCoroutines.Add(Timing.CallDelayed(npc.GoTo(pickup.position), () =>
+                possible_nodes = new Queue<NavigationNode>(NavigationNode.AllNodes.Values.Where(n => n.PossibleItemTypes.Contains(type)));
+                if (smart)
                 {
-                    if (npc.CurrentAIItemTarget != null)
+                    if (type == "keycard")
                     {
-                        npc.TakeItem(npc.CurrentAIItemTarget);
-                        npc.CurrentAIItemTarget = null;
+                        int count = possible_nodes.Count;
+                        for (int i = 0; i < count; i++)
+                        {
+                            NavigationNode node = possible_nodes.Dequeue();
+                            if (npc.AvailableKeycards.Length == 0 || (npc.AvailableKeycards.Max() != ItemType.KeycardO5 && node.PossibleItemTypes.Contains((npc.AvailableKeycards.Max() + 1).ToString("g"))))
+                            {
+                                possible_nodes.Enqueue(node);
+                            }
+                        }
                     }
-                }));
+                }
+            }
+            while (possible_nodes.Count > 0)
+            {
+                NavigationNode node = possible_nodes.Dequeue();
+                if (npc.GotoNode(node))
+                {
+                    Exiled.API.Features.Log.Info($"Selected item node: {node.Name}");
+                    npc.CurrentAIItemNodeTarget = node;
+                    npc.CurrentAIItemGroupTarget = type;
+                    break;
+                }
             }
             return 0f;
         }
@@ -62,7 +61,7 @@ namespace NPCS.AI
 
         public override void Construct()
         {
-            range = float.Parse(Arguments["range"].Replace(".", ","));
+            smart = bool.Parse(Arguments["smart"]);
         }
     }
 }

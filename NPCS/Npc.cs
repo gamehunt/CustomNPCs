@@ -164,9 +164,12 @@ namespace NPCS
             set
             {
                 NPCPlayer.Inventory.curItem = value;
-                if (!AvailableItems.Contains(value))
+                if (value != ItemType.None)
                 {
-                    TakeItem(value);
+                    if (!AvailableItems.Contains(value))
+                    {
+                        TakeItem(value);
+                    }
                 }
             }
         }
@@ -191,7 +194,26 @@ namespace NPCS
 
         public bool DisableFollowAutoTeleport { get; set; } = false;
 
-        public float MovementSpeed { get; set; } = 4f;
+        private float __customSpeed = 0f;
+
+        public float MovementSpeed
+        {
+            get
+            {
+                if (__customSpeed > 0)
+                {
+                    return __customSpeed;
+                }
+                else
+                {
+                    return IsRunning ? CharacterClassManager._staticClasses[(int)NPCPlayer.Role].runSpeed : CharacterClassManager._staticClasses[(int)NPCPlayer.Role].walkSpeed;
+                }
+            }
+            set
+            {
+                __customSpeed = value;
+            }
+        }
 
         public bool DisableRun { get; set; } = false;
         public bool IsRunning { get; set; } = false;
@@ -204,15 +226,18 @@ namespace NPCS
 
         public bool AIEnabled { get; set; } = false;
 
+        //AI STATES -------------------------------
         public LinkedList<AITarget> AIQueue { get; private set; } = new LinkedList<AITarget>();
 
         public AITarget CurrentAITarget { get; set; } = null;
-
         public Player CurrentAIPlayerTarget { get; set; } = null;
-
-        public Pickup CurrentAIItemTarget { get; set; } = null;
         public Room CurrentAIRoomTarget { get; set; } = null;
+        public string CurrentAIItemGroupTarget { get; set; } = null;
+        public NavigationNode CurrentAIItemNodeTarget { get; set; } = null;
+        public int SkippedTargets { get; set; } = 0;
+        //------------------------------------------
 
+        //Inventory --------------------------------
         public ItemType[] AvailableItems { get; set; } = new ItemType[8] { ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None };
 
         public int FreeSlots
@@ -238,6 +263,8 @@ namespace NPCS
                 return AvailableItems.Where(it => it.IsKeycard()).ToArray();
             }
         }
+
+        //------------------------------------------
 
         #endregion Properties
 
@@ -267,6 +294,12 @@ namespace NPCS
                             try
                             {
                                 delay = CurrentAITarget.Process(this);
+                                for (; SkippedTargets >= 0; SkippedTargets--)
+                                {
+                                    AITarget target = AIQueue.First.Value;
+                                    AIQueue.RemoveFirst();
+                                    AIQueue.AddLast(target);
+                                }
                             }
                             catch (Exception e)
                             {
@@ -350,6 +383,7 @@ namespace NPCS
                                 FollowTargetPosCache.Clear();
                                 eta = 0;
                                 Stop();
+                                continue;
                             }
                         }
 
@@ -380,6 +414,7 @@ namespace NPCS
                         eta = 0;
                         FireEvent(new NPCFollowTargetDiedEvent(this, FollowTarget));
                         Stop();
+                        continue;
                     }
 
                     //If we reached predicted target
@@ -406,6 +441,7 @@ namespace NPCS
 
                     if (CurrentNavTarget != null)
                     {
+                        IsRunning = !DisableRun;
                         //There is current
                         float distance = Vector3.Distance(CurrentNavTarget.Position, NPCPlayer.Position);
 
@@ -440,6 +476,10 @@ namespace NPCS
                                     //All is good
                                     Timing.KillCoroutines(MovementCoroutines);
                                     Move(MovementDirection.NONE);
+                                    while (CurrentNavTarget.AttachedDoor.locked)
+                                    {
+                                        yield return 0f;
+                                    }
                                     yield return Timing.WaitForSeconds(0.2f);
                                     CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
                                     yield return Timing.WaitForSeconds(0.1f);
@@ -450,6 +490,7 @@ namespace NPCS
                                 {
                                     //Stop otherwise
                                     Stop();
+                                    continue;
                                 }
                             }
                         }
@@ -466,7 +507,7 @@ namespace NPCS
                                     lift_node = NextNavTarget;
                                 }
                             }
-                            //If there is an elevator, try to call it
+                            //If there is an elevator, try to use it
                             if (CurrentNavTarget.AttachedElevator == null && lift_node != null)
                             {
                                 bool val = lift_node.AttachedElevator.Value.Value.IsClosed(lift_node.AttachedElevator.Value.Key);
@@ -492,6 +533,23 @@ namespace NPCS
                             //Target reached - force position to it so we wont stuck
                             Vector3 forced = new Vector3(CurrentNavTarget.Position.x, NPCPlayer.Position.y, CurrentNavTarget.Position.z);
                             NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(forced, 0f, true);
+
+                            //If we have AI item target reached, try to find and take item
+                            if (CurrentAIItemNodeTarget != null && CurrentAIItemNodeTarget == CurrentNavTarget)
+                            {
+                                CurrentAIItemNodeTarget = null;
+                                IEnumerable<Pickup> pickups = FindObjectsOfType<Pickup>().Where(pk => Vector3.Distance(pk.Networkposition, NPCPlayer.Position) <= 5f);
+                                foreach (Pickup p in pickups)
+                                {
+                                    if (Utils.Utils.CheckItemType(CurrentAIItemGroupTarget, p.ItemId))
+                                    {
+                                        yield return Timing.WaitForSeconds(GoTo(p.position));
+                                        TakeItem(p);
+                                        break;
+                                    }
+                                }
+                                CurrentAIItemGroupTarget = null;
+                            }
                             CurrentNavTarget = null;
                         }
                     }
@@ -555,7 +613,7 @@ namespace NPCS
         {
             for (; ; )
             {
-                float speed = (IsRunning && !DisableRun ? CharacterClassManager._staticClasses[(int)NPCPlayer.Role].runSpeed : MovementSpeed);
+                float speed = MovementSpeed;
                 switch (CurMovementDirection)
                 {
                     case MovementDirection.FORWARD:
@@ -615,7 +673,8 @@ namespace NPCS
             ClearNavTargets();
             FollowTarget = null;
             CurrentAIRoomTarget = null;
-            CurrentAIItemTarget = null;
+            CurrentAIItemNodeTarget = null;
+            CurrentAIItemGroupTarget = null;
             Timing.KillCoroutines(MovementCoroutines);
             Move(MovementDirection.NONE);
         }
@@ -803,11 +862,6 @@ namespace NPCS
                 visited_nodes.Add(current, int.MinValue);
                 return;
             }
-            if (!NPCPlayer.IsBypassModeEnabled && current.AttachedDoor != null && !current.AttachedDoor.CanBeOpenedWith(ItemHeld) && AvailableKeycards.Where(ItemHeld => current.AttachedDoor.CanBeOpenedWith(ItemHeld)).FirstOrDefault() != ItemType.None)
-            {
-                visited_nodes.Add(current, int.MinValue);
-                return;
-            }
             visited_nodes.Add(current, prev_value + 1);
             if (current == target)
             {
@@ -904,8 +958,8 @@ namespace NPCS
 
         public bool DisableDialogSystem { get; set; } = false;
 
-        public HashSet<RoleType> VisibleFor { get; set; } = new HashSet<RoleType>();
-
+        public HashSet<RoleType> VisibleForRoles { get; set; } = new HashSet<RoleType>();
+        public HashSet<Player> VisibleForPlayers { get; set; } = new HashSet<Player>();
         public bool ShouldTrigger096 { get; set; } = false;
 
         public bool DontCleanup { get; set; } = false;
@@ -916,20 +970,52 @@ namespace NPCS
 
         public void TakeItem(Pickup item)
         {
-            if (FreeSlots > 0)
+            if (FreeSlots > 0) // If there are free slots...
             {
+                //Take it
                 int free_slot = AvailableItems.Where(it => it == ItemType.None).Select((it, index) => index).FirstOrDefault();
                 AvailableItems[free_slot] = item.itemId;
                 item.Delete();
+            }
+            else //Otherwise we are probably went there from smart target...
+            {
+                //Try drop old item and take new one
+                if (CurrentAIItemGroupTarget == "keycard" && AvailableKeycards.Length != 0)
+                {
+                    DropItem(AvailableKeycards[0], true);
+                    TakeItem(item);
+                }
+                else if (CurrentAIItemGroupTarget == "weapon" && AvailableWeapons.Length != 0)
+                {
+                    DropItem(AvailableWeapons[0], true);
+                    TakeItem(item);
+                }
             }
         }
 
         public void TakeItem(ItemType item)
         {
+            if (item == ItemType.None)
+            {
+                return;
+            }
             if (FreeSlots > 0)
             {
                 int free_slot = AvailableItems.Where(it => it == ItemType.None).Select((it, index) => index).FirstOrDefault();
                 AvailableItems[free_slot] = item;
+            }
+        }
+
+        public void DropItem(ItemType type, bool spawn_drop)
+        {
+            if (AvailableItems.Contains(type))
+            {
+                int slot = AvailableItems.Where(it => it == type).Select((it, index) => index).FirstOrDefault();
+                AvailableItems[slot] = ItemType.None;
+                if (spawn_drop)
+                {
+                    type.Spawn(1f, NPCPlayer.Position + new Vector3(0, 0.5f, 0));
+                }
             }
         }
 
@@ -984,6 +1070,30 @@ namespace NPCS
 
             Player.IdsCache.Remove(NPCPlayer.Id);
             Player.Dictionary.Remove(NPCPlayer.GameObject);
+        }
+
+        public static Npc Get(Player p)
+        {
+            if (Dictionary.TryGetValue(p.GameObject, out Npc npc))
+            {
+                return npc;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static Npc Get(GameObject p)
+        {
+            if (Dictionary.TryGetValue(p, out Npc npc))
+            {
+                return npc;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private void Awake()

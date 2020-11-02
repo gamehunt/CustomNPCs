@@ -1,13 +1,8 @@
 ﻿using Exiled.API.Features;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NPCS.AI.TargetFilters
 {
-    class Scp096TargetFilter : TargetFilter
+    internal class Scp096TargetFilter : TargetFilter
     {
         public override string Name => "scp096";
 

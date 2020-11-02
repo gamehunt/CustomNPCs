@@ -14,6 +14,7 @@ namespace NPCS.Harmony
     internal class GhostModeFixPatch
     {
         private static readonly Vector3 GhostPos = Vector3.up * 6000f;
+
         private static bool Prefix(PlayerPositionManager __instance)
         {
             try
@@ -43,7 +44,6 @@ namespace NPCS.Harmony
 
                 foreach (GameObject gameObject in players)
                 {
-
                     if (Npc.Dictionary.ContainsKey(gameObject))
                     {
                         continue;
@@ -58,15 +58,14 @@ namespace NPCS.Harmony
                         {
                             if (__instance._transmitBuffer[index].position.y < 800f)
                             {
-
                                 ReferenceHub hub2 = ReferenceHub.GetHub(__instance._transmitBuffer[index].playerID);
-                                Npc npc = (Npc.Dictionary.ContainsKey(hub2.gameObject)) ? Npc.Dictionary[hub2.gameObject] : null;
+                                Npc npc = Npc.Get(hub2.gameObject);
 
                                 if ((hub2.characterClassManager.CurRole.team != Team.SCP
                                     && hub2.characterClassManager.CurRole.team != Team.RIP
                                     && !hub2
                                         .GetComponent<Scp939_VisionController>()
-                                        .CanSee(player.ReferenceHub.characterClassManager.Scp939)) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
+                                        .CanSee(player.ReferenceHub.characterClassManager.Scp939)) || (npc != null && npc.VisibleForRoles.Count != 0 && !npc.VisibleForRoles.Contains(player.Role)))
                                 {
                                     MakeGhost(index, __instance._transmitBuffer);
                                 }
@@ -161,9 +160,9 @@ namespace NPCS.Harmony
                         if (target?.ReferenceHub == null)
                             continue;
 
-                        Npc npc = (Npc.Dictionary.ContainsKey(target.GameObject)) ? Npc.Dictionary[target.GameObject] : null;
+                        Npc npc = Npc.Get(target);
 
-                        if (target.IsInvisible || PlayerCannotSee(player, target.Id) || (npc != null && npc.VisibleFor.Count != 0 && !npc.VisibleFor.Contains(player.Role)))
+                        if (target.IsInvisible || PlayerCannotSee(player, target.Id) || (npc != null && npc.VisibleForRoles.Count != 0 && !npc.VisibleForRoles.Contains(player.Role)) || (npc != null && npc.VisibleForPlayers.Count != 0 && !npc.VisibleForPlayers.Contains(player)))
                         {
                             MakeGhost(z, __instance._transmitBuffer);
                         }

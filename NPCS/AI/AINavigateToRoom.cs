@@ -46,6 +46,7 @@ namespace NPCS.AI
             }
             else if (room != null)
             {
+                npc.Stop();
                 if (npc.GotoRoom(room))
                 {
                     npc.CurrentAIRoomTarget = room;

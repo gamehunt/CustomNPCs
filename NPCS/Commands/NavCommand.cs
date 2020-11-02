@@ -49,26 +49,21 @@ namespace NPCS.Commands
                 switch (arguments.At(0))
                 {
                     case "create":
-                        string name = "";
-                        if (arguments.Count <= 1)
-                        {
-                            name = (++new_node_id).ToString();
-                        }
-                        else
-                        {
-                            name = arguments.At(1);
-                        }
+                        string name = (++new_node_id).ToString();
                         if (!s.IsAlive)
                         {
                             response = "You must be alive to use this!";
                             return false;
                         }
-                        if (NavigationNode.Get(name) != null)
-                        {
-                            response = "Node with this name already exists!";
-                            return false;
-                        }
                         created_node = NavigationNode.Create(s.Position, name, s.CurrentRoom.Name.RemoveBracketsOnEndOfName());
+                        if (arguments.Count > 1)
+                        {
+                            string[] AvailableItemTypes = arguments.At(1).Split(',');
+                            foreach (string type in AvailableItemTypes)
+                            {
+                                created_node.PossibleItemTypes.Add(type.Trim());
+                            }
+                        }
                         pickup = ItemType.SCP018.Spawn(1f, created_node.Position + new UnityEngine.Vector3(0, 0.5f, 0));
                         pickup.Locked = true;
                         foreach (NavigationNode d in NavigationNode.AllNodes.Values.Where(nd => nd != created_node && Vector3.Distance(nd.Position, created_node.Position) < Plugin.Instance.Config.NavNodeMapperMaxDistance))
@@ -85,7 +80,7 @@ namespace NPCS.Commands
                         int id = 0;
                         foreach (NavigationNode node in NavigationNode.AllNodes.Values)
                         {
-                            s.RemoteAdminMessage($"{id} - {node.Name} - {node.Priority}");
+                            s.RemoteAdminMessage($"{id} - {node.Name}");
                         }
                         response = "List end";
                         break;
@@ -126,6 +121,7 @@ namespace NPCS.Commands
                         IEnumerable<NavigationNode> to_serialize = NavigationNode.AllNodes.Values.Where(n => n.SInfo != null);
                         foreach (NavigationNode node in to_serialize)
                         {
+                            node.SInfo.ItemTypes = new List<string>(node.PossibleItemTypes);
                             if (!manual_mappings.ContainsKey(node.Room.RemoveBracketsOnEndOfName()))
                             {
                                 List<NavigationNode.NavNodeSerializationInfo> nodes = new List<NavigationNode.NavNodeSerializationInfo>
@@ -155,6 +151,56 @@ namespace NPCS.Commands
                             pickup.Locked = true;
                         }
                         response = "Marked nodes!";
+                        break;
+
+                    case "items":
+                        if (arguments.Count <= 2)
+                        {
+                            response = "You need to provide node name and at least one item group!";
+                            return false;
+                        }
+                        try
+                        {
+                            NavigationNode rnode = NavigationNode.AllNodes[arguments.At(1)];
+                            for (int i = 2; i < arguments.Count; i++)
+                            {
+                                if (rnode.PossibleItemTypes.Add(arguments.At(i)))
+                                {
+                                    s.RemoteAdminMessage($"Added type: {arguments.At(i)}");
+                                }
+                            }
+                            response = "";
+                        }
+                        catch (KeyNotFoundException)
+                        {
+                            response = "Node not found!";
+                            return false;
+                        }
+                        break;
+
+                    case "r_items":
+                        if (arguments.Count <= 2)
+                        {
+                            response = "You need to provide node name and at least one item group!";
+                            return false;
+                        }
+                        try
+                        {
+                            NavigationNode rnode = NavigationNode.AllNodes[arguments.At(1)];
+                            for (int i = 2; i < arguments.Count; i++)
+                            {
+                                if (rnode.PossibleItemTypes.Remove(arguments.At(i)))
+                                {
+                                    s.RemoteAdminMessage($"Removed type: {arguments.At(i)}");
+                                }
+                            }
+                            response = "";
+                        }
+                        catch (KeyNotFoundException)
+                        {
+                            response = "Node not found!";
+                            return false;
+                        }
                         break;
 
                     case "info":

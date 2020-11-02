@@ -64,7 +64,7 @@ namespace NPCS
         {
             if (ev.Target.IsNPC())
             {
-                Npc cmp = Npc.Dictionary[ev.Target.GameObject];
+                Npc cmp = Npc.Get(ev.Target);
                 NPCDiedEvent npc_ev = new NPCDiedEvent(cmp, ev.Killer);
                 cmp.FireEvent(npc_ev);
                 cmp.Kill(ev.HitInformation.GetDamageType() != DamageTypes.RagdollLess);
@@ -76,7 +76,7 @@ namespace NPCS
         {
             if (ev.Target.IsNPC())
             {
-                Npc npc = Npc.Dictionary[ev.Target.GameObject];
+                Npc npc = Npc.Get(ev.Target);
                 npc.FireEvent(new NPCHurtEvent(npc, ev.Attacker));
             }
         }
@@ -87,7 +87,7 @@ namespace NPCS
             {
                 if (p.IsNPC())
                 {
-                    Npc component = Npc.Dictionary[p.GameObject];
+                    Npc component = Npc.Get(p);
                     if (!component.NPCPlayer.IsGodModeEnabled)
                     {
                         p.Health -= ev.TargetToDamages[p];
@@ -107,7 +107,7 @@ namespace NPCS
         {
             if (ev.Player.IsNPC())
             {
-                Npc npc = Npc.Dictionary[ev.Player.GameObject];
+                Npc npc = Npc.Get(ev.Player);
                 if (npc.NPCPlayer.IsGodModeEnabled)
                 {
                     ev.IsAllowed = false;

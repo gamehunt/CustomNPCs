@@ -70,7 +70,7 @@ namespace NPCS.AI
         {
             try
             {
-                return (AITarget)registry[token].CreateInstance();
+                return registry[token].CreateInstance();
             }
             catch (KeyNotFoundException)
             {

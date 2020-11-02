@@ -9,8 +9,6 @@ namespace NPCS.Navigation
 {
     public class NavigationNode : MonoBehaviour
     {
-        public int Priority { get; set; } = 100;
-
         public Vector3 Position
         {
             get
@@ -23,6 +21,7 @@ namespace NPCS.Navigation
         {
             public Utils.SerializableVector3 Relative { get; set; }
             public float RoomRotation { get; set; }
+            public List<string> ItemTypes { get; set; }
         }
 
         public string Room { get; set; }
@@ -36,6 +35,8 @@ namespace NPCS.Navigation
         public Door AttachedDoor { get; set; }
 
         public KeyValuePair<Lift.Elevator, Lift>? AttachedElevator { get; set; } = null;
+
+        public HashSet<string> PossibleItemTypes { get; } = new HashSet<string>();
 
         public static Dictionary<string, NavigationNode> AllNodes = new Dictionary<string, NavigationNode>();
 
@@ -55,7 +56,8 @@ namespace NPCS.Navigation
                 node.SInfo = new NavNodeSerializationInfo
                 {
                     Relative = new Utils.SerializableVector3(pos - r.Position),
-                    RoomRotation = r.Transform.localRotation.eulerAngles.y
+                    RoomRotation = r.Transform.localRotation.eulerAngles.y,
+                    ItemTypes = new List<string>(node.PossibleItemTypes)
                 };
             }
             go.transform.position = pos;
@@ -75,13 +77,20 @@ namespace NPCS.Navigation
             node.Name = name;
             node.Room = room;
             node.SInfo = info;
+            if (info.ItemTypes != null)
+            {
+                foreach (string s in info.ItemTypes)
+                {
+                    node.PossibleItemTypes.Add(s);
+                }
+            }
             Room r = Map.Rooms.Where(rm => rm.Name.RemoveBracketsOnEndOfName().Equals(room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (r != null)
             {
                 go.transform.position = r.Position + Quaternion.Euler(0, r.Transform.localRotation.eulerAngles.y - info.RoomRotation, 0) * info.Relative.ToVector3();
             }
             AllNodes.Add(node.Name, node);
-            Log.Debug($"Node created: {name} at {go.transform.position}", Plugin.Instance.Config.VerboseOutput);
+            Log.Debug($"Node created: {name} at {go.transform.position} [{info.ItemTypes}]", Plugin.Instance.Config.VerboseOutput);
             return node;
         }
 
