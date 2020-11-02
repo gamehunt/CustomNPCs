@@ -178,6 +178,8 @@ namespace NPCS
                 AITarget.Register(new AINavigateToRoom());
                 AITarget.Register(new AIFollowTarget());
                 AITarget.Register(new AIFindItemTarget());
+                AITarget.Register(new AIConditionalJump());
+                AITarget.Register(new AIRunAwayTarget());
 
                 TargetFilter.Register(new CommonTargetFilter());
                 TargetFilter.Register(new Scp939TargetFilter());
