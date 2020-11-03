@@ -1,12 +1,14 @@
-﻿namespace NPCS.AI
+﻿using System;
+
+namespace NPCS.AI
 {
     internal class AIFollowTarget : AITarget
     {
         public override string Name => "AIFollowTarget";
 
-        public override string[] RequiredArguments => new string[] { "allow_teleport" };
+        public override string[] RequiredArguments => new string[] { "target_lost_behaviour" };
 
-        private bool allow_tp = true;
+        private Npc.TargetLostBehaviour behav = Npc.TargetLostBehaviour.TELEPORT;
 
         public override bool Check(Npc npc)
         {
@@ -15,12 +17,12 @@
 
         public override void Construct()
         {
-            allow_tp = bool.Parse(Arguments["allow_teleport"]);
+            behav = (Npc.TargetLostBehaviour)Enum.Parse(typeof(Npc.TargetLostBehaviour),Arguments["target_lost_behaviour"]);
         }
 
         public override float Process(Npc npc)
         {
-            npc.DisableFollowAutoTeleport = !allow_tp;
+            npc.OnTargetLostBehaviour = behav;
             npc.Stop();
             npc.Follow(npc.CurrentAIPlayerTarget);
             IsFinished = true;

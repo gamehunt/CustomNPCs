@@ -129,6 +129,13 @@ namespace NPCS
             RIGHT
         };
 
+        public enum TargetLostBehaviour
+        {
+            STOP,
+            TELEPORT,
+            SEARCH,
+        }
+
         public static IEnumerable<Npc> List
         {
             get
@@ -192,7 +199,7 @@ namespace NPCS
 
         public Player FollowTarget { get; set; } = null;
 
-        public bool DisableFollowAutoTeleport { get; set; } = false;
+        public TargetLostBehaviour OnTargetLostBehaviour { get; set; } = TargetLostBehaviour.TELEPORT;
 
         private float __customSpeed = 0f;
 
@@ -294,8 +301,9 @@ namespace NPCS
                             try
                             {
                                 delay = CurrentAITarget.Process(this);
-                                for (; SkippedTargets >= 0; SkippedTargets--)
+                                for (; SkippedTargets > 0; SkippedTargets--)
                                 {
+                                    Log.Info($"{SkippedTargets}");
                                     AITarget target = AIQueue.First.Value;
                                     AIQueue.RemoveFirst();
                                     AIQueue.AddLast(target);
@@ -311,11 +319,13 @@ namespace NPCS
 
                             if (CurrentAITarget.IsFinished || failure)
                             {
+                                CurrentAITarget.IsFinished = false;
                                 CurrentAITarget = null;
                             }
                         }
                         else
                         {
+                            CurrentAITarget.IsFinished = false;
                             CurrentAITarget = null;
                             yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                         }
@@ -358,16 +368,10 @@ namespace NPCS
                     {
                         float dist = Vector3.Distance(FollowTarget.Position, NPCPlayer.Position);
 
-                        //If run is disabled dont update it
-                        if (!DisableRun)
-                        {
-                            IsRunning = dist >= Plugin.Instance.Config.MaxFollowDistance / 3;
-                        }
-
                         //If we are far away...
                         if (dist >= Plugin.Instance.Config.MaxFollowDistance)
                         {
-                            if (!DisableFollowAutoTeleport)
+                            if (OnTargetLostBehaviour == TargetLostBehaviour.TELEPORT)
                             {
                                 //... Teleport to player if allowed
                                 NPCPlayer.Position = FollowTarget.Position;
@@ -376,13 +380,21 @@ namespace NPCS
                             }
                             else
                             {
-                                //Otherwise just lost the target and reset nav
+                                //Stop or try to search otherwise
 
                                 FireEvent(new NPCTargetLostEvent(this, FollowTarget));
 
                                 FollowTargetPosCache.Clear();
                                 eta = 0;
                                 Stop();
+                                if (OnTargetLostBehaviour == TargetLostBehaviour.SEARCH)
+                                {
+                                    Room r = FollowTarget.CurrentRoom;
+                                    if (r != null)
+                                    {
+                                        GotoRoom(r);
+                                    }
+                                }
                                 continue;
                             }
                         }
@@ -973,7 +985,7 @@ namespace NPCS
             if (FreeSlots > 0) // If there are free slots...
             {
                 //Take it
-                int free_slot = AvailableItems.Where(it => it == ItemType.None).Select((it, index) => index).FirstOrDefault();
+                int free_slot = AvailableItems.IndexOf(ItemType.None);
                 AvailableItems[free_slot] = item.itemId;
                 item.Delete();
             }
@@ -1001,7 +1013,7 @@ namespace NPCS
             }
             if (FreeSlots > 0)
             {
-                int free_slot = AvailableItems.Where(it => it == ItemType.None).Select((it, index) => index).FirstOrDefault();
+                int free_slot = AvailableItems.IndexOf(ItemType.None);
                 AvailableItems[free_slot] = item;
             }
         }
@@ -1010,7 +1022,7 @@ namespace NPCS
         {
             if (AvailableItems.Contains(type))
             {
-                int slot = AvailableItems.Where(it => it == type).Select((it, index) => index).FirstOrDefault();
+                int slot = AvailableItems.IndexOf(type);
                 AvailableItems[slot] = ItemType.None;
                 if (spawn_drop)
                 {

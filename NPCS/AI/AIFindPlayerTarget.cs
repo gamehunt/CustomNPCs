@@ -28,7 +28,7 @@ namespace NPCS.AI
         {
             IsFinished = true;
 
-            foreach (Player p in Player.List.Where(pl => (pl != npc.NPCPlayer || allow_self_select) && (allowed_roles.Count == 0 || allowed_roles.Contains(pl.Role)) && (disallowed_roles.Count == 0 || !disallowed_roles.Contains(pl.Role))))
+            foreach (Player p in Player.List.Where(pl => pl.IsAlive && (pl != npc.NPCPlayer || allow_self_select) && (allowed_roles.Count == 0 || allowed_roles.Contains(pl.Role)) && (disallowed_roles.Count == 0 || !disallowed_roles.Contains(pl.Role))))
             {
                 if (Vector3.Distance(p.Position, npc.NPCPlayer.Position) < range)
                 {

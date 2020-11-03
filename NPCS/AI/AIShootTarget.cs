@@ -66,12 +66,16 @@ namespace NPCS.AI
                         npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
                     }
                 }
+                else
+                {
+                    IsFinished = true;
+                }
                 return firerate * Plugin.Instance.Config.NpcFireCooldownMultiplier * npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
             }
             else
             {
                 float cd = 0f;
-                npc.DisableFollowAutoTeleport = true;
+                npc.OnTargetLostBehaviour = Npc.TargetLostBehaviour.STOP;
                 npc.Follow(npc.CurrentAIPlayerTarget);
                 if (Vector3.Distance(npc.CurrentAIPlayerTarget.Position, npc.NPCPlayer.Position) <= 1.5f)
                 {
@@ -107,8 +111,8 @@ namespace NPCS.AI
                     if (!npc.CurrentAIPlayerTarget.IsAlive)
                     {
                         npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
+                        npc.Stop();
                     }
-                    npc.Stop();
                 }
                 return cd;
             }

@@ -17,10 +17,10 @@ namespace NPCS.AI
 
         private Queue<NavigationNode> possible_nodes;
         private bool smart;
+        private string type;
 
         public override float Process(Npc npc)
         {
-            string type = Arguments["type"];
             if (possible_nodes == null || possible_nodes.Count == 0)
             {
                 possible_nodes = new Queue<NavigationNode>(NavigationNode.AllNodes.Values.Where(n => n.PossibleItemTypes.Contains(type)));
@@ -62,6 +62,7 @@ namespace NPCS.AI
         public override void Construct()
         {
             smart = bool.Parse(Arguments["smart"]);
+            type = Arguments["type"].Trim();
         }
     }
 }

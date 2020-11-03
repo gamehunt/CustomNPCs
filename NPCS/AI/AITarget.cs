@@ -42,7 +42,7 @@ namespace NPCS.AI
             }
         }
 
-        public bool IsFinished { get; protected set; } = false;
+        public bool IsFinished { get; set; } = false;
 
         public bool Verified { get; protected set; } = false;
 

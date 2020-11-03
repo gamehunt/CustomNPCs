@@ -181,6 +181,8 @@ namespace NPCS
                 AITarget.Register(new AIConditionalJump());
                 AITarget.Register(new AIRunAwayTarget());
 
+                Log.Info("Registering targets filters...");
+
                 TargetFilter.Register(new CommonTargetFilter());
                 TargetFilter.Register(new Scp939TargetFilter());
                 TargetFilter.Register(new Scp096TargetFilter());
