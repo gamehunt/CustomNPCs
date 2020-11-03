@@ -457,14 +457,14 @@ namespace NPCS
                         //There is current
                         float distance = Vector3.Distance(CurrentNavTarget.Position, NPCPlayer.Position);
 
-                        if (distance < 3f)
+                        if (distance < 3f && (!ProcessSCPLogic || NPCPlayer.Role != RoleType.Scp106))
                         {
                             //Try to open the door if there is one, so we wont collide with it
                             if (CurrentNavTarget.AttachedDoor != null && !CurrentNavTarget.AttachedDoor.NetworkisOpen)
                             {
                                 ItemType prev = ItemHeld;
-                                bool open = NPCPlayer.IsBypassModeEnabled;
-                                if (!NPCPlayer.IsBypassModeEnabled)
+                                bool open = NPCPlayer.IsBypassModeEnabled || (CurrentNavTarget.AttachedDoor.CheckpointDoor && NPCPlayer.ReferenceHub.characterClassManager.IsAnyScp()) ;
+                                if (!open)
                                 {
                                     if (!CurrentNavTarget.AttachedDoor.CanBeOpenedWith(ItemHeld))
                                     {
