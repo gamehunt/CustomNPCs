@@ -22,7 +22,7 @@ namespace NPCS
         public override string Name { get; } = "CustomNPCs";
         public override string Prefix { get; } = "CNPCS";
         public override Version Version { get; } = new Version(1, 4, 13);
-        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 12);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 13);
 
         public override PluginPriority Priority => PluginPriority.Lower;
 
