@@ -97,12 +97,12 @@ namespace NPCS.Harmony
                                     {
                                         if (!(sqrMagnitude < 4225f))
                                         {
-                                            MakeGhost(ppd.playerID, __instance._transmitBuffer);
+                                            MakeGhost(index, __instance._transmitBuffer);
                                             continue;
                                         }
                                         if (!(currentTarget.ReferenceHub.scpsController.CurrentScp is Scp096 scp) || !scp.EnragedOrEnraging)
                                         {
-                                            MakeGhost(ppd.playerID, __instance._transmitBuffer);
+                                            MakeGhost(index, __instance._transmitBuffer);
                                             continue;
                                         }
                                     }
