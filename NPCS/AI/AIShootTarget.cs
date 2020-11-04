@@ -2,6 +2,7 @@
 using Exiled.API.Features;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace NPCS.AI
 {
@@ -18,7 +19,7 @@ namespace NPCS.AI
         }
 
         private int accuracy;
-        private readonly Dictionary<string, int> hitboxes = new Dictionary<string, int>();
+        private readonly Dictionary<HitBoxType, int> hitboxes = new Dictionary<HitBoxType, int>();
         private float firerate;
         private int damage;
 
@@ -28,7 +29,7 @@ namespace NPCS.AI
             foreach (string val in Arguments["hitboxes"].Split(','))
             {
                 string[] splitted = val.Trim().Split(':');
-                hitboxes.Add(splitted[0], int.Parse(splitted[1]));
+                hitboxes.Add((HitBoxType)Enum.Parse(typeof(HitBoxType),splitted[0]), int.Parse(splitted[1]));
             }
             firerate = float.Parse(Arguments["firerate"].Replace('.', ','));
             damage = int.Parse(Arguments["damage"]);
@@ -50,9 +51,9 @@ namespace NPCS.AI
                     npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
                     bool miss = Plugin.Random.Next(0, 100) > accuracy;
                     int hitbox_value = Plugin.Random.Next(0, 100);
-                    string hitbox = "BODY";
+                    HitBoxType hitbox = HitBoxType.NULL;
                     int min = int.MaxValue;
-                    foreach (string box in hitboxes.Keys)
+                    foreach (HitBoxType box in hitboxes.Keys)
                     {
                         if (hitbox_value < hitboxes[box] && hitboxes[box] <= min)
                         {
@@ -60,7 +61,7 @@ namespace NPCS.AI
                             hitbox = box;
                         }
                     }
-                    npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(miss ? npc.gameObject : npc.CurrentAIPlayerTarget.GameObject, damage > 0 ? "_:" + hitbox + ":" + damage.ToString() : hitbox, npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
+                    npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(miss ? npc.gameObject : npc.CurrentAIPlayerTarget.GameObject, hitbox, npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
                     if (!npc.CurrentAIPlayerTarget.IsAlive)
                     {
                         npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));

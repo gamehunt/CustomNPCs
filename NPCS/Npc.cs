@@ -415,7 +415,7 @@ namespace NPCS
                             //Otherwise just dont move
                             FollowTargetPosCache.Clear();
                             eta = 0;
-                            Timing.KillCoroutines(MovementCoroutines);
+                            Timing.KillCoroutines(MovementCoroutines.ToArray());
                             Move(MovementDirection.NONE);
                         }
                     }
@@ -486,7 +486,7 @@ namespace NPCS
                                 if (open)
                                 {
                                     //All is good
-                                    Timing.KillCoroutines(MovementCoroutines);
+                                    Timing.KillCoroutines(MovementCoroutines.ToArray());
                                     Move(MovementDirection.NONE);
                                     while (CurrentNavTarget.AttachedDoor.locked)
                                     {
@@ -527,7 +527,7 @@ namespace NPCS
                                 {
                                     lift_node.AttachedElevator.Value.Value.UseLift();
 
-                                    Timing.KillCoroutines(MovementCoroutines);
+                                    Timing.KillCoroutines(MovementCoroutines.ToArray());
                                     Move(MovementDirection.NONE);
 
                                     while (!lift_node.AttachedElevator.Value.Value.operative)
@@ -687,7 +687,7 @@ namespace NPCS
             CurrentAIRoomTarget = null;
             CurrentAIItemNodeTarget = null;
             CurrentAIItemGroupTarget = null;
-            Timing.KillCoroutines(MovementCoroutines);
+            Timing.KillCoroutines(MovementCoroutines.ToArray());
             Move(MovementDirection.NONE);
         }
 
@@ -842,7 +842,7 @@ namespace NPCS
         public float GoTo(Vector3 position)
         {
             IsActionLocked = true;
-            Timing.KillCoroutines(MovementCoroutines);
+            Timing.KillCoroutines(MovementCoroutines.ToArray());
             Vector3 heading = (position - NPCPlayer.Position);
             heading.y = 0;
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
@@ -1074,8 +1074,8 @@ namespace NPCS
         private void OnDestroy()
         {
             Dictionary.Remove(this.gameObject);
-            Timing.KillCoroutines(MovementCoroutines);
-            Timing.KillCoroutines(AttachedCoroutines);
+            Timing.KillCoroutines(MovementCoroutines.ToArray());
+            Timing.KillCoroutines(AttachedCoroutines.ToArray());
             var ev = new LeftEventArgs(NPCPlayer);
 
             Log.SendRaw($"NPC {ev.Player.Nickname} ({NPCPlayer.Id}) deconstructed", ConsoleColor.Green);

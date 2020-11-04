@@ -1,6 +1,7 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using System;
+using System.Linq;
 
 namespace TeslaGateControlCompatModule
 {
@@ -14,7 +15,7 @@ namespace TeslaGateControlCompatModule
 
         public NPCS.Plugin NPCPlugin { get; private set; }
 
-        public override PluginPriority Priority => PluginPriority.Last;
+        public override PluginPriority Priority => PluginPriority.First;
 
         public HarmonyLib.Harmony Harmony { get; private set; }
 
@@ -26,14 +27,14 @@ namespace TeslaGateControlCompatModule
             {
                 Instance = this;
 
-                NPCPlugin = (NPCS.Plugin)Exiled.Loader.Loader.Plugins.Find(p => p.Name == "CustomNPCs");
+                NPCPlugin = (NPCS.Plugin)Exiled.Loader.Loader.Plugins.Where(p => p.Name == "CustomNPCs").FirstOrDefault();
                 if (NPCPlugin == null)
                 {
                     Log.Error("Failed to load EndConditions compat module addon: CustomNPCs not found!");
                     return;
                 }
 
-                if (Exiled.Loader.Loader.Plugins.Find(p => p.Prefix == "ST106") == null)
+                if (Exiled.Loader.Loader.Plugins.Where(p => p.Prefix == "ST106").FirstOrDefault() == null)
                 {
                     Log.Error("Failed to load Stalky106 compat module addon: Stalky106 not found!");
                     return;

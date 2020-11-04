@@ -1,6 +1,7 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using System;
+using System.Linq;
 
 namespace ReversePlagueCompatModule
 {
@@ -14,7 +15,7 @@ namespace ReversePlagueCompatModule
 
         public NPCS.Plugin NPCPlugin { get; private set; }
 
-        public override PluginPriority Priority => PluginPriority.Last;
+        public override PluginPriority Priority => PluginPriority.First;
 
         public HarmonyLib.Harmony Harmony { get; private set; }
 
@@ -26,14 +27,14 @@ namespace ReversePlagueCompatModule
             {
                 Instance = this;
 
-                NPCPlugin = (NPCS.Plugin)Exiled.Loader.Loader.Plugins.Find(p => p.Name == "CustomNPCs");
+                NPCPlugin = (NPCS.Plugin)Exiled.Loader.Loader.Plugins.Where(p => p.Name == "CustomNPCs").FirstOrDefault();
                 if (NPCPlugin == null)
                 {
                     Log.Error("Failed to load EndConditions compat module addon: CustomNPCs not found!");
                     return;
                 }
 
-                if (Exiled.Loader.Loader.Plugins.Find(p => p.Name == "ReversePlague") == null)
+                if (Exiled.Loader.Loader.Plugins.Where(p => p.Name == "ReversePlague").FirstOrDefault() == null)
                 {
                     Log.Error("Failed to load ReversePlague compat module addon: ReversePlague not found!");
                     return;

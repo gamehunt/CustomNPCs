@@ -21,10 +21,10 @@ namespace NPCS
         public override string Author { get; } = "gamehunt";
         public override string Name { get; } = "CustomNPCs";
         public override string Prefix { get; } = "CNPCS";
-        public override Version Version { get; } = new Version(1, 4, 12);
-        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 9);
+        public override Version Version { get; } = new Version(1, 4, 13);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 12);
 
-        public override PluginPriority Priority => PluginPriority.Lower;
+        public override PluginPriority Priority => PluginPriority.Higher;
 
         public HarmonyLib.Harmony Harmony { get; private set; }
 
@@ -44,6 +44,7 @@ namespace NPCS
 
                 Random = new Random();
 
+                /*
                 foreach (MethodBase bas in Evs.Events.Instance.Harmony.GetPatchedMethods())
                 {
                     if (bas.Name.Equals("TransmitData"))
@@ -65,6 +66,7 @@ namespace NPCS
                 }
 
                 Evs.Events.Instance.ReloadDisabledPatches();
+                */
 
                 Harmony = new HarmonyLib.Harmony($"gamehunt.cnpcs.{reloads}");
                 reloads++;

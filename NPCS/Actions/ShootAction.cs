@@ -11,7 +11,7 @@ namespace NPCS.Actions
     {
         public override string Name => "ShootAction";
 
-        private IEnumerator<float> ShootCoroutine(Npc npc, Player p, string hitbox, int amount)
+        private IEnumerator<float> ShootCoroutine(Npc npc, Player p, HitBoxType hitbox, int amount)
         {
             for (int i = 0; i < amount; i++)
             {
@@ -78,7 +78,7 @@ namespace NPCS.Actions
             Vector3 heading = (player.Position - npc.NPCPlayer.Position);
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
             npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
-            npc.AttachedCoroutines.Add(Timing.RunCoroutine(ShootCoroutine(npc, player, args["hitbox"], int.Parse(args["amount"]))));
+            npc.AttachedCoroutines.Add(Timing.RunCoroutine(ShootCoroutine(npc, player, (HitBoxType)System.Enum.Parse(typeof(HitBoxType),args["hitbox"]), int.Parse(args["amount"]))));
         }
     }
 }
