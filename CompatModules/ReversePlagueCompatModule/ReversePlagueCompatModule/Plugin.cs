@@ -11,11 +11,11 @@ namespace ReversePlagueCompatModule
         public override string Name { get; } = "ReversePlagueCompatModule";
         public override string Prefix { get; } = "ReversePlagueCompatModule";
         public override Version Version { get; } = new Version(1, 0, 0);
-        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 6);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 12);
 
         public NPCS.Plugin NPCPlugin { get; private set; }
 
-        public override PluginPriority Priority => PluginPriority.First;
+        public override PluginPriority Priority => PluginPriority.Last;
 
         public HarmonyLib.Harmony Harmony { get; private set; }
 

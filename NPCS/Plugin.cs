@@ -24,7 +24,7 @@ namespace NPCS
         public override Version Version { get; } = new Version(1, 4, 13);
         public override Version RequiredExiledVersion { get; } = new Version(2, 1, 12);
 
-        public override PluginPriority Priority => PluginPriority.Higher;
+        public override PluginPriority Priority => PluginPriority.Lower;
 
         public HarmonyLib.Harmony Harmony { get; private set; }
 

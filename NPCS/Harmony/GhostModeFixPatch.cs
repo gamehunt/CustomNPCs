@@ -95,8 +95,16 @@ namespace NPCS.Harmony
                                 {
                                     if (sqrMagnitude >= 1764f)
                                     {
-                                        MakeGhost(index, __instance._transmitBuffer);
-                                        continue; // As the target is already ghosted
+                                        if (!(sqrMagnitude < 4225f))
+                                        {
+                                            MakeGhost(ppd.playerID, __instance._transmitBuffer);
+                                            continue;
+                                        }
+                                        if (!(currentTarget.ReferenceHub.scpsController.CurrentScp is Scp096 scp) || !scp.EnragedOrEnraging)
+                                        {
+                                            MakeGhost(ppd.playerID, __instance._transmitBuffer);
+                                            continue;
+                                        }
                                     }
                                 }
                                 else if (sqrMagnitude >= 7225f)
@@ -109,7 +117,7 @@ namespace NPCS.Harmony
                                 // Otherwise Scp268 won't be processed
 
                                 if (scp096 != null
-                                    && scp096.Enraged
+                                    && scp096.EnragedOrEnraging
                                     && !scp096.HasTarget(currentTarget.ReferenceHub)
                                     && currentTarget.Team != Team.SCP)
                                 {
@@ -120,13 +128,13 @@ namespace NPCS.Harmony
                                 }
                                 else if (currentTarget.ReferenceHub.playerEffectsController.GetEffect<Scp268>().Enabled)
                                 {
-                                    bool flag = false;
+                                    bool flag2 = false;
                                     if (scp096 != null)
-                                        flag = scp096.HasTarget(currentTarget.ReferenceHub);
+                                        flag2 = scp096.HasTarget(currentTarget.ReferenceHub);
 
                                     if (player.Role != RoleType.Scp079
                                         && player.Role != RoleType.Spectator
-                                        && !flag)
+                                        && !flag2)
                                     {
                                         MakeGhost(index, __instance._transmitBuffer);
                                     }
