@@ -78,6 +78,7 @@ name: DEFAULT
 role: Scientist
 health: -1
 scale: [1, 1, 1]
+inventory: [KeycardO5, GunLogicer]
 item_held: GunLogicer
 root_node: default_node.yml
 god_mode: true
