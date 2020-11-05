@@ -30,7 +30,7 @@ namespace TeslaGateControlCompatModule
                 NPCPlugin = (NPCS.Plugin)Exiled.Loader.Loader.Plugins.Where(p => p.Name == "CustomNPCs").FirstOrDefault();
                 if (NPCPlugin == null)
                 {
-                    Log.Error("Failed to load EndConditions compat module addon: CustomNPCs not found!");
+                    Log.Error("Failed to load Stalky106 compat module addon: CustomNPCs not found!");
                     return;
                 }
 
