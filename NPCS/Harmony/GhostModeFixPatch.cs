@@ -59,13 +59,12 @@ namespace NPCS.Harmony
                             if (__instance._transmitBuffer[index].position.y < 800f)
                             {
                                 ReferenceHub hub2 = ReferenceHub.GetHub(__instance._transmitBuffer[index].playerID);
-                                Npc npc = Npc.Get(hub2.gameObject);
 
-                                if ((hub2.characterClassManager.CurRole.team != Team.SCP
+                                if (hub2.characterClassManager.CurRole.team != Team.SCP
                                     && hub2.characterClassManager.CurRole.team != Team.RIP
                                     && !hub2
                                         .GetComponent<Scp939_VisionController>()
-                                        .CanSee(player.ReferenceHub.characterClassManager.Scp939)) || (npc != null && npc.VisibleForRoles.Count != 0 && !npc.VisibleForRoles.Contains(player.Role)))
+                                        .CanSee(player.ReferenceHub.characterClassManager.Scp939))
                                 {
                                     MakeGhost(index, __instance._transmitBuffer);
                                 }
