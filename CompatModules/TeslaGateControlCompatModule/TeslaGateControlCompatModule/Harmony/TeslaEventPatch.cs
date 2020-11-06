@@ -9,7 +9,12 @@ namespace TeslaGateControlCompatModule.Harmony
     {
         private static bool Prefix(TeslaGateControl.eventHandlers __instance, TriggeringTeslaEventArgs ev)
         {
-            return !ev.Player.IsNPC();
+            if(ev.Player.IsNPC())
+            {
+                ev.IsTriggerable = false;
+                return false;
+            }
+            return true;
         }
     }
 }

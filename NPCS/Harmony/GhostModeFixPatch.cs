@@ -163,7 +163,10 @@ namespace NPCS.Harmony
                         if (ppd.position == GhostPos)
                             continue;
 
-                        var target = Player.Get(ppd.playerID);
+                        if (!ReferenceHub.TryGetHub(ppd.playerID, out var targetHub))
+                            continue;
+
+                        var target = GetPlayerOrServer(targetHub.gameObject);
                         // If for some reason the player/their ref hub is null
                         if (target?.ReferenceHub == null)
                             continue;
@@ -227,5 +230,18 @@ namespace NPCS.Harmony
 
         private static void RotatePlayer(int index, PlayerPositionData[] buff, Vector3 rotation) => buff[index]
             = new PlayerPositionData(buff[index].position, Quaternion.LookRotation(rotation).eulerAngles.y, buff[index].playerID);
+
+        private static Player GetPlayerOrServer(GameObject gameObject)
+        {
+            if (gameObject == null)
+                return null;
+
+            var refHub = ReferenceHub.GetHub(gameObject);
+
+            // The only reason is that the server is also a player,
+            // and we've seen a lot of NullRef exceptions at the place
+            // where we call this method
+            return refHub.isLocalPlayer ? Server.Host : Player.Get(gameObject);
+        }
     }
 }
