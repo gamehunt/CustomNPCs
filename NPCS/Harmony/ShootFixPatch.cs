@@ -167,16 +167,25 @@ namespace NPCS.Harmony
                             return false;
                         }
 
-                        if (__instance._lastRotationReset >= 0f && Math.Abs(Quaternion.Angle(__instance._lastRotation, __instance.camera.rotation)) < 0.01f)
+                        Vector3 positionOffset = referenceHub.playerMovementSync.RealModelPosition - __instance._hub.playerMovementSync.RealModelPosition;
+
+                        if (Vector3.Angle(positionOffset, __instance.transform.forward) > 45 && Math.Abs(positionOffset.y) > 10f && positionOffset.sqrMagnitude < 0.25f)
                         {
-                            __instance._lastRotationReset = 2f;
-                            __instance._lastRotation = __instance.camera.rotation;
+                            __instance.GetComponent<CharacterClassManager>().TargetConsolePrint(__instance.connectionToClient, "Shot rejected - Code W.12 (too big angle)", "gray");
+                            return false;
+                        }
+
+                        Vector2 rotationOffset = __instance._lastRotation - __instance._hub.playerMovementSync.Rotations;
+                        if (rotationOffset.sqrMagnitude < 0.001f)
+                        {
+                            __instance._lastRotation = __instance._hub.playerMovementSync.Rotations;
+
                             __instance.GetComponent<CharacterClassManager>().TargetConsolePrint(__instance.connectionToClient, "Shot rejected - Code W.9 (no recoil)", "gray");
                             return false;
                         }
+
                     }
-                    __instance._lastRotationReset = 0.35f;
-                    __instance._lastRotation = __instance.camera.rotation;
+                    __instance._lastRotation = __instance._hub.playerMovementSync.Rotations;
                     float num2 = Vector3.Distance(__instance.camera.transform.position, target.transform.position);
                     float num3 = __instance.weapons[(int)__instance.curWeapon].damageOverDistance.Evaluate(num2);
                     switch (referenceHub.characterClassManager.CurClass)
