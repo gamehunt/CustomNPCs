@@ -8,6 +8,8 @@ namespace NPCS.Actions
     {
         public override string Name => "CassieAction";
 
+        public override bool IsExclusive => false;
+
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
             Cassie.Message(args["message"], bool.Parse(args["held"]), bool.Parse(args["noise"]));

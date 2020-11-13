@@ -1,8 +1,8 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 namespace NPCS.AI
 {
@@ -29,7 +29,7 @@ namespace NPCS.AI
             foreach (string val in Arguments["hitboxes"].Split(','))
             {
                 string[] splitted = val.Trim().Split(':');
-                hitboxes.Add((HitBoxType)Enum.Parse(typeof(HitBoxType),splitted[0]), int.Parse(splitted[1]));
+                hitboxes.Add((HitBoxType)Enum.Parse(typeof(HitBoxType), splitted[0]), int.Parse(splitted[1]));
             }
             firerate = float.Parse(Arguments["firerate"].Replace('.', ','));
             damage = int.Parse(Arguments["damage"]);
@@ -111,7 +111,11 @@ namespace NPCS.AI
                     }
                     if (!npc.CurrentAIPlayerTarget.IsAlive)
                     {
-                        npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
+                        npc.AttachedCoroutines.Add(MEC.Timing.CallDelayed(0.1f, () =>
+                         {
+                             npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
+                         }));
+
                         npc.Stop();
                     }
                 }

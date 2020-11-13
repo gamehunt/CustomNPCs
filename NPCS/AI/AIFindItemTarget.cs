@@ -45,7 +45,7 @@ namespace NPCS.AI
                 NavigationNode node = possible_nodes.Dequeue();
                 if (npc.GotoNode(node))
                 {
-                    Exiled.API.Features.Log.Info($"Selected item node: {node.Name}");
+                    Exiled.API.Features.Log.Debug($"Selected item node: {node.Name}",Plugin.Instance.Config.VerboseOutput);
                     npc.CurrentAIItemNodeTarget = node;
                     npc.CurrentAIItemGroupTarget = type;
                     break;

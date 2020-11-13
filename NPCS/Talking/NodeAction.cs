@@ -7,6 +7,8 @@ namespace NPCS.Talking
     {
         public abstract string Name { get; }
 
+        public virtual bool IsExclusive { get; } = false;
+
         public abstract void Process(NPCS.Npc npc, Player player, Dictionary<string, string> args);
 
         private static readonly Dictionary<string, NodeAction> registry = new Dictionary<string, NodeAction>();

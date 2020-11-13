@@ -978,6 +978,8 @@ namespace NPCS
 
         public bool AffectRoundSummary { get; set; } = false;
 
+        public bool IsValid { get; set; } = true;
+
         #endregion API
 
         public void TakeItem(Pickup item)
@@ -1050,18 +1052,28 @@ namespace NPCS
 
         public void Kill(bool spawn_ragdoll)
         {
-            Log.Debug($"kill() called in NPC {Name}", Plugin.Instance.Config.VerboseOutput);
-            if (spawn_ragdoll)
+            if (IsValid)
             {
-                gameObject.GetComponent<RagdollManager>().SpawnRagdoll(gameObject.transform.position, gameObject.transform.rotation, Vector3.zero, (int)NPCPlayer.Role, new PlayerStats.HitInfo(), false, "", Name, 9999);
+                IsValid = false;
+                Log.Debug($"kill() called in NPC {Name}", Plugin.Instance.Config.VerboseOutput);
+                if (spawn_ragdoll)
+                {
+                    gameObject.GetComponent<RagdollManager>().SpawnRagdoll(gameObject.transform.position, gameObject.transform.rotation, Vector3.zero, (int)NPCPlayer.Role, new PlayerStats.HitInfo(), false, "", Name, 9999);
+                }
+                UnityEngine.Object.Destroy(NPCPlayer.GameObject);
             }
-            UnityEngine.Object.Destroy(NPCPlayer.GameObject);
         }
 
         public void FireEvent(NPCEvent ev)
         {
+            if (!IsValid)
+            {
+                Log.Debug($"Skipping event {ev.Name} on invalidated NPC", Plugin.Instance.Config.VerboseOutput);
+                return;
+            }
             try
             {
+                Log.Debug($"Fired event {ev.Name}", Plugin.Instance.Config.VerboseOutput);
                 ev.FireActions(Events[ev.Name]);
                 ev.OnFired(this);
             }
@@ -1076,9 +1088,8 @@ namespace NPCS
             Dictionary.Remove(this.gameObject);
             Timing.KillCoroutines(MovementCoroutines.ToArray());
             Timing.KillCoroutines(AttachedCoroutines.ToArray());
-            var ev = new LeftEventArgs(NPCPlayer);
 
-            Log.SendRaw($"NPC {ev.Player.Nickname} ({NPCPlayer.Id}) deconstructed", ConsoleColor.Green);
+            Log.SendRaw($"NPC {NPCPlayer.Nickname} ({NPCPlayer.Id}) deconstructed", ConsoleColor.Green);
 
             Player.IdsCache.Remove(NPCPlayer.Id);
             Player.Dictionary.Remove(NPCPlayer.GameObject);

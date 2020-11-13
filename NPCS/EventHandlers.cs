@@ -90,14 +90,7 @@ namespace NPCS
                     Npc component = Npc.Get(p);
                     if (!component.NPCPlayer.IsGodModeEnabled)
                     {
-                        p.Health -= ev.TargetToDamages[p];
-                        component.FireEvent(new NPCHurtEvent(component, ev.Thrower));
-                        if (p.Health <= 0f)
-                        {
-                            NPCDiedEvent npc_ev = new NPCDiedEvent(component, ev.Thrower);
-                            component.FireEvent(npc_ev);
-                            component.Kill(true);
-                        }
+                        p.Hurt(ev.TargetToDamages[p], ev.Thrower,DamageTypes.Grenade);
                     }
                 }
             }

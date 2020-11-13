@@ -83,6 +83,7 @@ item_held: GunLogicer
 root_node: default_node.yml
 god_mode: true
 is_exclusive: true
+affect_summary: false
 events: []
 ai_enabled: false
 ai: []

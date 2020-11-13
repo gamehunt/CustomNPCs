@@ -18,9 +18,16 @@ namespace NPCS.Events
 
         private IEnumerator<float> RunActions(Dictionary<NodeAction, Dictionary<string, string>> acts)
         {
-            NPC.IsActionLocked = true;
             foreach (NodeAction act in acts.Keys)
             {
+                if (act.IsExclusive)
+                {
+                    while (NPC.IsActionLocked)
+                    {
+                        yield return 0.0f;
+                    }
+                    NPC.IsActionLocked = true;
+                }
                 try
                 {
                     act.Process(NPC, Player, acts[act]);
@@ -35,9 +42,13 @@ namespace NPCS.Events
                     dur = float.Parse(acts[act]["next_action_delay"].Replace('.', ','));
                 }
                 catch (Exception) { }
+                if (act.IsExclusive)
+                {
+                    NPC.IsActionLocked = false;
+                }
                 yield return Timing.WaitForSeconds(dur);
             }
-            NPC.IsActionLocked = false;
+            
         }
 
         public virtual void OnFired(Npc npc)
@@ -46,10 +57,7 @@ namespace NPCS.Events
 
         public void FireActions(Dictionary<NodeAction, Dictionary<string, string>> acts)
         {
-            if (!NPC.IsActionLocked)
-            {
                 NPC.AttachedCoroutines.Add(Timing.RunCoroutine(RunActions(acts)));
-            }
         }
 
         public Npc NPC

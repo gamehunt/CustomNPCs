@@ -33,6 +33,7 @@ namespace NPCS.AI
 
         public override float Process(Npc npc)
         {
+            IsFinished = true;
             if (random)
             {
                 List<Room> valid_rooms = Map.Rooms.Where(rm => rm.Zone != Exiled.API.Enums.ZoneType.LightContainment || (safe ? Round.ElapsedTime.Minutes < 10 : !Map.IsLCZDecontaminated)).ToList();
@@ -52,7 +53,6 @@ namespace NPCS.AI
                     npc.CurrentAIRoomTarget = room;
                 }
             }
-            IsFinished = true;
             return 0f;
         }
 

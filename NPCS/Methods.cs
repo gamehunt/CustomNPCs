@@ -87,6 +87,7 @@ namespace NPCS
         //root_node: default_node.yml
         //god_mode: false
         //is_exclusive: true
+        //affect_summary: false
         //events: []
         //ai_enabled: false
         //ai: []
@@ -124,6 +125,8 @@ namespace NPCS
                 n.IsExclusive = raw_npc.IsExclusive;
 
                 n.SaveFile = path;
+
+                n.AffectRoundSummary = raw_npc.AffectSummary;
 
                 int health = raw_npc.Health;
 

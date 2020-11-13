@@ -85,6 +85,9 @@ namespace NPCS.Utils
         [YamlMember(Alias = "is_exclusive")]
         public bool IsExclusive { get; set; }
 
+        [YamlMember(Alias = "affect_summary")]
+        public bool AffectSummary { get; set; }
+
         public NpcEventSerializationInfo[] Events { get; set; }
 
         [YamlMember(Alias = "ai_enabled")]
