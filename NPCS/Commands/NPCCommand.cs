@@ -49,6 +49,10 @@ namespace NPCS.Commands
                             return false;
                         }
                         string file = arguments.Count < 2 ? "default_npc.yml" : arguments.At(1);
+                        if (!file.EndsWith(".yml"))
+                        {
+                            file += ".yml";
+                        }
                         if (Methods.CreateNPC(s.Position, s.Rotations, file) == null)
                         {
                             response = "Failed to load NPC!";

@@ -1,6 +1,8 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
+using Exiled.API.Enums;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,12 +41,37 @@ namespace NPCS.AI
         {
             if (!npc.NPCPlayer.ReferenceHub.characterClassManager.IsAnyScp())
             {
-                if (npc.AvailableWeapons.Length > 0)
+                if (npc.AvailableWeapons.Count > 0)
                 {
                     if (!npc.ItemHeld.IsWeapon(false))
                     {
-                        npc.ItemHeld = npc.AvailableWeapons[0];
+                        npc.ItemHeld = npc.AvailableWeapons.Keys.ElementAt(0);
                     }
+
+                    AmmoType ammo = AmmoType.Nato9;
+
+                    switch (npc.ItemHeld)
+                    {
+                        case ItemType.GunE11SR:
+                            ammo = AmmoType.Nato556;
+                            break;
+                        case ItemType.GunProject90:
+                            ammo = AmmoType.Nato9;
+                            break;
+                        case ItemType.GunLogicer:
+                            ammo = AmmoType.Nato762;
+                            break;
+                        case ItemType.GunMP7:
+                            ammo = AmmoType.Nato762;
+                            break;
+                        case ItemType.GunUSP:
+                            ammo = AmmoType.Nato9;
+                            break;
+                        case ItemType.GunCOM15:
+                            ammo = AmmoType.Nato9;
+                            break;
+                    }
+
                     npc.Stop();
                     Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
                     Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
@@ -62,6 +89,14 @@ namespace NPCS.AI
                         }
                     }
                     npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(miss ? npc.gameObject : npc.CurrentAIPlayerTarget.GameObject, hitbox, npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
+
+                    npc.AvailableWeapons[0]--;
+                    if(npc.AvailableWeapons[0] <= 0)
+                    {
+                        npc.NPCPlayer.ReferenceHub.weaponManager.CmdReload(true);
+                        npc.AvailableWeapons[0] = 40;
+                    }
+
                     if (!npc.CurrentAIPlayerTarget.IsAlive)
                     {
                         npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));

@@ -8,7 +8,7 @@ namespace NPCS.AI
     {
         public override string Name => "AIFindItemTarget";
 
-        public override string[] RequiredArguments => new string[] { "type", "smart" };
+        public override string[] RequiredArguments => new string[] { "type", "smart"};
 
         public override bool Check(Npc npc)
         {

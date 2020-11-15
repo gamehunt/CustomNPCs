@@ -182,6 +182,7 @@ namespace NPCS
                 AITarget.Register(new AIFindItemTarget());
                 AITarget.Register(new AIConditionalJump());
                 AITarget.Register(new AIRunAwayTarget());
+                AITarget.Register(new AIFindAmmoTarget());
 
                 Log.Info("Registering targets filters...");
 

@@ -16,13 +16,13 @@ namespace NPCS
         [Description("Should RA contain NPCs?")]
         public bool DisplayNpcInRemoteAdmin { get; set; } = false;
 
-        [Description("Maximum distance between NPC and follow target. If it's reached NPC will tp to target")]
+        [Description("Maximum distance between NPC and follow target. If it's reached NPC will lost target")]
         public float MaxFollowDistance { get; set; } = 15f;
 
         [Description("Enable this if you will use nav system (not neccessary for following)")]
         public bool GenerateNavigationGraph { get; set; } = false;
 
-        [Description("Adjust this if NPCs with custom scale are \"flying\"")]
+        [Description("Adjust this if NPCs with custom scale are \"flying\" or under map")]
         public float NpcSizePositionMultiplier { get; set; } = 1.3f;
 
         [Description("Adjust it if u feel that NPCs shoot too fast or too slow (higher = slower)")]
@@ -89,7 +89,7 @@ ai_enabled: false
 ai: []
 ";
 
-        // OH YEAAAAAH 41KB HARDCODED STRINGS XD
+        // OH YEAAAAAH 60KB HARDCODED STRINGS XD
         public static string DefaultNavMappings =
 @"
 Outside:
