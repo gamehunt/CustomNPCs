@@ -13,7 +13,7 @@ namespace NPCS.AI
     {
         public override string Name => "AIShootTarget";
 
-        public override string[] RequiredArguments => new string[] { "accuracy", "hitboxes", "firerate", "damage" };
+        public override string[] RequiredArguments => new string[] { "accuracy", "hitboxes", "firerate", "damage", "use_ammo" };
 
         public override bool Check(Npc npc)
         {
@@ -24,6 +24,7 @@ namespace NPCS.AI
         private readonly Dictionary<HitBoxType, int> hitboxes = new Dictionary<HitBoxType, int>();
         private float firerate;
         private int damage;
+        private bool use_ammo;
 
         public override void Construct()
         {
@@ -35,6 +36,7 @@ namespace NPCS.AI
             }
             firerate = float.Parse(Arguments["firerate"].Replace('.', ','));
             damage = int.Parse(Arguments["damage"]);
+            use_ammo = bool.Parse(Arguments["use_ammo"]);
         }
 
         public override float Process(Npc npc)
@@ -90,11 +92,15 @@ namespace NPCS.AI
                     }
                     npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(miss ? npc.gameObject : npc.CurrentAIPlayerTarget.GameObject, hitbox, npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
 
-                    npc.AvailableWeapons[0]--;
-                    if(npc.AvailableWeapons[0] <= 0)
+                    if (use_ammo)
                     {
-                        npc.NPCPlayer.ReferenceHub.weaponManager.CmdReload(true);
-                        npc.AvailableWeapons[0] = 40;
+                        //TODO
+                        npc.AvailableWeapons[0]--;
+                        if (npc.AvailableWeapons[0] <= 0)
+                        {
+                            npc.NPCPlayer.ReferenceHub.weaponManager.CmdReload(true);
+                            npc.AvailableWeapons[0] = 40;
+                        }
                     }
 
                     if (!npc.CurrentAIPlayerTarget.IsAlive)

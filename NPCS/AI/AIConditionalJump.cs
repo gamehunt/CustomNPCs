@@ -43,7 +43,7 @@ namespace NPCS.AI
                     break;
 
                 case "has_weapon":
-                    res = npc.AvailableWeapons.Length != 0;
+                    res = npc.AvailableWeapons.Count != 0;
                     break;
 
                 case "has_keycard":

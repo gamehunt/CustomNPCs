@@ -2,6 +2,7 @@
 using Exiled.API.Features;
 using MEC;
 using NPCS.Talking;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,11 +18,11 @@ namespace NPCS.Actions
             {
                 if (!npc.NPCPlayer.ReferenceHub.characterClassManager.IsAnyScp())
                 {
-                    if (npc.AvailableWeapons.Length > 0)
+                    if (npc.AvailableWeapons.Count > 0)
                     {
                         if (!npc.ItemHeld.IsWeapon(false))
                         {
-                            npc.ItemHeld = npc.AvailableWeapons[0];
+                            npc.ItemHeld = npc.AvailableWeapons.Keys.ElementAt(0);
                         }
                         npc.Stop();
                         Vector3 heading = (p.Position - npc.NPCPlayer.Position);
