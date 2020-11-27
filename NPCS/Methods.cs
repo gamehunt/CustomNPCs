@@ -72,6 +72,7 @@ namespace NPCS
             npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.4f, () =>
             {
                 npcc.FireEvent(new NPCOnCreatedEvent(npcc, null));
+
             }));
 
             return npcc;

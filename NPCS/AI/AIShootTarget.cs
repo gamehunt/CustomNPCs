@@ -78,7 +78,7 @@ namespace NPCS.AI
                     Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
                     Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
                     npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
-                    bool miss = Plugin.Random.Next(0, 100) > accuracy;
+                    bool miss = Plugin.Random.Next(0, 100) >= accuracy;
                     int hitbox_value = Plugin.Random.Next(0, 100);
                     HitBoxType hitbox = HitBoxType.NULL;
                     int min = int.MaxValue;
@@ -94,12 +94,12 @@ namespace NPCS.AI
 
                     if (use_ammo)
                     {
-                        //TODO
                         npc.AvailableWeapons[0]--;
-                        if (npc.AvailableWeapons[0] <= 0)
+                        if (npc.AvailableWeapons[0] <= 0 && npc.NPCPlayer.Ammo[(int)ammo] > 0)
                         {
                             npc.NPCPlayer.ReferenceHub.weaponManager.CmdReload(true);
-                            npc.AvailableWeapons[0] = 40;
+                            npc.AvailableWeapons[0] = Math.Min((int)npc.NPCPlayer.Ammo[(int)ammo], 40);
+                            npc.NPCPlayer.Ammo[(int)ammo] -= (uint)npc.AvailableWeapons[0];
                         }
                     }
 
