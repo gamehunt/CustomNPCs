@@ -297,7 +297,6 @@ namespace NPCS
                                 delay = CurrentAITarget.Process(this);
                                 for (; SkippedTargets > 0; SkippedTargets--)
                                 {
-                                    Log.Info($"{SkippedTargets}");
                                     AITarget target = AIQueue.First.Value;
                                     AIQueue.RemoveFirst();
                                     AIQueue.AddLast(target);
@@ -792,7 +791,7 @@ namespace NPCS
                     NPCPlayer.ReferenceHub.animationController.Network_curMoveState = (byte)PlayerMovementState.Walking;
                 }
             }
-            float speed = (IsRunning && !DisableRun ? CharacterClassManager._staticClasses[(int)NPCPlayer.Role].runSpeed : MovementSpeed);
+            float speed = MovementSpeed;
             switch (dir)
             {
                 case MovementDirection.FORWARD:

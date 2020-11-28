@@ -8,7 +8,7 @@ namespace NPCS.AI
     {
         public override string Name => "AIFindItemTarget";
 
-        public override string[] RequiredArguments => new string[] { "type", "smart"};
+        public override string[] RequiredArguments => new string[] { "type", "smart" };
 
         public override bool Check(Npc npc)
         {
@@ -45,7 +45,7 @@ namespace NPCS.AI
                 NavigationNode node = possible_nodes.Dequeue();
                 if (npc.GotoNode(node))
                 {
-                    Exiled.API.Features.Log.Debug($"Selected item node: {node.Name}",Plugin.Instance.Config.VerboseOutput);
+                    Exiled.API.Features.Log.Debug($"Selected item node: {node.Name}", Plugin.Instance.Config.VerboseOutput);
                     npc.CurrentAIItemNodeTarget = node;
                     npc.CurrentAIItemGroupTarget = type;
                     break;
