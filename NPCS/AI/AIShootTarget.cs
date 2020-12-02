@@ -1,6 +1,6 @@
-﻿using Exiled.API.Extensions;
+﻿using Exiled.API.Enums;
+using Exiled.API.Extensions;
 using Exiled.API.Features;
-using Exiled.API.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace NPCS.AI
     {
         public override string Name => "AIShootTarget";
 
-        public override string[] RequiredArguments => new string[] { "accuracy", "hitboxes", "firerate", "damage", "use_ammo" };
+        public override string[] RequiredArguments => new string[] { "accuracy", "hitboxes", "firerate", "damage" };
 
         public override bool Check(Npc npc)
         {
@@ -48,30 +48,7 @@ namespace NPCS.AI
                     if (!npc.ItemHeld.IsWeapon(false))
                     {
                         npc.ItemHeld = npc.AvailableWeapons.Keys.ElementAt(0);
-                    }
-
-                    AmmoType ammo = AmmoType.Nato9;
-
-                    switch (npc.ItemHeld)
-                    {
-                        case ItemType.GunE11SR:
-                            ammo = AmmoType.Nato556;
-                            break;
-                        case ItemType.GunProject90:
-                            ammo = AmmoType.Nato9;
-                            break;
-                        case ItemType.GunLogicer:
-                            ammo = AmmoType.Nato762;
-                            break;
-                        case ItemType.GunMP7:
-                            ammo = AmmoType.Nato762;
-                            break;
-                        case ItemType.GunUSP:
-                            ammo = AmmoType.Nato9;
-                            break;
-                        case ItemType.GunCOM15:
-                            ammo = AmmoType.Nato9;
-                            break;
+                        return 0.5f;
                     }
 
                     npc.Stop();
@@ -90,27 +67,40 @@ namespace NPCS.AI
                             hitbox = box;
                         }
                     }
+
                     npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(miss ? npc.gameObject : npc.CurrentAIPlayerTarget.GameObject, hitbox, npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
+
+                    bool end = !npc.CurrentAIPlayerTarget.IsAlive;
 
                     if (use_ammo)
                     {
-                        npc.AvailableWeapons[0]--;
-                        if (npc.AvailableWeapons[0] <= 0 && npc.NPCPlayer.Ammo[(int)ammo] > 0)
+                        npc.AvailableWeapons[npc.ItemHeld]--;
+                        if (npc.AvailableWeapons[npc.ItemHeld] <= 0)
                         {
-                            npc.NPCPlayer.ReferenceHub.weaponManager.CmdReload(true);
-                            npc.AvailableWeapons[0] = Math.Min((int)npc.NPCPlayer.Ammo[(int)ammo], 40);
-                            npc.NPCPlayer.Ammo[(int)ammo] -= (uint)npc.AvailableWeapons[0];
+                            npc.NPCPlayer.ReferenceHub.weaponManager.RpcReload(npc.NPCPlayer.ReferenceHub.weaponManager.curWeapon);
+                            npc.AvailableWeapons[npc.ItemHeld] = (int)npc.NPCPlayer.ReferenceHub.weaponManager.weapons[npc.NPCPlayer.ReferenceHub.weaponManager.curWeapon].maxAmmo;
+                            if (end)
+                            {
+                                npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
+                                IsFinished = true;
+                            }
+                            return npc.NPCPlayer.ReferenceHub.weaponManager.weapons[npc.NPCPlayer.ReferenceHub.weaponManager.curWeapon].reloadingTime;
                         }
                     }
 
-                    if (!npc.CurrentAIPlayerTarget.IsAlive)
+
+                    if (end)
                     {
                         npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
+                        IsFinished = true;
+                        return 0f;
                     }
+
                 }
                 else
                 {
                     IsFinished = true;
+                    return 0f;
                 }
                 return firerate * Plugin.Instance.Config.NpcFireCooldownMultiplier * npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
             }

@@ -1,6 +1,5 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
-using Exiled.API.Enums;
 using MEC;
 using NPCS.AI;
 using NPCS.Events;
@@ -170,7 +169,7 @@ namespace NPCS
             }
             set
             {
-                NPCPlayer.Inventory.curItem = value;
+                NPCPlayer.Inventory.curItem = value; ;
                 if (value != ItemType.None)
                 {
                     if (!AvailableItems.Contains(value))
@@ -456,7 +455,7 @@ namespace NPCS
                             if (CurrentNavTarget.AttachedDoor != null && !CurrentNavTarget.AttachedDoor.NetworkisOpen)
                             {
                                 ItemType prev = ItemHeld;
-                                bool open = NPCPlayer.IsBypassModeEnabled || (CurrentNavTarget.AttachedDoor.CheckpointDoor && NPCPlayer.ReferenceHub.characterClassManager.IsAnyScp()) ;
+                                bool open = NPCPlayer.IsBypassModeEnabled || (CurrentNavTarget.AttachedDoor.CheckpointDoor && NPCPlayer.ReferenceHub.characterClassManager.IsAnyScp());
                                 if (!open)
                                 {
                                     if (!CurrentNavTarget.AttachedDoor.CanBeOpenedWith(ItemHeld))
@@ -977,80 +976,82 @@ namespace NPCS
 
         public void TakeItem(Pickup item)
         {
-            if (item.ItemId.IsAmmo())
+            /* if (item.ItemId.IsAmmo())
+             {
+                 uint delta = 0;
+                 uint limit;
+                 switch (item.ItemId)
+                 {
+                     case ItemType.Ammo556:
+                         limit = NPCPlayer.ReferenceHub.searchCoordinator.ConfigPipe.GetLimitAmmo((byte)AmmoType.Nato556);
+                         NPCPlayer.Ammo[(int)AmmoType.Nato556] += (uint)item.durability;
+                         if (NPCPlayer.Ammo[(int)AmmoType.Nato556] > limit)
+                         {
+                             delta = NPCPlayer.Ammo[(int)AmmoType.Nato556] - limit;
+                             NPCPlayer.Ammo[(int)AmmoType.Nato556] = limit;
+                         }
+                         break;
+
+                     case ItemType.Ammo762:
+                         limit = NPCPlayer.ReferenceHub.searchCoordinator.ConfigPipe.GetLimitAmmo((byte)AmmoType.Nato762);
+                         NPCPlayer.Ammo[(int)AmmoType.Nato762] += (uint)item.durability;
+                         if (NPCPlayer.Ammo[(int)AmmoType.Nato762] > limit)
+                         {
+                             delta = NPCPlayer.Ammo[(int)AmmoType.Nato762] - limit;
+                             NPCPlayer.Ammo[(int)AmmoType.Nato762] = limit;
+                         }
+                         break;
+
+                     case ItemType.Ammo9mm:
+                         limit = NPCPlayer.ReferenceHub.searchCoordinator.ConfigPipe.GetLimitAmmo((byte)AmmoType.Nato9);
+                         NPCPlayer.Ammo[(int)AmmoType.Nato9] += (uint)item.durability;
+                         if (NPCPlayer.Ammo[(int)AmmoType.Nato9] > limit)
+                         {
+                             delta = NPCPlayer.Ammo[(int)AmmoType.Nato9] - limit;
+                             NPCPlayer.Ammo[(int)AmmoType.Nato9] = limit;
+                         }
+                         break;
+                 }
+                 if (delta > 0)
+                 {
+                     item.durability = delta;
+                 }
+                 else
+                 {
+                     item.Delete();
+                 }
+             }
+             else
+             {*/
+            if (FreeSlots > 0) // If there are free slots...
             {
-                uint delta = 0;
-                uint limit;
-                switch (item.ItemId)
+                //Take it
+                int free_slot = AvailableItems.IndexOf(ItemType.None);
+                AvailableItems[free_slot] = item.itemId;
+                if (item.itemId.IsWeapon())
                 {
-                    case ItemType.Ammo556:
-                        limit = NPCPlayer.ReferenceHub.searchCoordinator.ConfigPipe.GetLimitAmmo((byte)AmmoType.Nato556);
-                        NPCPlayer.Ammo[(int)AmmoType.Nato556] += (uint)item.durability;
-                        if (NPCPlayer.Ammo[(int)AmmoType.Nato556] > limit)
-                        {
-                            delta = NPCPlayer.Ammo[(int)AmmoType.Nato556] - limit;
-                            NPCPlayer.Ammo[(int)AmmoType.Nato556] = limit;
-                        }
-                        break;
-                    case ItemType.Ammo762:
-                        limit = NPCPlayer.ReferenceHub.searchCoordinator.ConfigPipe.GetLimitAmmo((byte)AmmoType.Nato762);
-                        NPCPlayer.Ammo[(int)AmmoType.Nato762] += (uint)item.durability;
-                        if (NPCPlayer.Ammo[(int)AmmoType.Nato762] > limit)
-                        {
-                            delta = NPCPlayer.Ammo[(int)AmmoType.Nato762] - limit;
-                            NPCPlayer.Ammo[(int)AmmoType.Nato762] = limit;
-                        }
-                        break;
-                    case ItemType.Ammo9mm:
-                        limit = NPCPlayer.ReferenceHub.searchCoordinator.ConfigPipe.GetLimitAmmo((byte)AmmoType.Nato9);
-                        NPCPlayer.Ammo[(int)AmmoType.Nato9] += (uint)item.durability;
-                        if (NPCPlayer.Ammo[(int)AmmoType.Nato9] > limit)
-                        {
-                            delta = NPCPlayer.Ammo[(int)AmmoType.Nato9] - limit;
-                            NPCPlayer.Ammo[(int)AmmoType.Nato9] = limit;
-                        }
-                        break;
+                    AvailableWeapons.Add(item.itemId, (int)item.durability);
                 }
-                if (delta > 0)
+                item.Delete();
+            }
+            else //Otherwise we are probably went there from smart target...
+            {
+                //Try drop old item and take new one
+                if (CurrentAIItemGroupTarget == "keycard" && AvailableKeycards.Length != 0)
                 {
-                    item.durability = delta;
+                    DropItem(AvailableKeycards[0], true);
+                    TakeItem(item);
+                    item.Delete();
                 }
-                else
+                else if (CurrentAIItemGroupTarget == "weapon" && AvailableWeapons.Count != 0)
                 {
+                    DropItem(AvailableWeapons.Keys.ElementAt(0), true);
+                    TakeItem(item);
+                    AvailableWeapons[item.itemId] = (int)item.durability;
                     item.Delete();
                 }
             }
-            else
-            {
-                if (FreeSlots > 0) // If there are free slots...
-                {
-                    //Take it
-                    int free_slot = AvailableItems.IndexOf(ItemType.None);
-                    AvailableItems[free_slot] = item.itemId;
-                    if (item.itemId.IsWeapon())
-                    {
-                        AvailableWeapons.Add(item.itemId, (int)item.durability);
-                    }
-                    item.Delete();
-                }
-                else //Otherwise we are probably went there from smart target...
-                {
-                    //Try drop old item and take new one
-                    if (CurrentAIItemGroupTarget == "keycard" && AvailableKeycards.Length != 0)
-                    {
-                        DropItem(AvailableKeycards[0], true);
-                        TakeItem(item);
-                        item.Delete();
-                    }
-                    else if (CurrentAIItemGroupTarget == "weapon" && AvailableWeapons.Count != 0)
-                    {
-                        DropItem(AvailableWeapons.Keys.ElementAt(0), true);
-                        TakeItem(item);
-                        AvailableWeapons[item.itemId] = (int)item.durability;
-                        item.Delete();
-                    }
-                }
-            }
+            //  }
         }
 
         public void TakeItem(ItemType item)
@@ -1065,7 +1066,15 @@ namespace NPCS
                 AvailableItems[free_slot] = item;
                 if (item.IsWeapon())
                 {
-                    AvailableWeapons.Add(item, 0);
+                    WeaponManager.Weapon[] weapons = NPCPlayer.ReferenceHub.weaponManager.weapons;
+                    for (int i = 0; i < weapons.Length; i++)
+                    {
+                        if (weapons[i].inventoryID == item)
+                        {
+                            AvailableWeapons.Add(item, (int)NPCPlayer.ReferenceHub.weaponManager.weapons[i].maxAmmo);
+                            break;
+                        }
+                    }
                 }
             }
         }

@@ -6,6 +6,7 @@ using NPCS.Navigation;
 
 namespace NPCS.AI
 {
+    //WIP
     class AIFindAmmoTarget : AITarget
     {
         public override string Name => "AIFindAmmoTarget";
