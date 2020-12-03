@@ -1,17 +1,17 @@
-﻿using Exiled.API.Enums;
-using Exiled.API.Extensions;
+﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using MEC;
 
 namespace NPCS.AI
 {
     //Runs while target is alive, resets nav
-    internal class AIShootTarget : AITarget
+    internal class AIAttackTarget : AITarget
     {
-        public override string Name => "AIShootTarget";
+        public override string Name => "AIAttackTarget";
 
         public override string[] RequiredArguments => new string[] { "accuracy", "hitboxes", "firerate", "damage" };
 
@@ -37,6 +37,17 @@ namespace NPCS.AI
             firerate = float.Parse(Arguments["firerate"].Replace('.', ','));
             damage = int.Parse(Arguments["damage"]);
             use_ammo = bool.Parse(Arguments["use_ammo"]);
+        }
+
+        private IEnumerator<float> ReviveCoroutine(Npc npc, Player target)
+        {
+            yield return Timing.WaitForSeconds(PlayableScps.Scp049.TimeToRevive);
+            if (npc.NPCPlayer.IsAlive && target.IsDead)
+            {
+                target.Role = RoleType.Scp0492;
+                yield return Timing.WaitForSeconds(0.3f);
+                target.Position = npc.NPCPlayer.Position;
+            }
         }
 
         public override float Process(Npc npc)
@@ -148,6 +159,19 @@ namespace NPCS.AI
                          }));
 
                         npc.Stop();
+
+                        Player target = npc.CurrentAIPlayerTarget;
+
+                        npc.CurrentAIPlayerTarget = null;
+
+                        if (npc.ProcessSCPLogic && npc.NPCPlayer.Role == RoleType.Scp049)
+                        {
+                            npc.AttachedCoroutines.Add(Timing.RunCoroutine(ReviveCoroutine(npc,target)));
+                            IsFinished = true;
+                            return PlayableScps.Scp049.TimeToRevive + 0.5f;
+                        }
+
+                        
                     }
                 }
                 return cd;
@@ -156,7 +180,7 @@ namespace NPCS.AI
 
         protected override AITarget CreateInstance()
         {
-            return new AIShootTarget();
+            return new AIAttackTarget();
         }
     }
 }

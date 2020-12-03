@@ -85,6 +85,9 @@ namespace NPCS.Utils
         [YamlMember(Alias = "is_exclusive")]
         public bool IsExclusive { get; set; }
 
+        [YamlMember(Alias = "process_scp_logic")]
+        public bool ProcessScpLogic { get; set; }
+
         [YamlMember(Alias = "affect_summary")]
         public bool AffectSummary { get; set; }
 

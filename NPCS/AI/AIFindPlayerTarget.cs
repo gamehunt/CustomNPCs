@@ -11,7 +11,7 @@ namespace NPCS.AI
     {
         public override string Name => "AIFindPlayerTarget";
 
-        public override string[] RequiredArguments => new string[] { "range", "filter", "role_blacklist", "role_whitelist", "allow_self_select" };
+        public override string[] RequiredArguments => new string[] { "range", "filter", "role_blacklist", "role_whitelist", "allow_self_select", "target_npc", "target_godmode" };
 
         public override bool Check(Npc npc)
         {
@@ -23,12 +23,14 @@ namespace NPCS.AI
         private readonly List<string> filters = new List<string>();
         private float range = 0f;
         private bool allow_self_select = false;
+        private bool tnpc = false;
+        private bool tgod = false;
 
         public override float Process(Npc npc)
         {
             IsFinished = true;
 
-            foreach (Player p in Player.List.Where(pl => pl.IsAlive && (pl != npc.NPCPlayer || allow_self_select) && (allowed_roles.Count == 0 || allowed_roles.Contains(pl.Role)) && (disallowed_roles.Count == 0 || !disallowed_roles.Contains(pl.Role))))
+            foreach (Player p in Player.List.Where(pl => pl.IsAlive && (pl != npc.NPCPlayer || allow_self_select) && (allowed_roles.Count == 0 || allowed_roles.Contains(pl.Role)) && (disallowed_roles.Count == 0 || !disallowed_roles.Contains(pl.Role)) && (!pl.IsGodModeEnabled || tgod) && (!pl.IsNPC() || tnpc)))
             {
                 if (Vector3.Distance(p.Position, npc.NPCPlayer.Position) < range)
                 {
@@ -90,6 +92,9 @@ namespace NPCS.AI
                     disallowed_roles.Add(erole);
                 }
             }
+
+            tnpc = bool.Parse(Arguments["target_npc"]);
+            tgod = bool.Parse(Arguments["target_godmode"]);
         }
     }
 }

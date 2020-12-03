@@ -21,7 +21,7 @@ namespace NPCS
         public override string Author { get; } = "gamehunt";
         public override string Name { get; } = "CustomNPCs";
         public override string Prefix { get; } = "CNPCS";
-        public override Version Version { get; } = new Version(1, 4, 16);
+        public override Version Version { get; } = new Version(1, 5, 0);
         public override Version RequiredExiledVersion { get; } = new Version(2, 1, 16);
 
         public override PluginPriority Priority => PluginPriority.Lower;
@@ -176,13 +176,14 @@ namespace NPCS
 
                 AITarget.Register(new AITestTarget());
                 AITarget.Register(new AIFindPlayerTarget());
-                AITarget.Register(new AIShootTarget());
+                AITarget.Register(new AIAttackTarget());
                 AITarget.Register(new AINavigateToRoom());
                 AITarget.Register(new AIFollowTarget());
                 AITarget.Register(new AIFindItemTarget());
                 AITarget.Register(new AIConditionalJump());
-                AITarget.Register(new AIRunAwayTarget());
-                AITarget.Register(new AIFindAmmoTarget());
+                //AITarget.Register(new AIRunAwayTarget());
+                //AITarget.Register(new AIFindAmmoTarget());
+                AITarget.Register(new AIStop());
 
                 Log.Info("Registering targets filters...");
 

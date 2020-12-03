@@ -88,6 +88,7 @@ namespace NPCS
         //root_node: default_node.yml
         //god_mode: false
         //is_exclusive: true
+        //process_scp_logic: false
         //affect_summary: false
         //events: []
         //ai_enabled: false
@@ -120,14 +121,11 @@ namespace NPCS
                 }
 
                 n.ItemHeld = raw_npc.ItemHeld;
-
                 n.NPCPlayer.IsGodModeEnabled = raw_npc.GodMode;
-
                 n.IsExclusive = raw_npc.IsExclusive;
-
                 n.SaveFile = path;
-
                 n.AffectRoundSummary = raw_npc.AffectSummary;
+                n.ProcessSCPLogic = raw_npc.ProcessScpLogic;
 
                 int health = raw_npc.Health;
 
