@@ -14,7 +14,7 @@ namespace NPCS.Harmony
 				return false;
 			}
 			Exiled.API.Features.Player scp096 = Exiled.API.Features.Player.Get(__instance.Hub);
-			if(scp096.IsNPC() && !NPCS.Npc.Dictionary[__instance.Hub.gameObject].ProcessSCPLogic)
+			if (scp096.IsNPC() && !NPCS.Npc.Dictionary[__instance.Hub.gameObject].ProcessSCPLogic)
             {
 				return false;
             }

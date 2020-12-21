@@ -13,7 +13,7 @@ namespace NPCS.AI
     {
         public override string Name => "AIAttackTarget";
 
-        public override string[] RequiredArguments => new string[] { "accuracy", "hitboxes", "firerate", "damage" };
+        public override string[] RequiredArguments => new string[] { "accuracy", "hitboxes", "firerate", "damage", "use_ammo" };
 
         public override bool Check(Npc npc)
         {
@@ -148,6 +148,9 @@ namespace NPCS.AI
                                 npc.NPCPlayer.GameObject.GetComponent<Scp049_2PlayerScript>().CallCmdShootAnim();
                                 npc.NPCPlayer.GameObject.GetComponent<Scp049_2PlayerScript>().CallCmdHurtPlayer(npc.CurrentAIPlayerTarget.GameObject);
                                 cd = 1f;
+                                break;
+                            case RoleType.Scp096:
+                                npc.CurrentAIPlayerTarget.Hurt(99999f, DamageTypes.Scp096, npc.NPCPlayer.Nickname, npc.NPCPlayer.Id);
                                 break;
                         }
                     }

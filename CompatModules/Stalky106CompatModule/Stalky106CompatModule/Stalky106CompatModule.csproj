@@ -46,7 +46,7 @@
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
     </Reference>
     <Reference Include="Stalky106V2.1.1">
-      <HintPath>..\..\..\..\..\AssemblyPublicizer\publicized_assemblies\Stalky106V2.1.1_publicized.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\publicized_assemblies\Stalky106V2.1.1_publicized.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>

@@ -1,6 +1,6 @@
 ﻿using Exiled.API.Interfaces;
 
-namespace TeslaGateControlCompatModule
+namespace Stalky106CompatModule
 {
     public class Config : IConfig
     {

@@ -3,9 +3,9 @@ using Exiled.API.Features;
 using System;
 using System.Linq;
 
-namespace TeslaGateControlCompatModule
+namespace Stalky106CompatModule
 {
-    public class Plugin : Exiled.API.Features.Plugin<TeslaGateControlCompatModule.Config>
+    public class Plugin : Exiled.API.Features.Plugin<Stalky106CompatModule.Config>
     {
         public override string Author { get; } = "gamehunt";
         public override string Name { get; } = "Stalky106CompatModule";

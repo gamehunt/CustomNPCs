@@ -84,6 +84,7 @@ root_node: default_node.yml
 god_mode: true
 is_exclusive: true
 affect_summary: false
+process_scp_logic: false
 events: []
 ai_enabled: false
 ai: []

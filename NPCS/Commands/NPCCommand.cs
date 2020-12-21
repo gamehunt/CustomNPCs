@@ -91,9 +91,9 @@ namespace NPCS.Commands
                                 obj_npc.Kill(false);
                                 response = "NPC removed!";
                             }
-                            catch (IndexOutOfRangeException)
+                            catch (ArgumentOutOfRangeException)
                             {
-                                response = "Invalid NPC id!";
+                                response = "Invalid NPC id! (Take it from `npc list`, not from RA!)";
                                 return false;
                             }
                         }
@@ -116,9 +116,9 @@ namespace NPCS.Commands
                             obj_npc.NPCPlayer.Position += new UnityEngine.Vector3(float.Parse(arguments.At(2)), float.Parse(arguments.At(3)), float.Parse(arguments.At(4)));
                             response = "NPC moved!";
                         }
-                        catch (IndexOutOfRangeException)
+                        catch (ArgumentOutOfRangeException)
                         {
-                            response = "Invalid NPC id!";
+                            response = "Invalid NPC id! (Take it from `npc list`, not from RA!)";
                             return false;
                         }
 
@@ -135,9 +135,9 @@ namespace NPCS.Commands
                             Npc.List.ToList()[int.Parse(arguments.At(1))].NPCPlayer.IsGodModeEnabled = bool.Parse(arguments.At(2));
                             response = "God-Mode switched";
                         }
-                        catch (IndexOutOfRangeException)
+                        catch (ArgumentOutOfRangeException)
                         {
-                            response = "Invalid NPC id!";
+                            response = "Invalid NPC id! (Take it from `npc list`, not from RA!)";
                             return false;
                         }
                         break;
@@ -161,9 +161,9 @@ namespace NPCS.Commands
                             obj_npc.GotoNode(node);
                             response = "Navigating npc to node!";
                         }
-                        catch (IndexOutOfRangeException)
+                        catch (ArgumentOutOfRangeException)
                         {
-                            response = "Invalid NPC id!";
+                            response = "Invalid NPC id! (Take it from `npc list`, not from RA!)";
                             return false;
                         }
                         break;
@@ -187,9 +187,9 @@ namespace NPCS.Commands
                             obj_npc.AddNavTarget(node);
                             response = "Navigating npc to node!";
                         }
-                        catch (IndexOutOfRangeException)
+                        catch (ArgumentOutOfRangeException)
                         {
-                            response = "Invalid NPC id!";
+                            response = "Invalid NPC id! (Take it from `npc list`, not from RA!)";
                             return false;
                         }
                         break;
@@ -208,9 +208,9 @@ namespace NPCS.Commands
                             obj_npc.Follow(p);
                             response = "Navigating npc to player!";
                         }
-                        catch (IndexOutOfRangeException)
+                        catch (ArgumentOutOfRangeException)
                         {
-                            response = "Invalid NPC id!";
+                            response = "Invalid NPC id! (Take it from `npc list`, not from RA!)";
                             return false;
                         }
                         break;
@@ -231,9 +231,9 @@ namespace NPCS.Commands
                             }
                             response = "Navigating npc to room!";
                         }
-                        catch (IndexOutOfRangeException)
+                        catch (ArgumentOutOfRangeException)
                         {
-                            response = "Invalid NPC id!";
+                            response = "Invalid NPC id! (Take it from `npc list`, not from RA!)";
                             return false;
                         }
                         break;

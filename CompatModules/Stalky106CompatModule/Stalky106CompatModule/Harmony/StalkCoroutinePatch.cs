@@ -5,7 +5,7 @@ using Stalky106;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ReversePlagueCompatModule.Harmony
+namespace Stalky106CompatModule.Harmony
 {
     [HarmonyPatch(typeof(Stalky106.StalkyMethods), nameof(Stalky106.StalkyMethods.FindTarget))]
     internal class StalkCoroutinePatch
