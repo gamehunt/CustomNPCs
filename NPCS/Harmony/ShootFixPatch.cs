@@ -162,22 +162,38 @@ namespace NPCS.Harmony
                         }
 
                         Vector3 positionOffset = referenceHub.playerMovementSync.RealModelPosition - __instance._hub.playerMovementSync.RealModelPosition;
-
-                        if (Vector3.Angle(positionOffset, __instance.transform.forward) > 45 && Math.Abs(positionOffset.y) > 10f && positionOffset.sqrMagnitude < 0.25f)
+                        float sqrMagnitude = positionOffset.sqrMagnitude;
+                        if (Math.Abs(positionOffset.y) < 10f && sqrMagnitude > 7.84f && (referenceHub.characterClassManager.CurClass != global::RoleType.Scp0492 || sqrMagnitude > 9f) && ((referenceHub.characterClassManager.CurClass != global::RoleType.Scp93953 && referenceHub.characterClassManager.CurClass != global::RoleType.Scp93989) || sqrMagnitude > 18.49f))
                         {
-                            __instance.GetComponent<CharacterClassManager>().TargetConsolePrint(__instance.connectionToClient, "Shot rejected - Code W.12 (too big angle)", "gray");
-                            return false;
+                            float angl = Math.Abs(global::Misc.AngleIgnoreY(positionOffset, __instance.transform.forward));
+                            if (angl > 45f)
+                            {
+                                __instance.GetComponent<global::CharacterClassManager>().TargetConsolePrint(__instance.connectionToClient, "Shot rejected - Code W.12 (too big angle)", "gray");
+                                return false;
+                            }
+                            if (__instance._lastAngleReset > 0f && angl > 25f && Math.Abs(global::Misc.AngleIgnoreY(positionOffset, __instance._lastAngle)) > 60f)
+                            {
+                                __instance._lastAngle = positionOffset;
+                                __instance._lastAngleReset = 0.4f;
+                                __instance.GetComponent<global::CharacterClassManager>().TargetConsolePrint(__instance.connectionToClient, "Shot rejected - Code W.13 (too big angle v2)", "gray");
+                                return false;
+                            }
+                            __instance._lastAngle = positionOffset;
+                            __instance._lastAngleReset = 0.4f;
                         }
-
-                        Vector2 rotationOffset = __instance._lastRotation - __instance._hub.playerMovementSync.Rotations;
-                        if (rotationOffset.sqrMagnitude < 0.001f)
+                        if (__instance._lastRotationReset > 0f && (__instance._hub.playerMovementSync.Rotations.x < 68f || __instance._hub.playerMovementSync.Rotations.x > 295f))
                         {
-                            __instance._lastRotation = __instance._hub.playerMovementSync.Rotations;
-
-                            __instance.GetComponent<CharacterClassManager>().TargetConsolePrint(__instance.connectionToClient, "Shot rejected - Code W.9 (no recoil)", "gray");
-                            return false;
+                            float num5 = __instance._hub.playerMovementSync.Rotations.x - __instance._lastRotation;
+                            if (num5 >= 0f && num5 <= 0.0005f)
+                            {
+                                __instance._lastRotation = __instance._hub.playerMovementSync.Rotations.x;
+                                __instance._lastRotationReset = 0.35f;
+                                __instance.GetComponent<global::CharacterClassManager>().TargetConsolePrint(__instance.connectionToClient, "Shot rejected - Code W.9 (no recoil)", "gray");
+                                return false;
+                            }
                         }
-                        __instance._lastRotation = __instance._hub.playerMovementSync.Rotations;
+                        __instance._lastRotation = __instance._hub.playerMovementSync.Rotations.x;
+                        __instance._lastRotationReset = 0.35f;
                     }
                     
                     float num2 = Vector3.Distance(__instance.camera.transform.position, target.transform.position);
