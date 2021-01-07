@@ -54,7 +54,7 @@ namespace NPCS.Harmony
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(ServerRoles), nameof(ServerRoles.gameObject))),
                 new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject,Npc>),nameof(Dictionary<GameObject,Npc>.ContainsKey))),
                 new CodeInstruction(OpCodes.Brfalse_S, skipStrLabel),
-                new CodeInstruction(OpCodes.Ldstr, "[NPC] "),
+                new CodeInstruction(OpCodes.Ldstr, "[NPC] "), 
                 new CodeInstruction(OpCodes.Stloc_S, 120),
             });
 
