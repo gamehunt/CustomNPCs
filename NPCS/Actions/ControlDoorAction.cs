@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Interactables.Interobjects.DoorUtils;
+using Exiled.API.Extensions;
 
 namespace NPCS.Actions
 {
@@ -11,29 +13,33 @@ namespace NPCS.Actions
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
-            Door d = Map.Doors.Where(dr => dr.DoorName.Equals(args["door"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            DoorVariant d = null;
+            if (DoorNametagExtension.NamedDoors.ContainsKey(args["door"]))
+            {
+                d = DoorNametagExtension.NamedDoors[args["door"]].TargetDoor;
+            }
             if (d != null)
             {
                 switch (args["type"])
                 {
                     case "lock":
-                        d.Networklocked = true;
+                        d.ServerChangeLock(DoorLockReason.AdminCommand, true);
                         break;
 
                     case "ulock":
-                        d.Networklocked = false;
+                        d.ServerChangeLock(DoorLockReason.AdminCommand, false);
                         break;
 
                     case "open":
-                        d.NetworkisOpen = true;
+                        d.NetworkTargetState = true;
                         break;
 
                     case "close":
-                        d.NetworkisOpen = false;
+                        d.NetworkTargetState = false;
                         break;
 
                     case "destroy":
-                        d.Networkdestroyed = true;
+                        d.BreakDoor();
                         break;
 
                     default:

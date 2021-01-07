@@ -16,6 +16,7 @@ using UnityEngine;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization.TypeInspectors;
+using Interactables.Interobjects.DoorUtils;
 
 namespace NPCS
 {
@@ -227,16 +228,20 @@ namespace NPCS
                     if (!manual_mappings.ContainsKey(rname))
                     {
                         NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
-                        foreach (Door d in r.Doors)
+                        foreach (DoorVariant d in r.Doors)
                         {
+                            if(d == null)
+                            {
+                                continue;
+                            }
                             if (d.gameObject.transform.position == Vector3.zero)
                             {
                                 continue;
                             }
-                            NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
+                            NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.gameObject.transform.position)}".Replace(' ', '_'));
                             if (new_node == null)
                             {
-                                new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
+                                new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.gameObject.transform.position)}".Replace(' ', '_')];
                             }
                             else
                             {
@@ -252,20 +257,24 @@ namespace NPCS
                         Log.Debug($"Loading manual mappings for room {r.Name}", Plugin.Instance.Config.VerboseOutput);
                         List<NavigationNode.NavNodeSerializationInfo> nodes = manual_mappings[rname];
                         int i = 0;
-                        foreach (Door d in r.Doors)
+                        foreach (DoorVariant d in r.Doors)
                         {
+                            if(d == null) //idk
+                            {
+                                continue; 
+                            }
                             if (d.gameObject.transform.position == Vector3.zero)
                             {
                                 continue;
                             }
-                            NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_'));
+                            NavigationNode new_node = NavigationNode.Create(d.gameObject.transform.position, $"AUTO_Door_{(d.gameObject.transform.position)}".Replace(' ', '_'));
                             if (new_node != null)
                             {
                                 new_node.AttachedDoor = d;
                             }
                             else
                             {
-                                new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.DoorName.IsEmpty() ? d.gameObject.transform.position.ToString() : d.DoorName)}".Replace(' ', '_')];
+                                new_node = NavigationNode.AllNodes[$"AUTO_Door_{(d.gameObject.transform.position)}".Replace(' ', '_')];
                             }
                         }
                         foreach (NavigationNode.NavNodeSerializationInfo info in nodes)

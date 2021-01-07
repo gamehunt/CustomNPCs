@@ -217,7 +217,7 @@ namespace NPCS.Commands
                             {
                                 s.RemoteAdminMessage(node.Name);
                             }
-                            s.RemoteAdminMessage($"Attached door: {rnode.AttachedDoor?.DoorName}");
+                            s.RemoteAdminMessage($"Attached door: {rnode.AttachedDoor}");
                             s.RemoteAdminMessage($"Attached elevator: {rnode.AttachedElevator}");
                             response = "";
                         }

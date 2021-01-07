@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 	<TargetFramework>net472</TargetFramework>
@@ -31,7 +31,7 @@
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
     <Reference Include="EndConditions">
-      <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\publicized_assemblies\EndConditions_publicized.dll</HintPath>
+      <HintPath>..\..\..\EndConditions_publicized.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.API">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>

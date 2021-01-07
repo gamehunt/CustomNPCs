@@ -452,40 +452,33 @@ namespace NPCS
                         if (distance < 3f && (!ProcessSCPLogic || NPCPlayer.Role != RoleType.Scp106))
                         {
                             //Try to open the door if there is one, so we wont collide with it
-                            if (CurrentNavTarget.AttachedDoor != null && !CurrentNavTarget.AttachedDoor.NetworkisOpen)
+                            if (CurrentNavTarget.AttachedDoor != null && !CurrentNavTarget.AttachedDoor.NetworkTargetState)
                             {
                                 ItemType prev = ItemHeld;
-                                bool open = NPCPlayer.IsBypassModeEnabled || (CurrentNavTarget.AttachedDoor.CheckpointDoor && NPCPlayer.ReferenceHub.characterClassManager.IsAnyScp());
+                                bool open = CurrentNavTarget.AttachedDoor.RequiredPermissions.CheckPermissions(prev, NPCPlayer.ReferenceHub);
                                 if (!open)
                                 {
-                                    if (!CurrentNavTarget.AttachedDoor.CanBeOpenedWith(ItemHeld))
-                                    {
                                         foreach (ItemType keycard in AvailableKeycards)
                                         {
-                                            if (CurrentNavTarget.AttachedDoor.CanBeOpenedWith(keycard))
+                                            if (CurrentNavTarget.AttachedDoor.RequiredPermissions.CheckPermissions(keycard, NPCPlayer.ReferenceHub))
                                             {
                                                 ItemHeld = keycard;
                                                 open = true;
                                                 break;
                                             }
                                         }
-                                    }
-                                    else
-                                    {
-                                        open = true;
-                                    }
                                 }
                                 if (open)
                                 {
                                     //All is good
                                     Timing.KillCoroutines(MovementCoroutines.ToArray());
                                     Move(MovementDirection.NONE);
-                                    while (CurrentNavTarget.AttachedDoor.locked)
+                                    while (CurrentNavTarget.AttachedDoor.ActiveLocks > 0)
                                     {
                                         yield return 0f;
                                     }
                                     yield return Timing.WaitForSeconds(0.2f);
-                                    CurrentNavTarget.AttachedDoor.NetworkisOpen = true;
+                                    CurrentNavTarget.AttachedDoor.NetworkTargetState = true;
                                     yield return Timing.WaitForSeconds(0.1f);
                                     GoTo(CurrentNavTarget.Position);
                                     ItemHeld = prev;

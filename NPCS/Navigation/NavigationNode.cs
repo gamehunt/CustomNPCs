@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Interactables.Interobjects.DoorUtils;
 
 namespace NPCS.Navigation
 {
@@ -32,7 +33,7 @@ namespace NPCS.Navigation
 
         public HashSet<NavigationNode> LinkedNodes = new HashSet<NavigationNode>();
 
-        public Door AttachedDoor { get; set; }
+        public DoorVariant AttachedDoor { get; set; }
 
         public KeyValuePair<Lift.Elevator, Lift>? AttachedElevator { get; set; } = null;
 
