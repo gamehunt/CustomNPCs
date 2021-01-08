@@ -64,6 +64,8 @@ namespace NPCS
 
             npcc.NPCPlayer.ReferenceHub.transform.localScale = scale;
 
+            npcc.NPCPlayer.SessionVariables.Add("IsNPC", true);
+
             npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.3f, () =>
             {
                 npcc.NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(pos, 0, true);
