@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Extensions;
+using Exiled.API.Features;
 using System.Collections.Generic;
 using UnityEngine;
 using YamlDotNet.Serialization;
@@ -24,6 +25,13 @@ namespace NPCS.Utils
         {
             return new Vector2(x, y);
         }
+    }
+
+    public class NPCAIState
+    {
+        public Player PlayerTarget { get; set; }
+        public Pickup PickupTarget { get; set; }
+        public Room RoomTarget { get; set; }
     }
 
     public class SerializableVector3
@@ -64,6 +72,12 @@ namespace NPCS.Utils
         public Dictionary<string, string> Args { get; set; }
     }
 
+    public enum AiMode
+    {
+        Legacy,
+        Python
+    }
+
     public class NpcSerializationInfo
     {
         public string Name { get; set; }
@@ -95,8 +109,12 @@ namespace NPCS.Utils
 
         [YamlMember(Alias = "ai_enabled")]
         public bool AiEnabled { get; set; }
+        [YamlMember(Alias = "ai_mode")]
+        public AiMode AiMode { get; set; }
 
         public NpcNodeWithArgsSerializationInfo[] Ai { get; set; }
+        [YamlMember(Alias = "ai_scripts")]
+        public string[] AiScripts { get; set; }
     }
 
     public class Utils
@@ -142,5 +160,7 @@ namespace NPCS.Utils
                     return item.ToString("g").Equals(type);
             }
         }
+
+
     }
 }

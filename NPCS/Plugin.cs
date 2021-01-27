@@ -7,6 +7,8 @@ using NPCS.Navigation;
 using NPCS.Talking;
 using System;
 using System.IO;
+using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
 using System.Reflection;
 using Evs = Exiled.Events;
 using Handlers = Exiled.Events.Handlers;
@@ -34,6 +36,8 @@ namespace NPCS
 
         private int reloads = 0;
 
+        public static ScriptEngine Engine { get; private set; }
+
         public override void OnEnabled()
         {
             try
@@ -44,7 +48,8 @@ namespace NPCS
 
                 Random = new Random();
 
-                
+                Engine = Python.CreateEngine();
+
                 foreach (MethodBase bas in Evs.Events.Instance.Harmony.GetPatchedMethods())
                 {
                     if (bas.Name.Equals("TransmitData"))
@@ -100,6 +105,10 @@ namespace NPCS
                 if (!Directory.Exists(Config.NPCs_mappings_path))
                 {
                     Directory.CreateDirectory(Config.NPCs_mappings_path);
+                }
+                if (!Directory.Exists(Config.NPCs_scripts_path))
+                {
+                    Directory.CreateDirectory(Config.NPCs_scripts_path);
                 }
                 if (!File.Exists(Config.NPCs_nav_mappings_path))
                 {

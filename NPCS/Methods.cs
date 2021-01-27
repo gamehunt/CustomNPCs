@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
+using Interactables.Interobjects.DoorUtils;
 using MEC;
 using Mirror;
 using NPCS.AI;
@@ -16,7 +17,6 @@ using UnityEngine;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization.TypeInspectors;
-using Interactables.Interobjects.DoorUtils;
 
 namespace NPCS
 {
@@ -75,7 +75,6 @@ namespace NPCS
             npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.4f, () =>
             {
                 npcc.FireEvent(new NPCOnCreatedEvent(npcc, null));
-
             }));
 
             return npcc;
@@ -130,6 +129,10 @@ namespace NPCS
                 n.AffectRoundSummary = raw_npc.AffectSummary;
                 n.ProcessSCPLogic = raw_npc.ProcessScpLogic;
 
+                n.AIMode = raw_npc.AiMode;
+
+                Log.Debug($"Set AI mode: {n.AIMode}", Plugin.Instance.Config.VerboseOutput);
+
                 int health = raw_npc.Health;
 
                 if (health > 0)
@@ -159,6 +162,8 @@ namespace NPCS
                 }
 
                 n.AIEnabled = raw_npc.AiEnabled;
+
+                n.StartAI();
 
                 foreach (NpcNodeWithArgsSerializationInfo info in raw_npc.Ai)
                 {
@@ -232,7 +237,7 @@ namespace NPCS
                         NavigationNode node = NavigationNode.Create(r.Position, $"AUTO_Room_{r.Name}".Replace(' ', '_'));
                         foreach (DoorVariant d in r.Doors)
                         {
-                            if(d == null)
+                            if (d == null)
                             {
                                 continue;
                             }
@@ -261,9 +266,9 @@ namespace NPCS
                         int i = 0;
                         foreach (DoorVariant d in r.Doors)
                         {
-                            if(d == null) //idk
+                            if (d == null) //idk
                             {
-                                continue; 
+                                continue;
                             }
                             if (d.gameObject.transform.position == Vector3.zero)
                             {

@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
 using MEC;
+using Microsoft.Scripting.Hosting;
 using NPCS.AI;
 using NPCS.Events;
 using NPCS.Navigation;
@@ -230,9 +231,12 @@ namespace NPCS
 
         public List<CoroutineHandle> MovementCoroutines { get; } = new List<CoroutineHandle>();
 
+        //AI STATES -------------------------------
         public bool AIEnabled { get; set; } = false;
 
-        //AI STATES -------------------------------
+        public Utils.AiMode AIMode { get; set; } = Utils.AiMode.Legacy;
+
+        // ============ Legacy
         public LinkedList<AITarget> AIQueue { get; private set; } = new LinkedList<AITarget>();
 
         public AITarget CurrentAITarget { get; set; } = null;
@@ -241,6 +245,10 @@ namespace NPCS
         public string CurrentAIItemGroupTarget { get; set; } = null;
         public NavigationNode CurrentAIItemNodeTarget { get; set; } = null;
         public int SkippedTargets { get; set; } = 0;
+
+        // ============ Python
+        public Utils.NPCAIState AIState { get; set; } = new Utils.NPCAIState();
+
         //------------------------------------------
 
         //Inventory --------------------------------
@@ -270,79 +278,96 @@ namespace NPCS
 
         #region Coroutines
 
+        public void StartAI()
+        {
+            Log.Info($"Starting AI with mode: {AIMode:g}({AIEnabled})");
+            AttachedCoroutines.Add(Timing.RunCoroutine(AICoroutine()));
+        }
+
         private IEnumerator<float> AICoroutine()
         {
-            for (; ; )
+            if (AIEnabled)
             {
-                if (AIEnabled)
+                if (AIMode != Utils.AiMode.Python)
                 {
-                    if (CurrentAITarget != null)
+                    for (; ; )
                     {
-                        bool res = false;
-                        try
+                        if (CurrentAITarget != null)
                         {
-                            res = CurrentAITarget.Check(this);
-                        }
-                        catch (Exception e)
-                        {
-                            Log.Warn($"AI Target check failure: {e}");
-                        }
-                        if (res)
-                        {
-                            float delay = 0f;
-                            bool failure = false;
+                            bool res = false;
                             try
                             {
-                                delay = CurrentAITarget.Process(this);
-                                for (; SkippedTargets > 0; SkippedTargets--)
-                                {
-                                    AITarget target = AIQueue.First.Value;
-                                    AIQueue.RemoveFirst();
-                                    AIQueue.AddLast(target);
-                                }
+                                res = CurrentAITarget.Check(this);
                             }
                             catch (Exception e)
                             {
-                                failure = true;
-                                Log.Warn($"Target processing failure: {e}");
+                                Log.Warn($"AI Target check failure: {e}");
                             }
+                            if (res)
+                            {
+                                float delay = 0f;
+                                bool failure = false;
+                                try
+                                {
+                                    delay = CurrentAITarget.Process(this);
+                                    for (; SkippedTargets > 0; SkippedTargets--)
+                                    {
+                                        AITarget target = AIQueue.First.Value;
+                                        AIQueue.RemoveFirst();
+                                        AIQueue.AddLast(target);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    failure = true;
+                                    Log.Warn($"Target processing failure: {e}");
+                                }
 
-                            yield return Timing.WaitForSeconds(delay);
+                                yield return Timing.WaitForSeconds(delay);
 
-                            if (CurrentAITarget.IsFinished || failure)
+                                if (CurrentAITarget.IsFinished || failure)
+                                {
+                                    CurrentAITarget.IsFinished = false;
+                                    CurrentAITarget = null;
+                                }
+                            }
+                            else
                             {
                                 CurrentAITarget.IsFinished = false;
                                 CurrentAITarget = null;
+                                yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                             }
                         }
                         else
                         {
-                            CurrentAITarget.IsFinished = false;
-                            CurrentAITarget = null;
+                            try
+                            {
+                                if (!AIQueue.IsEmpty())
+                                {
+                                    CurrentAITarget = AIQueue.First.Value;
+                                    AIQueue.RemoveFirst();
+                                    AIQueue.AddLast(CurrentAITarget);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Log.Debug($"Error while scheduling AI target: {e}", Plugin.Instance.Config.VerboseOutput);
+                            }
                             yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                         }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            if (!AIQueue.IsEmpty())
-                            {
-                                CurrentAITarget = AIQueue.First.Value;
-                                AIQueue.RemoveFirst();
-                                AIQueue.AddLast(CurrentAITarget);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Log.Debug($"Error while scheduling AI target: {e}", Plugin.Instance.Config.VerboseOutput);
-                        }
-                        yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                     }
                 }
                 else
                 {
-                    yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
+                    Log.Info("Switched to python mode...");
+                    ScriptScope scope = Plugin.Engine.CreateScope();
+                    Plugin.Engine.ExecuteFile(Path.Combine(Config.NPCs_scripts_path, "test.py"), scope);
+                    dynamic test = scope.GetVariable<Func<int>>("test_method");
+                    for (; ; )
+                    {
+
+                        yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
+                    }
                 }
             }
         }
@@ -1182,7 +1207,6 @@ namespace NPCS
             AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
             AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
-            AttachedCoroutines.Add(Timing.RunCoroutine(AICoroutine()));
             Dictionary.Add(gameObject, this);
             Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
         }

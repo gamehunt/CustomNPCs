@@ -57,6 +57,7 @@ namespace NPCS
         public List<string> InitialMappings { get; set; } = new List<string>();
 
         public static string NPCs_root_path = Path.Combine(Paths.Configs, "npcs");
+        public static string NPCs_scripts_path = Path.Combine(NPCs_root_path, "scripts");
 
         public static string NPCs_mappings_path = Path.Combine(NPCs_root_path, "mappings");
 
@@ -87,7 +88,9 @@ affect_summary: false
 process_scp_logic: false
 events: []
 ai_enabled: false
+ai_mode: Legacy
 ai: []
+ai_scripts: []
 ";
 
         // OH YEAAAAAH 60KB HARDCODED STRINGS XD
