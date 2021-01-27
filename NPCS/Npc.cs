@@ -190,7 +190,7 @@ namespace NPCS
 
         public bool IsExclusive { get; set; } = false;
 
-        public Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>> Events { get; } = new Dictionary<string, Dictionary<NodeAction, Dictionary<string, string>>>();
+        public Dictionary<string, List<KeyValuePair<NodeAction, Dictionary<string, string>>>> Events { get; } = new Dictionary<string, List<KeyValuePair<NodeAction, Dictionary<string, string>>>>();
 
         public LinkedList<NavigationNode> NavigationQueue { get; private set; } = new LinkedList<NavigationNode>();
 
@@ -458,15 +458,15 @@ namespace NPCS
                                 bool open = CurrentNavTarget.AttachedDoor.RequiredPermissions.CheckPermissions(prev, NPCPlayer.ReferenceHub);
                                 if (!open)
                                 {
-                                        foreach (ItemType keycard in AvailableKeycards)
+                                    foreach (ItemType keycard in AvailableKeycards)
+                                    {
+                                        if (CurrentNavTarget.AttachedDoor.RequiredPermissions.CheckPermissions(keycard, NPCPlayer.ReferenceHub))
                                         {
-                                            if (CurrentNavTarget.AttachedDoor.RequiredPermissions.CheckPermissions(keycard, NPCPlayer.ReferenceHub))
-                                            {
-                                                ItemHeld = keycard;
-                                                open = true;
-                                                break;
-                                            }
+                                            ItemHeld = keycard;
+                                            open = true;
+                                            break;
                                         }
+                                    }
                                 }
                                 if (open)
                                 {

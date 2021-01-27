@@ -16,11 +16,11 @@ namespace NPCS.Events
             Player = p;
         }
 
-        private IEnumerator<float> RunActions(Dictionary<NodeAction, Dictionary<string, string>> acts)
+        private IEnumerator<float> RunActions(List<KeyValuePair<NodeAction, Dictionary<string, string>>> acts)
         {
-            foreach (NodeAction act in acts.Keys)
+            foreach (KeyValuePair<NodeAction, Dictionary<string, string>> act in acts)
             {
-                if (act.IsExclusive)
+                if (act.Key.IsExclusive)
                 {
                     while (NPC.IsActionLocked)
                     {
@@ -30,19 +30,19 @@ namespace NPCS.Events
                 }
                 try
                 {
-                    act.Process(NPC, Player, acts[act]);
+                    act.Key.Process(NPC, Player, act.Value);
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"Exception during processing action {act.Name}: {e}");
+                    Log.Error($"Exception during processing action {act.Key.Name}: {e}");
                 }
                 float dur = 0;
                 try
                 {
-                    dur = float.Parse(acts[act]["next_action_delay"].Replace('.', ','));
+                    dur = float.Parse(act.Value["next_action_delay"].Replace('.', ','));
                 }
                 catch (Exception) { }
-                if (act.IsExclusive)
+                if (act.Key.IsExclusive)
                 {
                     NPC.IsActionLocked = false;
                 }
@@ -55,7 +55,7 @@ namespace NPCS.Events
         {
         }
 
-        public void FireActions(Dictionary<NodeAction, Dictionary<string, string>> acts)
+        public void FireActions(List<KeyValuePair<NodeAction, Dictionary<string, string>>> acts)
         {
                 NPC.AttachedCoroutines.Add(Timing.RunCoroutine(RunActions(acts)));
         }

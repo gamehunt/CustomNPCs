@@ -142,13 +142,13 @@ namespace NPCS
 
                 foreach (NpcEventSerializationInfo info in raw_npc.Events)
                 {
-                    Dictionary<NodeAction, Dictionary<string, string>> actions_mapping = new Dictionary<NodeAction, Dictionary<string, string>>();
+                    List<KeyValuePair<NodeAction, Dictionary<string, string>>> actions_mapping = new List<KeyValuePair<NodeAction, Dictionary<string, string>>>();
                     foreach (NpcNodeWithArgsSerializationInfo action in info.Actions)
                     {
                         NodeAction act = NodeAction.GetFromToken(action.Token);
                         if (act != null)
                         {
-                            actions_mapping.Add(act, action.Args);
+                            actions_mapping.Add(new KeyValuePair<NodeAction, Dictionary<string, string>>(act, action.Args));
                         }
                         else
                         {
