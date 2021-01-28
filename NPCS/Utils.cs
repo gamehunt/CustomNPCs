@@ -38,10 +38,26 @@ namespace NPCS.Utils
 
         private Npc npc;
 
-        //reeeeee
-        public List<Player> GetNearestPlayers(float range, bool alive = true, RoleType role = RoleType.None)
+        public List<Player> GetNearestPlayers(float range, bool include_npcs = false)
         {
-            return (role == RoleType.None ? (alive ? Player.List.Where(p => p != npc.NPCPlayer && !p.IsNPC() && p.IsAlive) : Player.List.Where(p => p != npc.NPCPlayer && !p.IsNPC())) : Player.Get(role)).Where(pp => Vector3.Distance(npc.NPCPlayer.Position, pp.Position) <= range).ToList();
+            return Player.List.Where(pp => pp != npc.NPCPlayer && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range).ToList();
+        }
+
+        public List<Player> GetNearestPlayers(float range, RoleType role, bool include_npcs = false)
+        {
+            return Player.Get(role).Where(pp => pp != npc.NPCPlayer && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range).ToList();
+        }
+
+        public List<Player> GetNearestPlayers(float range, RoleType[] roles, bool IsBlacklist = false, bool include_npcs = false)
+        {
+            if (!IsBlacklist)
+            {
+                return Player.List.Where(pp => pp != npc.NPCPlayer && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range && roles.Contains(pp.Role)).ToList();
+            }
+            else
+            {
+                return Player.List.Where(pp => pp != npc.NPCPlayer && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range && !roles.Contains(pp.Role)).ToList();
+            }
         }
     }
 
