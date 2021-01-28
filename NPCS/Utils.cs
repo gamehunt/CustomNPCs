@@ -1,10 +1,11 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
+using MEC;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using YamlDotNet.Serialization;
-using MEC;
 
 namespace NPCS.Utils
 {
@@ -65,31 +66,54 @@ namespace NPCS.Utils
     {
         public NPCAIController(Npc parent)
         {
-            npc = parent;
+            Npc = parent;
         }
 
-        private Npc npc;
+        public Npc Npc { get; }
 
         public Player CurrentPlayerTarget
         {
-            get => npc.CurrentAIPlayerTarget;
+            get => Npc.CurrentAIPlayerTarget;
             set
             {
-                npc.CurrentAIPlayerTarget = value;
+                Npc.CurrentAIPlayerTarget = value;
             }
         }
 
         public void Stop()
         {
-            npc.Stop();
+            Npc.Stop();
         }
 
         public void Follow(Player target, Npc.TargetLostBehaviour behav = Npc.TargetLostBehaviour.SEARCH)
         {
-            npc.OnTargetLostBehaviour = behav;
-            npc.Follow(target);
+            Npc.OnTargetLostBehaviour = behav;
+            Npc.Follow(target);
         }
 
+        public void GoToRoom(string room_name = "", bool safe = true)
+        {
+            if (string.IsNullOrEmpty(room_name))
+            {
+                List<Room> valid_rooms = Map.Rooms.Where(rm => rm.Zone != Exiled.API.Enums.ZoneType.LightContainment || (safe ? Round.ElapsedTime.Minutes < 10 : !Map.IsLCZDecontaminated)).ToList();
+                Room r = valid_rooms[Plugin.Random.Next(0, valid_rooms.Count)];
+                Log.Debug($"[AI] Room selected: {r.Name}", Plugin.Instance.Config.VerboseOutput);
+                Npc.Stop();
+                if (Npc.GotoRoom(r))
+                {
+                    Npc.CurrentAIRoomTarget = r;
+                }
+            }
+            else
+            {
+                Room room = Map.Rooms.Where(rm => rm.Name.Equals(room_name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                Npc.Stop();
+                if (Npc.GotoRoom(room))
+                {
+                    Npc.CurrentAIRoomTarget = room;
+                }
+            }
+        }
 
         private IEnumerator<float> ReviveCoroutine(Npc npc, Player target)
         {
@@ -104,20 +128,20 @@ namespace NPCS.Utils
 
         public float Attack(Player target, int accuracy = 100, Dictionary<HitBoxType, int> hitboxes = null, bool use_ammo = false, float firerate_mul = 1f)
         {
-            if (!npc.NPCPlayer.ReferenceHub.characterClassManager.IsAnyScp())
+            if (!Npc.NPCPlayer.ReferenceHub.characterClassManager.IsAnyScp())
             {
-                if (npc.AvailableWeapons.Count > 0)
+                if (Npc.AvailableWeapons.Count > 0)
                 {
-                    if (!npc.ItemHeld.IsWeapon(false))
+                    if (!Npc.ItemHeld.IsWeapon(false))
                     {
-                        npc.ItemHeld = npc.AvailableWeapons.Keys.ElementAt(0);
+                        Npc.ItemHeld = Npc.AvailableWeapons.Keys.ElementAt(0);
                         return 0.5f;
                     }
 
-                    npc.Stop();
-                    Vector3 heading = (npc.CurrentAIPlayerTarget.Position - npc.NPCPlayer.Position);
+                    Npc.Stop();
+                    Vector3 heading = (Npc.CurrentAIPlayerTarget.Position - Npc.NPCPlayer.Position);
                     Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
-                    npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
+                    Npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
                     bool miss = Plugin.Random.Next(0, 100) >= accuracy;
                     int hitbox_value = Plugin.Random.Next(0, 100);
                     HitBoxType hitbox = HitBoxType.NULL;
@@ -135,30 +159,30 @@ namespace NPCS.Utils
                         }
                     }
 
-                    npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(miss ? npc.gameObject : npc.CurrentAIPlayerTarget.GameObject, hitbox, npc.NPCPlayer.CameraTransform.forward, npc.NPCPlayer.Position, npc.CurrentAIPlayerTarget.Position);
+                    Npc.NPCPlayer.ReferenceHub.weaponManager.CallCmdShoot(miss ? Npc.gameObject : Npc.CurrentAIPlayerTarget.GameObject, hitbox, Npc.NPCPlayer.CameraTransform.forward, Npc.NPCPlayer.Position, Npc.CurrentAIPlayerTarget.Position);
 
-                    bool end = !npc.CurrentAIPlayerTarget.IsAlive;
+                    bool end = !Npc.CurrentAIPlayerTarget.IsAlive;
 
                     if (use_ammo)
                     {
-                        npc.AvailableWeapons[npc.ItemHeld]--;
-                        if (npc.AvailableWeapons[npc.ItemHeld] <= 0)
+                        Npc.AvailableWeapons[Npc.ItemHeld]--;
+                        if (Npc.AvailableWeapons[Npc.ItemHeld] <= 0)
                         {
-                            npc.NPCPlayer.ReferenceHub.weaponManager.RpcReload(npc.NPCPlayer.ReferenceHub.weaponManager.curWeapon);
-                            npc.AvailableWeapons[npc.ItemHeld] = (int)npc.NPCPlayer.ReferenceHub.weaponManager.weapons[npc.NPCPlayer.ReferenceHub.weaponManager.curWeapon].maxAmmo;
+                            Npc.NPCPlayer.ReferenceHub.weaponManager.RpcReload(Npc.NPCPlayer.ReferenceHub.weaponManager.curWeapon);
+                            Npc.AvailableWeapons[Npc.ItemHeld] = (int)Npc.NPCPlayer.ReferenceHub.weaponManager.weapons[Npc.NPCPlayer.ReferenceHub.weaponManager.curWeapon].maxAmmo;
                             if (end)
                             {
-                                npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
+                                Npc.FireEvent(new Events.NPCTargetKilledEvent(Npc, Npc.CurrentAIPlayerTarget));
                             }
-                            return npc.NPCPlayer.ReferenceHub.weaponManager.weapons[npc.NPCPlayer.ReferenceHub.weaponManager.curWeapon].reloadingTime;
+                            return Npc.NPCPlayer.ReferenceHub.weaponManager.weapons[Npc.NPCPlayer.ReferenceHub.weaponManager.curWeapon].reloadingTime;
                         }
                     }
 
                     if (end)
                     {
-                        npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
-                        npc.Stop();
-                        npc.CurrentAIPlayerTarget = null;
+                        Npc.FireEvent(new Events.NPCTargetKilledEvent(Npc, Npc.CurrentAIPlayerTarget));
+                        Npc.Stop();
+                        Npc.CurrentAIPlayerTarget = null;
                         return 0f;
                     }
                 }
@@ -166,62 +190,62 @@ namespace NPCS.Utils
                 {
                     return 0f;
                 }
-                return firerate_mul * Plugin.Instance.Config.NpcFireCooldownMultiplier * npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
+                return firerate_mul * Plugin.Instance.Config.NpcFireCooldownMultiplier * Npc.NPCPlayer.ReferenceHub.weaponManager._fireCooldown;
             }
             else
             {
                 float cd = 0f;
-                npc.OnTargetLostBehaviour = Npc.TargetLostBehaviour.STOP;
-                npc.Follow(npc.CurrentAIPlayerTarget);
-                if (Vector3.Distance(npc.CurrentAIPlayerTarget.Position, npc.NPCPlayer.Position) <= 1.5f)
+                Npc.OnTargetLostBehaviour = Npc.TargetLostBehaviour.STOP;
+                Npc.Follow(Npc.CurrentAIPlayerTarget);
+                if (Vector3.Distance(Npc.CurrentAIPlayerTarget.Position, Npc.NPCPlayer.Position) <= 1.5f)
                 {
-                    if (npc.NPCPlayer.Role.Is939())
+                    if (Npc.NPCPlayer.Role.Is939())
                     {
-                        npc.NPCPlayer.GameObject.GetComponent<Scp939PlayerScript>().CallCmdShoot(npc.CurrentAIPlayerTarget.GameObject);
+                        Npc.NPCPlayer.GameObject.GetComponent<Scp939PlayerScript>().CallCmdShoot(Npc.CurrentAIPlayerTarget.GameObject);
                     }
                     else
                     {
-                        switch (npc.NPCPlayer.Role)
+                        switch (Npc.NPCPlayer.Role)
                         {
                             case RoleType.Scp106:
-                                npc.NPCPlayer.GameObject.GetComponent<Scp106PlayerScript>().CallCmdMovePlayer(npc.CurrentAIPlayerTarget.GameObject, ServerTime.time);
+                                Npc.NPCPlayer.GameObject.GetComponent<Scp106PlayerScript>().CallCmdMovePlayer(Npc.CurrentAIPlayerTarget.GameObject, ServerTime.time);
                                 cd = 2f;
                                 break;
 
                             case RoleType.Scp173:
-                                npc.NPCPlayer.GameObject.GetComponent<Scp173PlayerScript>().CallCmdHurtPlayer(npc.CurrentAIPlayerTarget.GameObject);
+                                Npc.NPCPlayer.GameObject.GetComponent<Scp173PlayerScript>().CallCmdHurtPlayer(Npc.CurrentAIPlayerTarget.GameObject);
                                 break;
 
                             case RoleType.Scp049:
-                                npc.CurrentAIPlayerTarget.Hurt(99999f, DamageTypes.Scp049, npc.NPCPlayer.Nickname);
+                                Npc.CurrentAIPlayerTarget.Hurt(99999f, DamageTypes.Scp049, Npc.NPCPlayer.Nickname);
                                 cd = PlayableScps.Scp049.KillCooldown;
                                 break;
 
                             case RoleType.Scp0492:
-                                npc.NPCPlayer.GameObject.GetComponent<Scp049_2PlayerScript>().CallCmdShootAnim();
-                                npc.NPCPlayer.GameObject.GetComponent<Scp049_2PlayerScript>().CallCmdHurtPlayer(npc.CurrentAIPlayerTarget.GameObject);
+                                Npc.NPCPlayer.GameObject.GetComponent<Scp049_2PlayerScript>().CallCmdShootAnim();
+                                Npc.NPCPlayer.GameObject.GetComponent<Scp049_2PlayerScript>().CallCmdHurtPlayer(Npc.CurrentAIPlayerTarget.GameObject);
                                 cd = 1f;
                                 break;
 
                             case RoleType.Scp096:
-                                npc.CurrentAIPlayerTarget.Hurt(99999f, DamageTypes.Scp096, npc.NPCPlayer.Nickname, npc.NPCPlayer.Id);
+                                Npc.CurrentAIPlayerTarget.Hurt(99999f, DamageTypes.Scp096, Npc.NPCPlayer.Nickname, Npc.NPCPlayer.Id);
                                 break;
                         }
                     }
-                    if (!npc.CurrentAIPlayerTarget.IsAlive)
+                    if (!Npc.CurrentAIPlayerTarget.IsAlive)
                     {
-                        npc.AttachedCoroutines.Add(MEC.Timing.CallDelayed(0.1f, () =>
+                        Npc.AttachedCoroutines.Add(MEC.Timing.CallDelayed(0.1f, () =>
                         {
-                            npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
+                            Npc.FireEvent(new Events.NPCTargetKilledEvent(Npc, Npc.CurrentAIPlayerTarget));
                         }));
 
-                        npc.Stop();
+                        Npc.Stop();
 
-                        npc.CurrentAIPlayerTarget = null;
+                        Npc.CurrentAIPlayerTarget = null;
 
-                        if (npc.ProcessSCPLogic && npc.NPCPlayer.Role == RoleType.Scp049)
+                        if (Npc.ProcessSCPLogic && Npc.NPCPlayer.Role == RoleType.Scp049)
                         {
-                            npc.AttachedCoroutines.Add(Timing.RunCoroutine(ReviveCoroutine(npc, target)));
+                            Npc.AttachedCoroutines.Add(Timing.RunCoroutine(ReviveCoroutine(Npc, target)));
                             return PlayableScps.Scp049.TimeToRevive + 0.5f;
                         }
                     }
