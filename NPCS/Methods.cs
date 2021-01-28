@@ -94,7 +94,9 @@ namespace NPCS
         //affect_summary: false
         //events: []
         //ai_enabled: false
+        //ai_mode: Legacy
         //ai: []
+        //ai_scripts: []
 
         public static Npc CreateNPC(Vector3 pos, Vector2 rot, string path)
         {
@@ -130,6 +132,13 @@ namespace NPCS
                 n.ProcessSCPLogic = raw_npc.ProcessScpLogic;
 
                 n.AIMode = raw_npc.AiMode;
+
+                foreach(string scr in raw_npc.AiScripts)
+                {
+                    string full = Path.Combine(Config.NPCs_scripts_path, scr);
+                    Log.Debug($"Enabling script: {full}", Plugin.Instance.Config.VerboseOutput);
+                    n.AIScripts.Add(full);
+                }
 
                 Log.Debug($"Set AI mode: {n.AIMode}", Plugin.Instance.Config.VerboseOutput);
 

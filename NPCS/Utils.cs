@@ -253,7 +253,7 @@ namespace NPCS.Utils
         public Dictionary<string, string> Args { get; set; }
     }
 
-    public enum AiMode
+    public enum AIMode
     {
         Legacy,
         Python
@@ -292,7 +292,7 @@ namespace NPCS.Utils
         public bool AiEnabled { get; set; }
 
         [YamlMember(Alias = "ai_mode")]
-        public AiMode AiMode { get; set; }
+        public AIMode AiMode { get; set; }
 
         public NpcNodeWithArgsSerializationInfo[] Ai { get; set; }
 

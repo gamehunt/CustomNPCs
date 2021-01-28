@@ -234,7 +234,8 @@ namespace NPCS
         //AI STATES -------------------------------
         public bool AIEnabled { get; set; } = false;
 
-        public Utils.AiMode AIMode { get; set; } = Utils.AiMode.Legacy;
+        public Utils.AIMode AIMode { get; set; } = Utils.AIMode.Legacy;
+        public List<string> AIScripts { get; set; } = new List<string>();
 
         // ============ Legacy
         public LinkedList<AITarget> AIQueue { get; private set; } = new LinkedList<AITarget>();
@@ -248,6 +249,7 @@ namespace NPCS
 
         // ============ Python
         public Utils.NPCAIController AIController { get; set; } = null;
+
         public Utils.NPCAIHelper AIHelper { get; set; } = null;
         //------------------------------------------
 
@@ -288,7 +290,7 @@ namespace NPCS
         {
             if (AIEnabled)
             {
-                if (AIMode != Utils.AiMode.Python)
+                if (AIMode != Utils.AIMode.Python)
                 {
                     for (; ; )
                     {
@@ -361,20 +363,33 @@ namespace NPCS
                 {
                     Log.Info("Switched to python mode...");
                     ScriptScope scope = Plugin.Engine.CreateScope();
+                    scope.SetVariable("controller", AIController);
+                    scope.SetVariable("helper", AIHelper);
                     for (; ; )
                     {
-                        float delay = 0f;
-                        try
+                        if (AIScripts.Count != 0)
                         {
-                            scope.SetVariable("controller", AIController);
-                            scope.SetVariable("helper", AIHelper);
-                            Plugin.Engine.ExecuteFile(Path.Combine(Config.NPCs_scripts_path, "test.py"), scope);
-                            delay = scope.GetVariable<float>("delay");
-                        }catch(Exception e)
-                        {
-                            Log.Error($"AI script failure: {e}");
+                            foreach (string script in AIScripts)
+                            {
+                                //Log.Debug($"Running script {script}", Plugin.Instance.Config.VerboseOutput);
+                                float delay = 0f;
+                                try
+                                {
+                                    Plugin.Engine.ExecuteFile(script, scope);
+                                    delay = scope.GetVariable<float>("delay");
+                                }
+                                catch (Exception e)
+                                {
+                                    Log.Error($"AI script failure: {e}");
+                                }
+                                //Log.Debug($"--> {delay}", Plugin.Instance.Config.VerboseOutput);
+                                yield return Timing.WaitForSeconds(delay);
+                            }
                         }
-                        yield return Timing.WaitForSeconds(delay);
+                        else
+                        {
+                            yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
+                        }
                     }
                 }
             }
