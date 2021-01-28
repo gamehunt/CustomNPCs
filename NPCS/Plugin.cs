@@ -58,6 +58,7 @@ namespace NPCS
                 Random = new Random();
 
                 Engine = Python.CreateEngine();
+                Engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(HitBoxType)));
                 Engine.Runtime.LoadAssembly(Assembly.GetExecutingAssembly());
 
                 foreach (MethodBase bas in Evs.Events.Instance.Harmony.GetPatchedMethods())

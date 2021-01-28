@@ -247,8 +247,8 @@ namespace NPCS
         public int SkippedTargets { get; set; } = 0;
 
         // ============ Python
-        public Utils.NPCAIState AIState { get; set; } = new Utils.NPCAIState();
-
+        public Utils.NPCAIController AIController { get; set; } = null;
+        public Utils.NPCAIHelper AIHelper { get; set; } = null;
         //------------------------------------------
 
         //Inventory --------------------------------
@@ -363,16 +363,18 @@ namespace NPCS
                     ScriptScope scope = Plugin.Engine.CreateScope();
                     for (; ; )
                     {
+                        float delay = 0f;
                         try
                         {
-                            scope.SetVariable("obj", this);
-                            //scope.SetVariable("core_path", Path.Combine(Paths.Plugins, "0NPCS.dll"));
+                            scope.SetVariable("controller", AIController);
+                            scope.SetVariable("helper", AIHelper);
                             Plugin.Engine.ExecuteFile(Path.Combine(Config.NPCs_scripts_path, "test.py"), scope);
+                            delay = scope.GetVariable<float>("delay");
                         }catch(Exception e)
                         {
                             Log.Error($"AI script failure: {e}");
                         }
-                        yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
+                        yield return Timing.WaitForSeconds(delay);
                     }
                 }
             }
@@ -1210,6 +1212,8 @@ namespace NPCS
         private void Awake()
         {
             NPCPlayer = Player.Get(gameObject);
+            AIController = new Utils.NPCAIController(this);
+            AIHelper = new Utils.NPCAIHelper(this);
             AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
             AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
