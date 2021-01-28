@@ -361,11 +361,17 @@ namespace NPCS
                 {
                     Log.Info("Switched to python mode...");
                     ScriptScope scope = Plugin.Engine.CreateScope();
-                    Plugin.Engine.ExecuteFile(Path.Combine(Config.NPCs_scripts_path, "test.py"), scope);
-                    dynamic test = scope.GetVariable<Func<int>>("test_method");
                     for (; ; )
                     {
-
+                        try
+                        {
+                            scope.SetVariable("obj", this);
+                            //scope.SetVariable("core_path", Path.Combine(Paths.Plugins, "0NPCS.dll"));
+                            Plugin.Engine.ExecuteFile(Path.Combine(Config.NPCs_scripts_path, "test.py"), scope);
+                        }catch(Exception e)
+                        {
+                            Log.Error($"AI script failure: {e}");
+                        }
                         yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                     }
                 }

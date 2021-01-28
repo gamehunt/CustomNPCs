@@ -1,5 +1,8 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
+using IronPython.Runtime;
+using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
 using NPCS.AI;
 using NPCS.AI.TargetFilters;
 using NPCS.Conditions;
@@ -7,8 +10,6 @@ using NPCS.Navigation;
 using NPCS.Talking;
 using System;
 using System.IO;
-using IronPython.Hosting;
-using Microsoft.Scripting.Hosting;
 using System.Reflection;
 using Evs = Exiled.Events;
 using Handlers = Exiled.Events.Handlers;
@@ -38,6 +39,14 @@ namespace NPCS
 
         public static ScriptEngine Engine { get; private set; }
 
+        public class TestClz
+        {
+            public void Test()
+            {
+                Log.Info("TTT");
+            }
+        }
+
         public override void OnEnabled()
         {
             try
@@ -49,6 +58,7 @@ namespace NPCS
                 Random = new Random();
 
                 Engine = Python.CreateEngine();
+                Engine.Runtime.LoadAssembly(Assembly.GetExecutingAssembly());
 
                 foreach (MethodBase bas in Evs.Events.Instance.Harmony.GetPatchedMethods())
                 {
@@ -71,7 +81,6 @@ namespace NPCS
                 }
 
                 Evs.Events.Instance.ReloadDisabledPatches();
-                
 
                 Harmony = new HarmonyLib.Harmony($"gamehunt.cnpcs.{reloads}");
                 reloads++;
@@ -128,6 +137,9 @@ namespace NPCS
                     sw.Write(Config.DefaultNPCContents);
                     sw.Close();
                 }
+
+
+                //Engine.Operations.Invoke(vari, new TestClz());
 
                 Log.Info("Registering conditions...");
 
