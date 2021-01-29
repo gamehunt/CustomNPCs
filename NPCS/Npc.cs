@@ -3,6 +3,7 @@ using Exiled.API.Features;
 using MEC;
 using Microsoft.Scripting.Hosting;
 using NPCS.AI;
+using NPCS.AI.Python;
 using NPCS.Events;
 using NPCS.Navigation;
 using NPCS.Talking;
@@ -248,9 +249,9 @@ namespace NPCS
         public int SkippedTargets { get; set; } = 0;
 
         // ============ Python
-        public Utils.NPCAIController AIController { get; set; } = null;
+        public NPCAIController AIController { get; set; } = null;
 
-        public Utils.NPCAIHelper AIHelper { get; set; } = null;
+        public NPCAIHelper AIHelper { get; set; } = null;
         //------------------------------------------
 
         //Inventory --------------------------------
@@ -1227,8 +1228,8 @@ namespace NPCS
         private void Awake()
         {
             NPCPlayer = Player.Get(gameObject);
-            AIController = new Utils.NPCAIController(this);
-            AIHelper = new Utils.NPCAIHelper(this);
+            AIController = new NPCAIController(this);
+            AIHelper = new NPCAIHelper(this);
             AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
             AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
             AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));

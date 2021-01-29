@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NPCS.AI.TargetFilters
 {
-    internal abstract class TargetFilter
+    public abstract class TargetFilter
     {
         public abstract string Name { get; }
 
