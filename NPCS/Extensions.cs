@@ -11,6 +11,11 @@ namespace NPCS
             return Npc.Dictionary.ContainsKey(p.GameObject);
         }
 
+        public static Npc AsNPC(this Player p)
+        {
+            return p.IsNPC() ? Npc.Dictionary[p.GameObject] : null;
+        }
+
         public static bool IsClosed(this Lift lift, Lift.Elevator elev)
         {
             for (int i = 0; i < lift.elevators.Length; i++)

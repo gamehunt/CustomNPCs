@@ -1197,8 +1197,8 @@ namespace NPCS
 
             Log.SendRaw($"NPC {NPCPlayer.Nickname} ({NPCPlayer.Id}) deconstructed", ConsoleColor.Green);
 
-            Player.IdsCache.Remove(NPCPlayer.Id);
-            Player.Dictionary.Remove(NPCPlayer.GameObject);
+            //Player.IdsCache.Remove(NPCPlayer.Id);
+            //Player.Dictionary.Remove(NPCPlayer.GameObject);
         }
 
         public static Npc Get(Player p)

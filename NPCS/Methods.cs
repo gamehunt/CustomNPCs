@@ -52,10 +52,10 @@ namespace NPCS
             NetworkServer.Spawn(obj);
             PlayerManager.AddPlayer(obj); //I'm not sure if I need this
 
-            Player ply_obj = new Player(obj);
-            Player.Dictionary.Add(obj, ply_obj);
+            Player ply_obj = Player.Get(obj);
+            //Player.Dictionary.Add(obj, ply_obj);
 
-            Player.IdsCache.Add(ply_obj.Id, ply_obj);
+            //Player.IdsCache.Add(ply_obj.Id, ply_obj);
 
             Npc npcc = obj.AddComponent<Npc>();
 

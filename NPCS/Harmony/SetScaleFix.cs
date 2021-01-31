@@ -16,7 +16,7 @@ namespace NPCS.Harmony
 
                 foreach (Player target in Player.List)
                 {
-                    if (!Npc.Dictionary.ContainsKey(target.GameObject))
+                    if (!target.IsNPC())
                     {
                         Server.SendSpawnMessage?.Invoke(null, new object[] { __instance.ReferenceHub.characterClassManager.netIdentity, target.Connection });
                     }

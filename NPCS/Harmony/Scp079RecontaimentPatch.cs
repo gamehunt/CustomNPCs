@@ -129,7 +129,7 @@ namespace NPCS.Harmony
                     if (component.CurClass == global::RoleType.Scp079)
                     {
                         flag = true;
-                    }
+                    }  
                     if (component.CurRole.team == global::Team.SCP)
                     {
                         num++;

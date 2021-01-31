@@ -24,8 +24,8 @@ namespace NPCS
         public override string Author { get; } = "gamehunt";
         public override string Name { get; } = "CustomNPCs";
         public override string Prefix { get; } = "CNPCS";
-        public override Version Version { get; } = new Version(1, 5, 2);
-        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 25);
+        public override Version Version { get; } = new Version(1, 6, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 29);
 
         public override PluginPriority Priority => PluginPriority.Lower;
 
@@ -38,14 +38,6 @@ namespace NPCS
         private int reloads = 0;
 
         public static ScriptEngine Engine { get; private set; }
-
-        public class TestClz
-        {
-            public void Test()
-            {
-                Log.Info("TTT");
-            }
-        }
 
         public override void OnEnabled()
         {
@@ -138,9 +130,6 @@ namespace NPCS
                     sw.Write(Config.DefaultNPCContents);
                     sw.Close();
                 }
-
-
-                //Engine.Operations.Invoke(vari, new TestClz());
 
                 Log.Info("Registering conditions...");
 
