@@ -1,9 +1,5 @@
 ﻿using Exiled.API.Extensions;
-using Exiled.API.Features;
-using MEC;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using YamlDotNet.Serialization;
 
@@ -29,7 +25,6 @@ namespace NPCS.Utils
             return new Vector2(x, y);
         }
     }
-   
 
     public class SerializableVector3
     {

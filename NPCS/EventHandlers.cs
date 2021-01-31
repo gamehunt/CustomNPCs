@@ -90,7 +90,7 @@ namespace NPCS
                     Npc component = Npc.Get(p);
                     if (!component.NPCPlayer.IsGodModeEnabled)
                     {
-                        p.Hurt(ev.TargetToDamages[p], ev.Thrower,DamageTypes.Grenade);
+                        p.Hurt(ev.TargetToDamages[p], ev.Thrower, DamageTypes.Grenade);
                     }
                 }
             }

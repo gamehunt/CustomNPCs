@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Exiled.API.Enums;
+using NPCS.Navigation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Exiled.API.Enums;
-using NPCS.Navigation;
 
 namespace NPCS.AI
 {
     //WIP
-    class AIFindAmmoTarget : AITarget
+    internal class AIFindAmmoTarget : AITarget
     {
         public override string Name => "AIFindAmmoTarget";
 
@@ -15,18 +15,22 @@ namespace NPCS.AI
 
         private AmmoType target_type;
         private string string_type;
-        bool IsAuto = false;
+        private bool IsAuto = false;
         private Queue<NavigationNode> possible_nodes;
 
         private ItemType ItemFromAmmo(AmmoType type)
         {
-            switch (type) {
+            switch (type)
+            {
                 case AmmoType.Nato556:
                     return ItemType.Ammo556;
+
                 case AmmoType.Nato762:
                     return ItemType.Ammo762;
+
                 case AmmoType.Nato9:
                     return ItemType.Ammo9mm;
+
                 default:
                     return ItemType.None;
             }

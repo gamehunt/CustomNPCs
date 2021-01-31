@@ -17,7 +17,7 @@ namespace NPCS.AI
 
         public override void Construct()
         {
-            behav = (Npc.TargetLostBehaviour)Enum.Parse(typeof(Npc.TargetLostBehaviour),Arguments["target_lost_behaviour"]);
+            behav = (Npc.TargetLostBehaviour)Enum.Parse(typeof(Npc.TargetLostBehaviour), Arguments["target_lost_behaviour"]);
         }
 
         public override float Process(Npc npc)

@@ -2,8 +2,8 @@
 using Exiled.API.Features;
 using MEC;
 using NPCS.Talking;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace NPCS.Actions
@@ -79,7 +79,7 @@ namespace NPCS.Actions
             Vector3 heading = (player.Position - npc.NPCPlayer.Position);
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
             npc.NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
-            npc.AttachedCoroutines.Add(Timing.RunCoroutine(ShootCoroutine(npc, player, (HitBoxType)System.Enum.Parse(typeof(HitBoxType),args["hitbox"]), int.Parse(args["amount"]))));
+            npc.AttachedCoroutines.Add(Timing.RunCoroutine(ShootCoroutine(npc, player, (HitBoxType)System.Enum.Parse(typeof(HitBoxType), args["hitbox"]), int.Parse(args["amount"]))));
         }
     }
 }

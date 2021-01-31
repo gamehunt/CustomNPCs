@@ -1,6 +1,5 @@
 ﻿using Exiled.Events.EventArgs;
 using HarmonyLib;
-using NPCS;
 
 namespace TeslaGateControlCompatModule.Harmony
 {
@@ -9,7 +8,7 @@ namespace TeslaGateControlCompatModule.Harmony
     {
         private static bool Prefix(TeslaGateControl.eventHandlers __instance, TriggeringTeslaEventArgs ev)
         {
-            if(ev.Player.IsNPC())
+            if (ev.Player.IsNPC())
             {
                 ev.IsTriggerable = false;
                 return false;

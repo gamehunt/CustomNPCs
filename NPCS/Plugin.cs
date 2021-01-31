@@ -1,6 +1,5 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
-using IronPython.Runtime;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using NPCS.AI;

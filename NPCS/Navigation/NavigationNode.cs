@@ -1,10 +1,10 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
+using Interactables.Interobjects.DoorUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Interactables.Interobjects.DoorUtils;
 
 namespace NPCS.Navigation
 {

@@ -1,6 +1,5 @@
 ﻿using Exiled.API.Features;
 using HarmonyLib;
-using NPCS;
 using Stalky106;
 using System.Collections.Generic;
 using UnityEngine;

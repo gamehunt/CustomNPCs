@@ -1,10 +1,10 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using UnityEngine;
 using MEC;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace NPCS.AI
 {
@@ -99,14 +99,12 @@ namespace NPCS.AI
                         }
                     }
 
-
                     if (end)
                     {
                         npc.FireEvent(new Events.NPCTargetKilledEvent(npc, npc.CurrentAIPlayerTarget));
                         IsFinished = true;
                         return 0f;
                     }
-
                 }
                 else
                 {
@@ -149,6 +147,7 @@ namespace NPCS.AI
                                 npc.NPCPlayer.GameObject.GetComponent<Scp049_2PlayerScript>().CallCmdHurtPlayer(npc.CurrentAIPlayerTarget.GameObject);
                                 cd = 1f;
                                 break;
+
                             case RoleType.Scp096:
                                 npc.CurrentAIPlayerTarget.Hurt(99999f, DamageTypes.Scp096, npc.NPCPlayer.Nickname, npc.NPCPlayer.Id);
                                 break;
@@ -169,12 +168,10 @@ namespace NPCS.AI
 
                         if (npc.ProcessSCPLogic && npc.NPCPlayer.Role == RoleType.Scp049)
                         {
-                            npc.AttachedCoroutines.Add(Timing.RunCoroutine(ReviveCoroutine(npc,target)));
+                            npc.AttachedCoroutines.Add(Timing.RunCoroutine(ReviveCoroutine(npc, target)));
                             IsFinished = true;
                             return PlayableScps.Scp049.TimeToRevive + 0.5f;
                         }
-
-                        
                     }
                 }
                 return cd;

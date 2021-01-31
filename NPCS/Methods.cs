@@ -133,7 +133,7 @@ namespace NPCS
 
                 n.AIMode = raw_npc.AiMode;
 
-                foreach(string scr in raw_npc.AiScripts)
+                foreach (string scr in raw_npc.AiScripts)
                 {
                     string full = Path.Combine(Config.NPCs_scripts_path, scr);
                     Log.Debug($"Enabling script: {full}", Plugin.Instance.Config.VerboseOutput);

@@ -1,9 +1,7 @@
-﻿using Exiled.API.Features;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Exiled.API.Extensions;
+using Exiled.API.Features;
 using Interactables.Interobjects.DoorUtils;
-using Exiled.API.Extensions;
+using System.Collections.Generic;
 
 namespace NPCS.Actions
 {

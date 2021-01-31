@@ -1,6 +1,4 @@
-using Exiled.API.Extensions;
 using Exiled.API.Features;
-using System;
 
 namespace NPCS
 {
@@ -34,7 +32,5 @@ namespace NPCS
             }
             return lift.NetworkstatusID != (int)Lift.Status.Moving;
         }
-
-    
     }
 }

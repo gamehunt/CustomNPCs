@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NPCS.AI
+﻿namespace NPCS.AI
 {
-    class AIStop : AITarget
+    internal class AIStop : AITarget
     {
         public override string Name => "AIStop";
 
@@ -19,7 +13,6 @@ namespace NPCS.AI
 
         public override void Construct()
         {
-            
         }
 
         public override float Process(Npc npc)

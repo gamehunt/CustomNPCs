@@ -48,7 +48,6 @@ namespace NPCS.Events
                 }
                 yield return Timing.WaitForSeconds(dur);
             }
-            
         }
 
         public virtual void OnFired(Npc npc)
@@ -57,7 +56,7 @@ namespace NPCS.Events
 
         public void FireActions(List<KeyValuePair<NodeAction, Dictionary<string, string>>> acts)
         {
-                NPC.AttachedCoroutines.Add(Timing.RunCoroutine(RunActions(acts)));
+            NPC.AttachedCoroutines.Add(Timing.RunCoroutine(RunActions(acts)));
         }
 
         public Npc NPC

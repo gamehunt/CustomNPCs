@@ -15,7 +15,7 @@ namespace NPCS.AI.Python
         private Npc npc;
 
         private List<TargetFilters.TargetFilter> PrepareFilters(IronPython.Runtime.List filters)
-        { 
+        {
             List<TargetFilters.TargetFilter> fobjs = new List<TargetFilters.TargetFilter>();
             if (filters != null)
             {

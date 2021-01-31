@@ -1,8 +1,6 @@
 ﻿using Exiled.API.Features;
 using HarmonyLib;
 using MEC;
-using NPCS;
-using ReversePlague;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;

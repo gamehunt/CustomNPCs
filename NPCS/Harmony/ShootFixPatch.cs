@@ -195,7 +195,7 @@ namespace NPCS.Harmony
                         __instance._lastRotation = __instance._hub.playerMovementSync.Rotations.x;
                         __instance._lastRotationReset = 0.35f;
                     }
-                    
+
                     float num2 = Vector3.Distance(__instance.camera.transform.position, target.transform.position);
                     float num3 = __instance.weapons[(int)__instance.curWeapon].damageOverDistance.Evaluate(num2);
                     switch (referenceHub.characterClassManager.CurClass)

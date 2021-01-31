@@ -1,6 +1,4 @@
 ﻿using HarmonyLib;
-using NPCS;
-using ReversePlague;
 
 namespace ReversePlagueCompatModule.Harmony
 {

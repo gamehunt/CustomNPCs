@@ -1,6 +1,4 @@
-﻿using Dissonance;
-
-namespace NPCS.AI
+﻿namespace NPCS.AI
 {
     internal class AIConditionalJump : AITarget
     {
