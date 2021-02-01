@@ -81,12 +81,12 @@ namespace NPCS.AI.Python
             return resulted;
         }
 
-        public List<Player> GetNearestPlayers(float range, RoleType[] roles, IronPython.Runtime.List filters = null, bool IsBlacklist = false, bool include_npcs = false)
+        public List<Player> GetNearestPlayers(float range, RoleType[] roles, IronPython.Runtime.List filters = null, bool is_blacklist = false, bool include_npcs = false)
         {
             List<Player> resulted = new List<Player>();
             List<TargetFilters.TargetFilter> fobjs = PrepareFilters(filters);
             IEnumerable<Player> raw_players;
-            if (!IsBlacklist)
+            if (!is_blacklist)
             {
                 raw_players = Player.List.Where(pp => pp != npc.NPCPlayer && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range && roles.Contains(pp.Role));
             }
@@ -105,6 +105,21 @@ namespace NPCS.AI.Python
                 }
             }
             return resulted;
+        }
+
+        public Player GetNearestPlayer(float range, IronPython.Runtime.List filters = null, bool include_npcs = false)
+        {
+            return GetNearestPlayers(range, filters, include_npcs).FirstOrDefault();
+        }
+
+        public Player GetNearestPlayer(float range, RoleType role, IronPython.Runtime.List filters = null, bool include_npcs = false)
+        {
+            return GetNearestPlayers(range, role, filters, include_npcs).FirstOrDefault();
+        }
+
+        public Player GetNearestPlayer(float range, RoleType[] roles, IronPython.Runtime.List filters = null, bool is_blacklist = false, bool include_npcs = false)
+        {
+            return GetNearestPlayers(range, roles, filters, is_blacklist, include_npcs).FirstOrDefault();
         }
 
         public Pickup FindItemOfGroup(string group)

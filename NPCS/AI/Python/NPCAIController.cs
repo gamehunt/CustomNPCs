@@ -37,7 +37,7 @@ namespace NPCS.AI.Python
             CurrentPlayerTarget = player;
         }
 
-        public void ClearPlayerTarget()
+        public void ResetPlayerTarget()
         {
             CurrentPlayerTarget = null;
         }

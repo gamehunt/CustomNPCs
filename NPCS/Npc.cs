@@ -374,6 +374,7 @@ namespace NPCS
                                 float delay = 0f;
                                 try
                                 {
+                                    scope.SetVariable("delay", Plugin.Instance.Config.AIIdleUpdateFrequency);
                                     Plugin.Engine.ExecuteFile(script, scope);
                                     delay = scope.GetVariable<float>("delay");
                                 }
