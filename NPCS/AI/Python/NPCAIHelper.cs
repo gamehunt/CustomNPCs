@@ -106,5 +106,20 @@ namespace NPCS.AI.Python
             }
             return resulted;
         }
+
+        public Pickup FindItemOfGroup(string group)
+        {
+            switch (group)
+            {
+                case "keycard":
+                    return null;
+                case "weapon":
+                    return null;
+                case "ammo":
+                    return null;
+                default:
+                    return null;
+            }
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace NPCS
             {
                 foreach (string mapping in Plugin.Instance.Config.InitialMappings)
                 {
-                    Npc.LoadNPCMappings(mapping);
+                    Methods.LoadNPCMappings(mapping);
                 }
             });
         }

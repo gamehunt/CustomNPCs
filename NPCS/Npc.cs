@@ -9,10 +9,8 @@ using NPCS.Navigation;
 using NPCS.Talking;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
-using YamlDotNet.Serialization;
 
 namespace NPCS
 {
@@ -21,7 +19,7 @@ namespace NPCS
         #region Serialization
 
         //Megabruh
-        private class NPCMappingInfo
+        public class NPCMappingInfo
         {
             private Npc parent;
 
@@ -171,7 +169,7 @@ namespace NPCS
             }
             set
             {
-                NPCPlayer.Inventory.curItem = value; ;
+                NPCPlayer.Inventory.curItem = value;
                 if (value != ItemType.None)
                 {
                     if (!AvailableItems.Contains(value))
@@ -1235,70 +1233,6 @@ namespace NPCS
             AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
             Dictionary.Add(gameObject, this);
             Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
-        }
-
-        public static void SaveNPCMappings(string path)
-        {
-            path = Path.Combine(Config.NPCs_mappings_path, path);
-            StreamWriter sw;
-            if (!File.Exists(path))
-            {
-                sw = File.CreateText(path);
-                var serializer = new SerializerBuilder().Build();
-                List<NPCMappingInfo> infos = new List<NPCMappingInfo>();
-                foreach (Npc n in Npc.List)
-                {
-                    if (n.SaveFile != null)
-                    {
-                        infos.Add(new NPCMappingInfo(n));
-                    }
-                }
-                var yaml = serializer.Serialize(infos);
-                sw.Write(yaml);
-                sw.Close();
-            }
-            else
-            {
-                Log.Error("Failed to save npc mappings: File exists!");
-            }
-        }
-
-        private static IEnumerator<float> NPCMappingsLoadCoroutine(List<NPCMappingInfo> infos)
-        {
-            foreach (NPCMappingInfo info in infos)
-            {
-                Room rm = Map.Rooms.Where(r => r.Name.Equals(info.Room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                if (rm != null)
-                {
-                    Methods.CreateNPC(rm.Position + Quaternion.Euler(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation, 0) * info.Relative.ToVector3(), info.Rotation.ToVector2() + new Vector2(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation), info.File);
-                    yield return Timing.WaitForSeconds(0.1f);
-                }
-            }
-        }
-
-        public static void LoadNPCMappings(string path)
-        {
-            path = Path.Combine(Config.NPCs_mappings_path, path);
-            StreamReader sr;
-            if (File.Exists(path))
-            {
-                sr = File.OpenText(path);
-                var deserializer = new DeserializerBuilder().Build();
-                List<NPCMappingInfo> infos = deserializer.Deserialize<List<NPCMappingInfo>>(sr);
-                sr.Close();
-                if (infos != null)
-                {
-                    Timing.RunCoroutine(NPCMappingsLoadCoroutine(infos));
-                }
-                else
-                {
-                    Log.Error("Failed to load npc mappings: Format error!");
-                }
-            }
-            else
-            {
-                Log.Error("Failed to load npc mappings: File not exists!");
-            }
         }
     }
 }

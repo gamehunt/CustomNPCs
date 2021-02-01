@@ -31,6 +31,17 @@ namespace NPCS.AI.Python
             return CurrentPlayerTarget != null && CurrentPlayerTarget.IsAlive && Npc.AIHelper.CheckPlayer(CurrentPlayerTarget, filters);
         }
 
+        //Just for readability
+        public void SetPlayerTarget(Player player)
+        {
+            CurrentPlayerTarget = player;
+        }
+
+        public void ClearPlayerTarget()
+        {
+            CurrentPlayerTarget = null;
+        }
+
         public void Stop()
         {
             Npc.Stop();
@@ -214,5 +225,7 @@ namespace NPCS.AI.Python
                 return cd;
             }
         }
+
+
     }
 }

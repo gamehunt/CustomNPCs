@@ -246,7 +246,7 @@ namespace NPCS.Commands
                             return false;
                         }
 
-                        Npc.SaveNPCMappings(arguments.At(1));
+                        Methods.SaveNPCMappings(arguments.At(1));
                         response = "Mappings saved!";
                         break;
 
@@ -258,7 +258,7 @@ namespace NPCS.Commands
                             return false;
                         }
 
-                        Npc.LoadNPCMappings(arguments.At(1));
+                        Methods.LoadNPCMappings(arguments.At(1));
                         response = "Mappings loaded!";
 
                         break;
