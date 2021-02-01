@@ -362,8 +362,8 @@ namespace NPCS
                 {
                     Log.Info("Switched to python mode...");
                     ScriptScope scope = Plugin.Engine.CreateScope();
-                    scope.SetVariable("controller", AIController);
-                    scope.SetVariable("helper", AIHelper);
+                    scope.SetVariable("npc", AIController);
+                    scope.SetVariable("npc_utils", AIHelper);
                     for (; ; )
                     {
                         if (AIScripts.Count != 0)

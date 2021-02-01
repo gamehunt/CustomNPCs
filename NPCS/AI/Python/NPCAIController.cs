@@ -77,6 +77,11 @@ namespace NPCS.AI.Python
             }
         }
 
+        public bool IsGoing()
+        {
+            return Npc.CurrentAIRoomTarget != null;
+        }
+
         private IEnumerator<float> ReviveCoroutine(Npc npc, Player target)
         {
             yield return Timing.WaitForSeconds(PlayableScps.Scp049.TimeToRevive);
