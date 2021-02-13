@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 	<TargetFramework>net472</TargetFramework>
-    <AssemblyName>zzz_EndConditionsCompatModule</AssemblyName>
+    <AssemblyName>zzz_SCPStatsCompatModule</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -30,9 +30,6 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="EndConditions">
-      <HintPath>..\..\..\PublicizedAssemblies\EndConditions_publicized.dll</HintPath>
-    </Reference>
     <Reference Include="Exiled.API">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
     </Reference>
@@ -45,11 +42,11 @@
     <Reference Include="Exiled.Permissions">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
     </Reference>
-    <Reference Include="Mirror">
-      <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\Mirror.dll</HintPath>
-    </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
+    </Reference>
+    <Reference Include="SCPStats">
+      <HintPath>..\..\..\PublicizedAssemblies\SCPStats_publicized.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>

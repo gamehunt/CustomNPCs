@@ -1005,7 +1005,27 @@ namespace NPCS
 
         public HashSet<RoleType> VisibleForRoles { get; set; } = new HashSet<RoleType>();
         public HashSet<Player> VisibleForPlayers { get; set; } = new HashSet<Player>();
-        public bool ShouldTrigger096 { get; set; } = false;
+
+        private bool __shouldTrigger = false;
+
+        public bool ShouldTrigger096 { 
+            get
+            {
+                return __shouldTrigger;
+            }
+            set
+            {
+                __shouldTrigger = value;
+                if (!value)
+                {
+                    Scp096.TurnedPlayers.Add(this.NPCPlayer);
+                }
+                else
+                {
+                    Scp096.TurnedPlayers.Remove(this.NPCPlayer);
+                }
+            }
+        }
 
         public bool DontCleanup { get; set; } = false;
 
@@ -1193,7 +1213,7 @@ namespace NPCS
             Dictionary.Remove(this.gameObject);
             Timing.KillCoroutines(MovementCoroutines.ToArray());
             Timing.KillCoroutines(AttachedCoroutines.ToArray());
-
+            Scp096.TurnedPlayers.Remove(this.NPCPlayer);
             Log.SendRaw($"NPC {NPCPlayer.Nickname} ({NPCPlayer.Id}) deconstructed", ConsoleColor.Green);
 
             //Player.IdsCache.Remove(NPCPlayer.Id);

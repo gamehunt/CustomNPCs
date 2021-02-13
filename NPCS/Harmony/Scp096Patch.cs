@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NPCS.Harmony
 {
-    [HarmonyPatch(typeof(Scp096), nameof(Scp096.UpdateVision))]
+    //[HarmonyPatch(typeof(Scp096), nameof(Scp096.UpdateVision))]
     internal class Scp096Patch
     {
         private static bool Prefix(Scp096 __instance)

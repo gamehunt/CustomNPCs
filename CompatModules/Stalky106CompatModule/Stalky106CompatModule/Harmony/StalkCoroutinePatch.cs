@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using HarmonyLib;
+using NPCS;
 using Stalky106;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine;
 namespace Stalky106CompatModule.Harmony
 {
     [HarmonyPatch(typeof(Stalky106.StalkyMethods), nameof(Stalky106.StalkyMethods.FindTarget))]
-    internal class StalkCoroutinePatch
+    public class StalkCoroutinePatch
     {
         private static bool Prefix(StalkyMethods __instance, ref Player __result, List<Player> validPlayerList, LayerMask teleportPlacementMask, out Vector3 portalPosition)
         {

@@ -76,6 +76,9 @@ namespace NPCS.Harmony
                         for (int index = 0; index < __instance._usedData; ++index)
                         {
                             PlayerPositionData ppd = __instance._transmitBuffer[index];
+                            if (!ReferenceHub.TryGetHub(ppd.playerID, out var targetHub))
+                                continue;
+
                             Player currentTarget = Player.Get(ppd.playerID);
                             Scp096 scp096 = player.ReferenceHub.scpsController.CurrentScp as Scp096;
 

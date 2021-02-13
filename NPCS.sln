@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReversePlagueCompatModule",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeslaGateControlCompatModule", "CompatModules\TeslaGateControlCompatModule\TeslaGateControlCompatModule\TeslaGateControlCompatModule.csproj", "{66072CC6-56CF-41DB-A525-8752BD9A1E81}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UAfkCompatModule", "CompatModules\UAfkCompatModule\UAfkCompatModule\UAfkCompatModule.csproj", "{6AA0A576-448A-46ED-8248-2A0079184882}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCPStatsCompatModule", "CompatModules\SCPStatsCompatModule\SCPStatsCompatModule\SCPStatsCompatModule.csproj", "{610F8529-0200-4172-9258-E53BABA2B979}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{66072CC6-56CF-41DB-A525-8752BD9A1E81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66072CC6-56CF-41DB-A525-8752BD9A1E81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66072CC6-56CF-41DB-A525-8752BD9A1E81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AA0A576-448A-46ED-8248-2A0079184882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AA0A576-448A-46ED-8248-2A0079184882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AA0A576-448A-46ED-8248-2A0079184882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AA0A576-448A-46ED-8248-2A0079184882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{610F8529-0200-4172-9258-E53BABA2B979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{610F8529-0200-4172-9258-E53BABA2B979}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{610F8529-0200-4172-9258-E53BABA2B979}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{610F8529-0200-4172-9258-E53BABA2B979}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

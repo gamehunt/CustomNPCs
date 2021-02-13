@@ -8,7 +8,7 @@ using static HarmonyLib.AccessTools;
 namespace EndConditionsCompatModule.Harmony
 {
     [HarmonyPatch(typeof(EndConditions.Handler), nameof(EndConditions.Handler.OnCheckRoundEnd))]
-    internal class RoundEndCheckPatch
+    public class RoundEndCheckPatch
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
