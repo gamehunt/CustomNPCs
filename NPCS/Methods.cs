@@ -55,6 +55,10 @@ namespace NPCS
             Npc npcc = obj.AddComponent<Npc>();
             npcc.RootNode = TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node));
 
+            // We triggering JoinedEvent in RHub.Awake() -> our object got added to the unverified list 
+            // We dont trigger VerifiedEvent so we need to add our fake player to the player dictionary manually
+            // And actually finish the NPC initialization after that, otherwise npc.NPCPlayer will be null and all shit is broken
+
             Timing.CallDelayed(0.1f, () =>
             {
                     Player.UnverifiedPlayers.TryGetValue(ccm._hub, out Player ply_obj);
