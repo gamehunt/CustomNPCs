@@ -88,6 +88,7 @@ namespace NPCS.Harmony
                     "staffRA=" + global::ServerStatic.PermissionsHandler.StaffAccess.ToString(),
                     "friendlyFire=" + global::ServerConsole.FriendlyFire.ToString(),
                     "geoblocking=" + (byte)global::CustomLiteNetLib4MirrorTransport.Geoblocking,
+                    "modded=" + global::CustomNetworkManager.Modded.ToString(),
                     "cgs=" + (global::CustomNetworkManager.UsingCustomGamemode || global::ServerConsole.CustomGamemodeServerConfig).ToString(),
                     "whitelist=" + global::ServerConsole.WhiteListEnabled.ToString(),
                     "accessRestriction=" + global::ServerConsole.AccessRestriction.ToString(),

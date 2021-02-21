@@ -293,6 +293,10 @@ namespace NPCS
                 {
                     for (; ; )
                     {
+                        while (!IsValid)
+                        {
+                            yield return 0.0f;
+                        }
                         if (CurrentAITarget != null)
                         {
                             bool res = false;
@@ -362,6 +366,10 @@ namespace NPCS
                 {
                     Log.Info("Switched to python mode...");
                     ScriptScope scope = Plugin.Engine.CreateScope();
+                    while (!IsValid)
+                    {
+                        yield return 0.0f;
+                    }
                     scope.SetVariable("npc", AIController);
                     scope.SetVariable("npc_utils", AIHelper);
                     for (; ; )
@@ -402,6 +410,10 @@ namespace NPCS
             int dormant_cache_update = 0;
             for (; ; )
             {
+                while (!IsValid)
+                {
+                    yield return 0.0f;
+                }
                 if (FollowTarget != null)
                 {
                     if (FollowTarget.IsAlive)
@@ -633,6 +645,10 @@ namespace NPCS
             List<Player> invalid_players = new List<Player>();
             for (; ; )
             {
+                while (!IsValid)
+                {
+                    yield return 0.0f;
+                }
                 invalid_players.Clear();
                 foreach (Player p in TalkingStates.Keys)
                 {
@@ -658,6 +674,10 @@ namespace NPCS
         {
             for (; ; )
             {
+                while (!IsValid)
+                {
+                    yield return 0.0f;
+                }
                 float speed = MovementSpeed;
                 switch (CurMovementDirection)
                 {
@@ -1031,7 +1051,7 @@ namespace NPCS
 
         public bool AffectRoundSummary { get; set; } = false;
 
-        public bool IsValid { get; set; } = true;
+        public bool IsValid { get; set; } = false;
 
         #endregion API
 
@@ -1246,14 +1266,25 @@ namespace NPCS
 
         private void Awake()
         {
-            NPCPlayer = Player.Get(gameObject);
-            AIController = new NPCAIController(this);
-            AIHelper = new NPCAIHelper(this);
-            AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
-            AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
-            AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
             Dictionary.Add(gameObject, this);
-            Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
+        }
+
+        public void FinishInitialization()
+        {
+            try
+            {
+                NPCPlayer = Player.Get(gameObject);
+                AIController = new NPCAIController(this);
+                AIHelper = new NPCAIHelper(this);
+                AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
+                AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
+                AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
+                Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
+                IsValid = true;
+            }catch(Exception e)
+            {
+                Log.Error($"Exception in init finalizer: {e}");
+            }
         }
     }
 }

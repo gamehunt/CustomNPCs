@@ -42,7 +42,7 @@
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\DissonanceVoip.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.API">
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
+      <HintPath>..\PublicizedAssemblies\Exiled.API_publicized.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.Events">
       <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Events.dll</HintPath>

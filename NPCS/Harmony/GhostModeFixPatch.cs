@@ -49,7 +49,10 @@ namespace NPCS.Harmony
                         continue;
                     }
 
-                    Player player = Player.Get(gameObject);
+                    Player player = GetPlayerOrServer(gameObject);
+                    if (player == null)
+                        continue;
+
                     Array.Copy(__instance._receivedData, __instance._transmitBuffer, __instance._usedData);
 
                     if (player.Role.Is939())
@@ -168,7 +171,9 @@ namespace NPCS.Harmony
                         if (!ReferenceHub.TryGetHub(ppd.playerID, out var targetHub))
                             continue;
 
-                        var target = GetPlayerOrServer(targetHub.gameObject);
+                        Player target = GetPlayerOrServer(targetHub.gameObject);
+                        if (target == null)
+                            continue;
                         // If for some reason the player/their ref hub is null
                         if (target?.ReferenceHub == null)
                             continue;
@@ -235,9 +240,6 @@ namespace NPCS.Harmony
 
         private static Player GetPlayerOrServer(GameObject gameObject)
         {
-            if (gameObject == null)
-                return null;
-
             var refHub = ReferenceHub.GetHub(gameObject);
 
             // The only reason is that the server is also a player,

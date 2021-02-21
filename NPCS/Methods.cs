@@ -52,19 +52,21 @@ namespace NPCS
             NetworkServer.Spawn(obj);
             PlayerManager.AddPlayer(obj); //I'm not sure if I need this
 
-            Player ply_obj = Player.Get(obj);
-            //Player.Dictionary.Add(obj, ply_obj);
-
-            //Player.IdsCache.Add(ply_obj.Id, ply_obj);
-
             Npc npcc = obj.AddComponent<Npc>();
-
-            npcc.ItemHeld = itemHeld;
             npcc.RootNode = TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node));
 
-            npcc.NPCPlayer.ReferenceHub.transform.localScale = scale;
+            Timing.CallDelayed(0.1f, () =>
+            {
+                    Player.UnverifiedPlayers.TryGetValue(ccm._hub, out Player ply_obj);
+                    Player.Dictionary.Add(obj, ply_obj);
+                    ply_obj.IsVerified = true;
 
-            npcc.NPCPlayer.SessionVariables.Add("IsNPC", true);
+                    npcc.FinishInitialization();
+
+                    npcc.ItemHeld = itemHeld;
+                    npcc.NPCPlayer.ReferenceHub.transform.localScale = scale;
+                    npcc.NPCPlayer.SessionVariables.Add("IsNPC", true);
+            });
 
             npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.3f, () =>
             {
@@ -118,14 +120,26 @@ namespace NPCS
 
                 Npc n = CreateNPC(pos, rot, new Vector3(raw_npc.Scale[0], raw_npc.Scale[1], raw_npc.Scale[2]), raw_npc.Role, ItemType.None, raw_npc.Name, raw_npc.RootNode);
 
-                foreach (ItemType type in raw_npc.Inventory)
+                Timing.CallDelayed(0.2f, () =>
                 {
-                    Log.Debug($"Added item: {type:g}");
-                    n.TakeItem(type);
-                }
+                    foreach (ItemType type in raw_npc.Inventory)
+                    {
+                        Log.Debug($"Added item: {type:g}");
+                        n.TakeItem(type);
+                    }
 
-                n.ItemHeld = raw_npc.ItemHeld;
-                n.NPCPlayer.IsGodModeEnabled = raw_npc.GodMode;
+                    n.ItemHeld = raw_npc.ItemHeld;
+                    n.NPCPlayer.IsGodModeEnabled = raw_npc.GodMode;
+
+                    int health = raw_npc.Health;
+
+                    if (health > 0)
+                    {
+                        n.NPCPlayer.MaxHealth = health;
+                        n.NPCPlayer.Health = health;
+                    }
+                });
+
                 n.IsExclusive = raw_npc.IsExclusive;
                 n.SaveFile = path;
                 n.AffectRoundSummary = raw_npc.AffectSummary;
@@ -144,14 +158,6 @@ namespace NPCS
                 if (n.AIMode == AIMode.Legacy)
                 {
                     Log.Warn("YML AI has been deprecated and will be removed soon! Please, switch to Python - it much more flexible and simplier to code.");
-                }
-
-                int health = raw_npc.Health;
-
-                if (health > 0)
-                {
-                    n.NPCPlayer.MaxHealth = health;
-                    n.NPCPlayer.Health = health;
                 }
 
                 Log.Info("Parsing events...");
