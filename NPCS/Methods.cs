@@ -50,7 +50,7 @@ namespace NPCS
             roles.MyColor = "red";
 
             NetworkServer.Spawn(obj);
-            PlayerManager.AddPlayer(obj); //I'm not sure if I need this
+            PlayerManager.AddPlayer(obj, CustomNetworkManager.slots); //I'm not sure if I need this
 
             Npc npcc = obj.AddComponent<Npc>();
             npcc.RootNode = TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, root_node));
@@ -61,6 +61,8 @@ namespace NPCS
 
             Timing.CallDelayed(0.1f, () =>
             {
+                try
+                {
                     Player.UnverifiedPlayers.TryGetValue(ccm._hub, out Player ply_obj);
                     Player.Dictionary.Add(obj, ply_obj);
                     ply_obj.IsVerified = true;
@@ -70,6 +72,10 @@ namespace NPCS
                     npcc.ItemHeld = itemHeld;
                     npcc.NPCPlayer.ReferenceHub.transform.localScale = scale;
                     npcc.NPCPlayer.SessionVariables.Add("IsNPC", true);
+                }catch(Exception e)
+                {
+                    Log.Error(e);
+                }
             });
 
             npcc.AttachedCoroutines.Add(Timing.CallDelayed(0.3f, () =>

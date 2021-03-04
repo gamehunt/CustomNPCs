@@ -4,7 +4,7 @@
     <TargetFramework>net472</TargetFramework>
     <LangVersion>7.3</LangVersion>
     <Authors>gamehunt</Authors>
-    <Version>1.4.6</Version>
+    <Version>1.6.3</Version>
     <Product>CustomNPCS</Product>
     <AssemblyName>0NPCS</AssemblyName>
   </PropertyGroup>

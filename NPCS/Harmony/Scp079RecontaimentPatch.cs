@@ -4,7 +4,7 @@ using UnityEngine;
 namespace NPCS.Harmony
 {
     [HarmonyPatch(typeof(NineTailedFoxAnnouncer), nameof(NineTailedFoxAnnouncer.Update))]
-    internal class Scp079RecontaimentPatch
+    public class Scp079RecontaimentPatch
     {
         private static void Prefix(NineTailedFoxAnnouncer __instance)
         {
@@ -135,7 +135,7 @@ namespace NPCS.Harmony
                         num++;
                     }
                 }
-                if (num == 1 && flag && global::Generator079.mainGenerator.totalVoltage < 4 && !global::Generator079.mainGenerator.forcedOvercharge)
+                if (num == 1 && flag && global::Generator079.mainGenerator.totalVoltage <= 4 && !global::Generator079.mainGenerator.forcedOvercharge)
                 {
                     global::Generator079.mainGenerator.forcedOvercharge = true;
                     global::Recontainer079.BeginContainment(true);
