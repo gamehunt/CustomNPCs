@@ -378,7 +378,6 @@ namespace NPCS
                         {
                             foreach (string script in AIScripts)
                             {
-                                //Log.Debug($"Running script {script}", Plugin.Instance.Config.VerboseOutput);
                                 float delay = 0f;
                                 try
                                 {
@@ -390,7 +389,6 @@ namespace NPCS
                                 {
                                     Log.Error($"AI script failure: {e}");
                                 }
-                                //Log.Debug($"--> {delay}", Plugin.Instance.Config.VerboseOutput);
                                 yield return Timing.WaitForSeconds(delay);
                             }
                         }

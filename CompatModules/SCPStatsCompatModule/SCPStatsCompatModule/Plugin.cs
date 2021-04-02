@@ -30,17 +30,17 @@ namespace SCPStatsCompatModule
                 NPCPlugin = (NPCS.Plugin)Exiled.Loader.Loader.Plugins.Where(p => p.Name == "CustomNPCs").FirstOrDefault();
                 if (NPCPlugin == null)
                 {
-                    Log.Error("Failed to load SCPStatsCompatModule compat module addon: SCPStats not found!");
+                    Log.Error("Failed to load SCPStatsCompatModule compat module addon: CustomNPCs not found!");
                     return;
                 }
 
-                if (Exiled.Loader.Loader.Plugins.Where(p => p.Name == "ScpStats").FirstOrDefault() == null)
+                if (Exiled.Loader.Loader.Plugins.Where(p => p.Name == "SCPStats").FirstOrDefault() == null)
                 {
                     Log.Error("Failed to load SCPStatsCompatModule addon: SCPStats not found!");
                     return;
                 }
 
-                Harmony = new HarmonyLib.Harmony("gamehunt.compat.uafk");
+                Harmony = new HarmonyLib.Harmony("gamehunt.compat.scpstats");
                 Harmony.PatchAll();
 
                 Log.Info($"SCPStatsCompatModule loaded. @gamehunt");

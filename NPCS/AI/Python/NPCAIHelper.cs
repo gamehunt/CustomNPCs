@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Features;
+using Exiled.API.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -53,12 +54,19 @@ namespace NPCS.AI.Python
             List<TargetFilters.TargetFilter> fobjs = PrepareFilters(filters);
             foreach (Player p in Player.List.Where(pp => pp != npc.NPCPlayer && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range))
             {
-                foreach (TargetFilters.TargetFilter filter in fobjs)
+                if (fobjs.Count > 0)
                 {
-                    if (filter.Check(npc, p))
+                    foreach (TargetFilters.TargetFilter filter in fobjs)
                     {
-                        resulted.Add(p);
+                        if (filter.Check(npc, p))
+                        {
+                            resulted.Add(p);
+                        }
                     }
+                }
+                else
+                {
+                    resulted.Add(p);
                 }
             }
             return resulted;
@@ -70,12 +78,19 @@ namespace NPCS.AI.Python
             List<TargetFilters.TargetFilter> fobjs = PrepareFilters(filters);
             foreach (Player p in Player.Get(role).Where(pp => pp != npc.NPCPlayer && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range))
             {
-                foreach (TargetFilters.TargetFilter filter in fobjs)
+                if (fobjs.Count > 0)
                 {
-                    if (filter.Check(npc, p))
+                    foreach (TargetFilters.TargetFilter filter in fobjs)
                     {
-                        resulted.Add(p);
+                        if (filter.Check(npc, p))
+                        {
+                            resulted.Add(p);
+                        }
                     }
+                }
+                else
+                {
+                    resulted.Add(p);
                 }
             }
             return resulted;
@@ -96,12 +111,19 @@ namespace NPCS.AI.Python
             }
             foreach (Player p in raw_players)
             {
-                foreach (TargetFilters.TargetFilter filter in fobjs)
+                if (fobjs.Count > 0)
                 {
-                    if (filter.Check(npc, p))
+                    foreach (TargetFilters.TargetFilter filter in fobjs)
                     {
-                        resulted.Add(p);
+                        if (filter.Check(npc, p))
+                        {
+                            resulted.Add(p);
+                        }
                     }
+                }
+                else
+                {
+                    resulted.Add(p);
                 }
             }
             return resulted;
@@ -127,11 +149,11 @@ namespace NPCS.AI.Python
             switch (group)
             {
                 case "keycard":
-                    return null;
+                    return Object.FindObjectsOfType<Pickup>().Where(p => p.ItemId.IsKeycard()).FirstOrDefault();
                 case "weapon":
-                    return null;
+                    return Object.FindObjectsOfType<Pickup>().Where(p => p.ItemId.IsWeapon(false)).FirstOrDefault();
                 case "ammo":
-                    return null;
+                    return Object.FindObjectsOfType<Pickup>().Where(p => p.ItemId.IsAmmo()).FirstOrDefault();
                 default:
                     return null;
             }

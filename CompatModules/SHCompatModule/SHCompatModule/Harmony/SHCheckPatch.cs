@@ -13,7 +13,7 @@ namespace SHCompatModule.Harmony
         private static bool Prefix(SerpentsHand.EventHandlers __instance, ref int __result, Team team)
         {
 			Player player = null;
-			if (SerpentsHand.SerpentsHand.isScp035)
+			if (SerpentsHand.SerpentsHand.IsScp035)
 			{
 				player = __instance.TryGet035();
 			}

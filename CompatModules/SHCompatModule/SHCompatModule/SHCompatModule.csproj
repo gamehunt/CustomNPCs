@@ -46,7 +46,7 @@
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
     </Reference>
     <Reference Include="SerpentsHand">
-      <HintPath>..\..\..\PublicizedAssemblies\SerpentsHand (3)_publicized.dll</HintPath>
+      <HintPath>..\..\..\PublicizedAssemblies\SerpentsHand_publicized.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
