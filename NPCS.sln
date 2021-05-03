@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminToolsCompatModule", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SHCompatModule", "CompatModules\SHCompatModule\SHCompatModule\SHCompatModule.csproj", "{8798EB56-94C6-406F-99BF-DDEAA7D725BC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DICompatModule", "CompatModules\DICompatModule\DICompatModule\DICompatModule.csproj", "{2479D371-B3E9-441B-B22F-B0117DA2D2E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControlCompatModule", "CompatModules\ControlCompatModule\ControlCompatModule\ControlCompatModule.csproj", "{456F849C-7806-4754-89BF-33A7BF41A8D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{8798EB56-94C6-406F-99BF-DDEAA7D725BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8798EB56-94C6-406F-99BF-DDEAA7D725BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8798EB56-94C6-406F-99BF-DDEAA7D725BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2479D371-B3E9-441B-B22F-B0117DA2D2E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2479D371-B3E9-441B-B22F-B0117DA2D2E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2479D371-B3E9-441B-B22F-B0117DA2D2E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2479D371-B3E9-441B-B22F-B0117DA2D2E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{456F849C-7806-4754-89BF-33A7BF41A8D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{456F849C-7806-4754-89BF-33A7BF41A8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{456F849C-7806-4754-89BF-33A7BF41A8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{456F849C-7806-4754-89BF-33A7BF41A8D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

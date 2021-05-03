@@ -59,6 +59,11 @@ namespace NPCS.Harmony
                     global::CharacterClassManager characterClassManager = null;
                     foreach (GameObject gameObject in global::PlayerManager.players)
                     {
+                        global::CharacterClassManager component = gameObject.GetComponent<global::CharacterClassManager>();
+                        if (Npc.Dictionary.ContainsKey(gameObject) && !Npc.Dictionary[gameObject].AffectRoundSummary)
+                        {
+                            continue;
+                        }
                         int playerId = gameObject.GetComponent<RemoteAdmin.QueryProcessor>().PlayerId;
                         scpDeath = global::NineTailedFoxAnnouncer.scpDeaths[i];
                         if (playerId == scpDeath.hitInfo.PlayerId)

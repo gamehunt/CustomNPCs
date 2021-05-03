@@ -24,7 +24,7 @@ namespace NPCS.Harmony
                     }
                 }
             }
-            if (num <= 0 && global::Generator079.mainGenerator.totalVoltage < 4 && !global::Generator079.mainGenerator.forcedOvercharge)
+            if (num <= 0 && global::Generator079.mainGenerator.totalVoltage <= 4 && !global::Generator079.mainGenerator.forcedOvercharge)
             {
                 global::Generator079.mainGenerator.forcedOvercharge = true;
                 global::Recontainer079.BeginContainment(true);

@@ -8,6 +8,7 @@ using NPCS.Conditions;
 using NPCS.Navigation;
 using NPCS.Talking;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Evs = Exiled.Events;
@@ -200,6 +201,8 @@ namespace NPCS
                 TargetFilter.Register(new CommonTargetFilter());
                 TargetFilter.Register(new Scp939TargetFilter());
                 TargetFilter.Register(new Scp096TargetFilter());
+
+
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }

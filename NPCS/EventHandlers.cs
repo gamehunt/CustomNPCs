@@ -4,11 +4,15 @@ using MEC;
 using NPCS.Events;
 using NPCS.Harmony;
 using NPCS.Navigation;
+using System.Collections.Generic;
+using System;
 
 namespace NPCS
 {
     public class EventHandlers
     {
+
+
         public void OnRoundStart()
         {
             RoundSummaryFix.__npc_endRequested = false;
@@ -23,6 +27,28 @@ namespace NPCS
 
         public void OnWaitingForPlayers()
         {
+            ServerConsole.singleton.NameFormatter.Commands["player_count"] = delegate (List<string> args)
+            {
+                return (global::PlayerManager.players.Count - Npc.Dictionary.Count).ToString();
+            };
+            ServerConsole.singleton.NameFormatter.Commands["full_player_count"] = delegate (List<string> args)
+            {
+                int count = global::PlayerManager.players.Count - Npc.Dictionary.Count;
+                if (count != global::CustomNetworkManager.TypedSingleton.ReservedMaxPlayers)
+                {
+                    return string.Format("{0}/{1}", count, global::CustomNetworkManager.TypedSingleton.ReservedMaxPlayers);
+                }
+                int count2 = args.Count;
+                if (count2 == 1)
+                {
+                    return "FULL";
+                }
+                if (count2 != 2)
+                {
+                    throw new ArgumentOutOfRangeException("args", args, "Invalid arguments. Use: full_player_count OR full_player_count,[full]");
+                }
+                return ServerConsole.singleton.NameFormatter.ProcessExpression(args[1]);
+            };
             if (Plugin.Instance.Config.GenerateNavigationGraph)
             {
                 Timing.CallDelayed(0.1f, () =>
