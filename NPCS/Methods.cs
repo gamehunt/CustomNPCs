@@ -40,6 +40,8 @@ namespace NPCS
             processor._ipAddress = "127.0.0.WAN";
 
             ccm.CurClass = type;
+            ccm._privUserId = null;
+            ccm.UserId2 = null;
             obj.GetComponent<PlayerStats>().SetHPAmount(ccm.Classes.SafeGet(type).maxHP);
 
             obj.GetComponent<NicknameSync>().Network_myNickSync = name;

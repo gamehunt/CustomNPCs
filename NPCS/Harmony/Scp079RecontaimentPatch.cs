@@ -6,16 +6,16 @@ namespace NPCS.Harmony
     [HarmonyPatch(typeof(NineTailedFoxAnnouncer), nameof(NineTailedFoxAnnouncer.Update))]
     public class Scp079RecontaimentPatch
     {
-        private static void Prefix(NineTailedFoxAnnouncer __instance)
+        private static bool Prefix(NineTailedFoxAnnouncer __instance)
         {
             if (global::NineTailedFoxAnnouncer.scpDeaths.Count <= 0)
             {
-                return;
+                return false;
             }
             __instance.scpListTimer += Time.deltaTime;
             if (__instance.scpListTimer <= 1f)
             {
-                return;
+                return false;
             }
             for (int i = 0; i < global::NineTailedFoxAnnouncer.scpDeaths.Count; i++)
             {
@@ -151,6 +151,7 @@ namespace NPCS.Harmony
             }
             __instance.scpListTimer = 0f;
             global::NineTailedFoxAnnouncer.scpDeaths.Clear();
+            return false;
         }
     }
 }

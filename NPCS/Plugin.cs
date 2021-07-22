@@ -71,6 +71,10 @@ namespace NPCS
                     {
                         Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
                     }
+                    else if (bas.Name.Equals("PlayEntranceAnnouncement"))
+                    {
+                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
+                    }
                 }
 
                 Evs.Events.Instance.ReloadDisabledPatches();

@@ -6,7 +6,7 @@ namespace NPCS.Harmony
     [HarmonyPatch(typeof(NineTailedFoxAnnouncer), nameof(NineTailedFoxAnnouncer.CheckForZombies))]
     internal class Scp079RecontaimentPatch2
     {
-        private static void Prefix(GameObject zombie)
+        private static bool Prefix(GameObject zombie)
         {
             int num = 0;
             foreach (GameObject gameObject in global::PlayerManager.players)
@@ -30,6 +30,7 @@ namespace NPCS.Harmony
                 global::Recontainer079.BeginContainment(true);
                 global::NineTailedFoxAnnouncer.singleton.ServerOnlyAddGlitchyPhrase("ALLSECURED . SCP 0 7 9 RECONTAINMENT SEQUENCE COMMENCING . FORCEOVERCHARGE", 0.1f, 0.07f);
             }
+            return false;
         }
     }
 }
