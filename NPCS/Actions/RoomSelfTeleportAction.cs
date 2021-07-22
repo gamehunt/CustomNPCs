@@ -16,7 +16,7 @@ namespace NPCS.Actions
             Room r = Map.Rooms.Where(rm => rm.Name.Equals(args["room"], StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (r != null)
             {
-                npc.NPCPlayer.Position = r.Position;
+                npc.PlayerInstance.Position = r.Position;
             }
             else
             {

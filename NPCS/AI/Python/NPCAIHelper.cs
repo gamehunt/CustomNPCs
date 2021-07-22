@@ -52,7 +52,7 @@ namespace NPCS.AI.Python
         {
             List<Player> resulted = new List<Player>();
             List<TargetFilters.TargetFilter> fobjs = PrepareFilters(filters);
-            foreach (Player p in Player.List.Where(pp => pp != npc.NPCPlayer && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range))
+            foreach (Player p in Player.List.Where(pp => pp != npc.PlayerInstance && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.PlayerInstance.Position) <= range))
             {
                 if (fobjs.Count > 0)
                 {
@@ -76,7 +76,7 @@ namespace NPCS.AI.Python
         {
             List<Player> resulted = new List<Player>();
             List<TargetFilters.TargetFilter> fobjs = PrepareFilters(filters);
-            foreach (Player p in Player.Get(role).Where(pp => pp != npc.NPCPlayer && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range))
+            foreach (Player p in Player.Get(role).Where(pp => pp != npc.PlayerInstance && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.PlayerInstance.Position) <= range))
             {
                 if (fobjs.Count > 0)
                 {
@@ -103,11 +103,11 @@ namespace NPCS.AI.Python
             IEnumerable<Player> raw_players;
             if (!is_blacklist)
             {
-                raw_players = Player.List.Where(pp => pp != npc.NPCPlayer && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range && roles.Contains(pp.Role));
+                raw_players = Player.List.Where(pp => pp != npc.PlayerInstance && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.PlayerInstance.Position) <= range && roles.Contains(pp.Role));
             }
             else
             {
-                raw_players = Player.List.Where(pp => pp != npc.NPCPlayer && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.NPCPlayer.Position) <= range && !roles.Contains(pp.Role));
+                raw_players = Player.List.Where(pp => pp != npc.PlayerInstance && pp.IsAlive && (!pp.IsNPC() || include_npcs) && Vector3.Distance(pp.Position, npc.PlayerInstance.Position) <= range && !roles.Contains(pp.Role));
             }
             foreach (Player p in raw_players)
             {

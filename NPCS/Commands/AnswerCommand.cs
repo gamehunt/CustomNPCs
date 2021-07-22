@@ -25,7 +25,7 @@ namespace NPCS.Commands
                     bool flag = false;
                     foreach (Npc npc in Npc.List)
                     {
-                        if (Vector3.Distance(npc.NPCPlayer.Position, s.Position) < 3f)
+                        if (Vector3.Distance(npc.PlayerInstance.Position, s.Position) < 3f)
                         {
                             npc.HandleAnswer(s, arguments.At(0));
                             flag = true;

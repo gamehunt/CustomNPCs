@@ -23,11 +23,11 @@ namespace NPCS.Commands
                 bool flag = false;
                 foreach (Npc obj_npc in Npc.List)
                 {
-                    if (Vector3.Distance(obj_npc.NPCPlayer.Position, s.Position) < 3f)
+                    if (Vector3.Distance(obj_npc.PlayerInstance.Position, s.Position) < 3f)
                     {
                         if (obj_npc.TalkingStates.ContainsKey(s))
                         {
-                            obj_npc.TalkingStates[s].Send(obj_npc.Name, s);
+                            obj_npc.TalkingStates[s].Send(obj_npc.PlayerInstance.Nickname, s);
                             flag = true;
                             break;
                         }

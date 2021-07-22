@@ -9,7 +9,7 @@ namespace NPCS.AI.TargetFilters
 
         public override bool Check(Npc n, Player p)
         {
-            return !n.NPCPlayer.TargetGhostsHashSet.Contains(p.Id) && !n.NPCPlayer.TargetGhosts.Contains(p.Id) && !p.IsInvisible && !Physics.Linecast(n.NPCPlayer.Position, p.Position, n.NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces);
+            return !n.PlayerInstance.TargetGhostsHashSet.Contains(p.Id) && !n.PlayerInstance.TargetGhosts.Contains(p.Id) && !p.IsInvisible && !Physics.Linecast(n.PlayerInstance.Position, p.Position, n.PlayerInstance.ReferenceHub.playerMovementSync.CollidableSurfaces);
         }
     }
 }

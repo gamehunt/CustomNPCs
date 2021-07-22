@@ -29,7 +29,7 @@ namespace NPCS.Commands
                     }
                     if (!obj_npc.IsActionLocked && !(obj_npc.IsExclusive && obj_npc.IsLocked))
                     {
-                        if (Vector3.Distance(obj_npc.NPCPlayer.Position, s.Position) < 3f)
+                        if (Vector3.Distance(obj_npc.PlayerInstance.Position, s.Position) < 3f)
                         {
                             obj_npc.TalkWith(s);
                             flag = true;
@@ -40,11 +40,11 @@ namespace NPCS.Commands
                     {
                         if (obj_npc.IsLocked && obj_npc.LockHandler == s)
                         {
-                            s.SendConsoleMessage($"[{obj_npc.Name}] {Plugin.Instance.Config.TranslationAlreadyTalking}", "yellow");
+                            s.SendConsoleMessage($"[{obj_npc.PlayerInstance.Nickname}] {Plugin.Instance.Config.TranslationAlreadyTalking}", "yellow");
                         }
                         else
                         {
-                            s.SendConsoleMessage($"[{obj_npc.Name}] {Plugin.Instance.Config.TranslationNpcBusy}", "yellow");
+                            s.SendConsoleMessage($"[{obj_npc.PlayerInstance.Nickname}] {Plugin.Instance.Config.TranslationNpcBusy}", "yellow");
                         }
                         response = null;
 

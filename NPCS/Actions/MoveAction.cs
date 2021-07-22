@@ -30,8 +30,8 @@ namespace NPCS.Actions
                     break;
 
                 case "jump":
-                    npc.NPCPlayer.ReferenceHub.animationController.Networkspeed = new UnityEngine.Vector2(1, 1);
-                    npc.AttachedCoroutines.Add(Timing.CallDelayed(float.Parse(args["duration"].Replace('.', ',')), () => npc.NPCPlayer.ReferenceHub.animationController.NetworkcurAnim = 0));
+                    npc.PlayerInstance.ReferenceHub.animationController.Networkspeed = new UnityEngine.Vector2(1, 1);
+                    npc.AttachedCoroutines.Add(Timing.CallDelayed(float.Parse(args["duration"].Replace('.', ',')), () => npc.PlayerInstance.ReferenceHub.animationController.NetworkcurAnim = 0));
                     break;
 
                 default:

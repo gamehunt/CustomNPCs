@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace NPCS
 {
-    public class Npc : MonoBehaviour
+    public class Npc: FakePlayerAPI.FakePlayer
     {
         #region Serialization
 
@@ -42,7 +42,7 @@ namespace NPCS
             {
                 get
                 {
-                    return parent?.NPCPlayer.CurrentRoom.Name ?? deserializedRoom;
+                    return parent?.PlayerInstance.CurrentRoom.Name ?? deserializedRoom;
                 }
                 set
                 {
@@ -54,7 +54,7 @@ namespace NPCS
             {
                 get
                 {
-                    return parent?.NPCPlayer.CurrentRoom.Transform.localRotation.eulerAngles.y ?? deserializedRoomRotation;
+                    return parent?.PlayerInstance.CurrentRoom.Transform.localRotation.eulerAngles.y ?? deserializedRoomRotation;
                 }
                 set
                 {
@@ -66,7 +66,7 @@ namespace NPCS
             {
                 get
                 {
-                    Vector3? source = parent?.NPCPlayer.Position - parent?.NPCPlayer.CurrentRoom.Position;
+                    Vector3? source = parent?.PlayerInstance.Position - parent?.PlayerInstance.CurrentRoom.Position;
                     if (source == null)
                     {
                         return deserializedRelative;
@@ -86,7 +86,7 @@ namespace NPCS
             {
                 get
                 {
-                    Vector2? source = parent?.NPCPlayer.Rotations;
+                    Vector2? source = parent?.PlayerInstance.Rotations;
                     if (source == null)
                     {
                         return deserializedRotations;
@@ -135,50 +135,11 @@ namespace NPCS
             SEARCH,
         }
 
-        public static IEnumerable<Npc> List
-        {
-            get
-            {
-                return Dictionary.Values;
-            }
-        }
-
-        public static Dictionary<GameObject, Npc> Dictionary { get; } = new Dictionary<GameObject, Npc>();
-
-        public Player NPCPlayer { get; set; }
-
         public TalkNode RootNode { get; set; }
 
         public string SaveFile { get; set; } = null;
 
-        public string Name
-        {
-            get
-            {
-                return NPCPlayer.Nickname;
-            }
-        }
-
         public Dictionary<Player, TalkNode> TalkingStates { get; } = new Dictionary<Player, TalkNode>();
-
-        public ItemType ItemHeld
-        {
-            get
-            {
-                return NPCPlayer.Inventory.curItem;
-            }
-            set
-            {
-                NPCPlayer.Inventory.curItem = value;
-                if (value != ItemType.None)
-                {
-                    if (!AvailableItems.Contains(value))
-                    {
-                        TakeItem(value);
-                    }
-                }
-            }
-        }
 
         public MovementDirection CurMovementDirection { get; set; }
 
@@ -190,8 +151,6 @@ namespace NPCS
 
         public bool IsExclusive { get; set; } = false;
 
-        public Dictionary<string, List<KeyValuePair<NodeAction, Dictionary<string, string>>>> Events { get; } = new Dictionary<string, List<KeyValuePair<NodeAction, Dictionary<string, string>>>>();
-
         public LinkedList<NavigationNode> NavigationQueue { get; private set; } = new LinkedList<NavigationNode>();
 
         public NavigationNode CurrentNavTarget { get; set; } = null;
@@ -201,6 +160,8 @@ namespace NPCS
         public TargetLostBehaviour OnTargetLostBehaviour { get; set; } = TargetLostBehaviour.TELEPORT;
 
         private float __customSpeed = 0f;
+
+        private static int __counter = 0;
 
         public float MovementSpeed
         {
@@ -212,7 +173,7 @@ namespace NPCS
                 }
                 else
                 {
-                    return IsRunning ? CharacterClassManager._staticClasses[(int)NPCPlayer.Role].runSpeed : CharacterClassManager._staticClasses[(int)NPCPlayer.Role].walkSpeed;
+                    return IsRunning ? CharacterClassManager._staticClasses[(int)PlayerInstance.Role].runSpeed : CharacterClassManager._staticClasses[(int)PlayerInstance.Role].walkSpeed;
                 }
             }
             set
@@ -226,8 +187,6 @@ namespace NPCS
 
         public bool ProcessSCPLogic { get; set; } = false;
 
-        public List<CoroutineHandle> AttachedCoroutines { get; } = new List<CoroutineHandle>();
-
         public List<CoroutineHandle> MovementCoroutines { get; } = new List<CoroutineHandle>();
 
         //AI STATES -------------------------------
@@ -236,43 +195,14 @@ namespace NPCS
         public Utils.AIMode AIMode { get; set; } = Utils.AIMode.Legacy;
         public List<string> AIScripts { get; set; } = new List<string>();
 
-        // ============ Legacy
-        public LinkedList<AITarget> AIQueue { get; private set; } = new LinkedList<AITarget>();
-
-        public AITarget CurrentAITarget { get; set; } = null;
+        // ============ Python
+        public NPCAIController AIController { get; set; } = null;
         public Player CurrentAIPlayerTarget { get; set; } = null;
         public Room CurrentAIRoomTarget { get; set; } = null;
         public string CurrentAIItemGroupTarget { get; set; } = null;
         public NavigationNode CurrentAIItemNodeTarget { get; set; } = null;
-        public int SkippedTargets { get; set; } = 0;
-
-        // ============ Python
-        public NPCAIController AIController { get; set; } = null;
 
         public NPCAIHelper AIHelper { get; set; } = null;
-        //------------------------------------------
-
-        //Inventory --------------------------------
-        public ItemType[] AvailableItems { get; set; } = new ItemType[8] { ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None, ItemType.None };
-
-        public int FreeSlots
-        {
-            get
-            {
-                return AvailableItems.Where(it => it == ItemType.None).Count();
-            }
-        }
-
-        public Dictionary<ItemType, int> AvailableWeapons { get; } = new Dictionary<ItemType, int>();
-
-        public ItemType[] AvailableKeycards
-        {
-            get
-            {
-                return AvailableItems.Where(it => it.IsKeycard()).ToArray();
-            }
-        }
-
         //------------------------------------------
 
         #endregion Properties
@@ -289,113 +219,36 @@ namespace NPCS
         {
             if (AIEnabled)
             {
-                if (AIMode != Utils.AIMode.Python)
+                ScriptScope scope = Plugin.Engine.CreateScope();
+                while (!IsValid)
                 {
-                    for (; ; )
-                    {
-                        while (!IsValid)
-                        {
-                            yield return 0.0f;
-                        }
-                        if (CurrentAITarget != null)
-                        {
-                            bool res = false;
-                            try
-                            {
-                                res = CurrentAITarget.Check(this);
-                            }
-                            catch (Exception e)
-                            {
-                                Log.Warn($"AI Target check failure: {e}");
-                            }
-                            if (res)
-                            {
-                                float delay = 0f;
-                                bool failure = false;
-                                try
-                                {
-                                    delay = CurrentAITarget.Process(this);
-                                    for (; SkippedTargets > 0; SkippedTargets--)
-                                    {
-                                        AITarget target = AIQueue.First.Value;
-                                        AIQueue.RemoveFirst();
-                                        AIQueue.AddLast(target);
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    failure = true;
-                                    Log.Warn($"Target processing failure: {e}");
-                                }
-
-                                yield return Timing.WaitForSeconds(delay);
-
-                                if (CurrentAITarget.IsFinished || failure)
-                                {
-                                    CurrentAITarget.IsFinished = false;
-                                    CurrentAITarget = null;
-                                }
-                            }
-                            else
-                            {
-                                CurrentAITarget.IsFinished = false;
-                                CurrentAITarget = null;
-                                yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                if (!AIQueue.IsEmpty())
-                                {
-                                    CurrentAITarget = AIQueue.First.Value;
-                                    AIQueue.RemoveFirst();
-                                    AIQueue.AddLast(CurrentAITarget);
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                Log.Debug($"Error while scheduling AI target: {e}", Plugin.Instance.Config.VerboseOutput);
-                            }
-                            yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
-                        }
-                    }
+                   yield return 0.0f;
                 }
-                else
+                scope.SetVariable("npc", AIController);
+                scope.SetVariable("npc_utils", AIHelper);
+                for (; ; )
                 {
-                    Log.Info("Switched to python mode...");
-                    ScriptScope scope = Plugin.Engine.CreateScope();
-                    while (!IsValid)
+                    if (AIScripts.Count != 0)
                     {
-                        yield return 0.0f;
+                       foreach (string script in AIScripts)
+                       {
+                          float delay = 0f;
+                          try
+                          {
+                             scope.SetVariable("delay", Plugin.Instance.Config.AIIdleUpdateFrequency);
+                             Plugin.Engine.ExecuteFile(script, scope);
+                             delay = scope.GetVariable<float>("delay");
+                          }
+                          catch (Exception e)
+                          {
+                             Log.Error($"AI script failure: {e}");
+                          }
+                          yield return Timing.WaitForSeconds(delay);
+                       }
                     }
-                    scope.SetVariable("npc", AIController);
-                    scope.SetVariable("npc_utils", AIHelper);
-                    for (; ; )
+                    else
                     {
-                        if (AIScripts.Count != 0)
-                        {
-                            foreach (string script in AIScripts)
-                            {
-                                float delay = 0f;
-                                try
-                                {
-                                    scope.SetVariable("delay", Plugin.Instance.Config.AIIdleUpdateFrequency);
-                                    Plugin.Engine.ExecuteFile(script, scope);
-                                    delay = scope.GetVariable<float>("delay");
-                                }
-                                catch (Exception e)
-                                {
-                                    Log.Error($"AI script failure: {e}");
-                                }
-                                yield return Timing.WaitForSeconds(delay);
-                            }
-                        }
-                        else
-                        {
-                            yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
-                        }
+                       yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                     }
                 }
             }
@@ -416,7 +269,7 @@ namespace NPCS
                 {
                     if (FollowTarget.IsAlive)
                     {
-                        float dist = Vector3.Distance(FollowTarget.Position, NPCPlayer.Position);
+                        float dist = Vector3.Distance(FollowTarget.Position, PlayerInstance.Position);
 
                         //If we are far away...
                         if (dist >= Plugin.Instance.Config.MaxFollowDistance)
@@ -424,7 +277,7 @@ namespace NPCS
                             if (OnTargetLostBehaviour == TargetLostBehaviour.TELEPORT)
                             {
                                 //... Teleport to player if allowed
-                                NPCPlayer.Position = FollowTarget.Position;
+                                PlayerInstance.Position = FollowTarget.Position;
                                 eta = 0;
                                 FollowTargetPosCache.Clear();
                             }
@@ -505,22 +358,22 @@ namespace NPCS
                     {
                         IsRunning = !DisableRun;
                         //There is current
-                        float distance = Vector3.Distance(CurrentNavTarget.Position, NPCPlayer.Position);
+                        float distance = Vector3.Distance(CurrentNavTarget.Position, PlayerInstance.Position);
 
-                        if (distance < 3f && (!ProcessSCPLogic || NPCPlayer.Role != RoleType.Scp106))
+                        if (distance < 3f && (!ProcessSCPLogic || PlayerInstance.Role != RoleType.Scp106))
                         {
                             //Try to open the door if there is one, so we wont collide with it
                             if (CurrentNavTarget.AttachedDoor != null && !CurrentNavTarget.AttachedDoor.NetworkTargetState)
                             {
-                                ItemType prev = ItemHeld;
-                                bool open = CurrentNavTarget.AttachedDoor.RequiredPermissions.CheckPermissions(prev, NPCPlayer.ReferenceHub);
+                                Inventory.SyncItemInfo prev = PlayerInstance.CurrentItem;
+                                bool open = CurrentNavTarget.AttachedDoor.RequiredPermissions.CheckPermissions(prev.id, PlayerInstance.ReferenceHub);
                                 if (!open)
                                 {
-                                    foreach (ItemType keycard in AvailableKeycards)
+                                    foreach (Inventory.SyncItemInfo keycard in PlayerInstance.Inventory.items.Where(i => i.id.IsKeycard()))
                                     {
-                                        if (CurrentNavTarget.AttachedDoor.RequiredPermissions.CheckPermissions(keycard, NPCPlayer.ReferenceHub))
+                                        if (CurrentNavTarget.AttachedDoor.RequiredPermissions.CheckPermissions(keycard.id, PlayerInstance.ReferenceHub))
                                         {
-                                            ItemHeld = keycard;
+                                            PlayerInstance.CurrentItem = keycard;
                                             open = true;
                                             break;
                                         }
@@ -539,7 +392,7 @@ namespace NPCS
                                     CurrentNavTarget.AttachedDoor.NetworkTargetState = true;
                                     yield return Timing.WaitForSeconds(0.1f);
                                     GoTo(CurrentNavTarget.Position);
-                                    ItemHeld = prev;
+                                    PlayerInstance.CurrentItem = prev;
                                 }
                                 else
                                 {
@@ -586,20 +439,20 @@ namespace NPCS
                         if (CurMovementDirection == MovementDirection.NONE)
                         {
                             //Target reached - force position to it so we wont stuck
-                            Vector3 forced = new Vector3(CurrentNavTarget.Position.x, NPCPlayer.Position.y, CurrentNavTarget.Position.z);
-                            NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(forced, 0f, true);
+                            Vector3 forced = new Vector3(CurrentNavTarget.Position.x, PlayerInstance.Position.y, CurrentNavTarget.Position.z);
+                            PlayerInstance.ReferenceHub.playerMovementSync.OverridePosition(forced, 0f, true);
 
                             //If we have AI item target reached, try to find and take item
                             if (CurrentAIItemNodeTarget != null && CurrentAIItemNodeTarget == CurrentNavTarget)
                             {
                                 CurrentAIItemNodeTarget = null;
-                                IEnumerable<Pickup> pickups = FindObjectsOfType<Pickup>().Where(pk => Vector3.Distance(pk.Networkposition, NPCPlayer.Position) <= 5f);
+                                IEnumerable<Pickup> pickups = FindObjectsOfType<Pickup>().Where(pk => Vector3.Distance(pk.Networkposition, PlayerInstance.Position) <= 5f);
                                 foreach (Pickup p in pickups)
                                 {
                                     if (Utils.Utils.CheckItemType(CurrentAIItemGroupTarget, p.ItemId))
                                     {
                                         yield return Timing.WaitForSeconds(GoTo(p.position));
-                                        TakeItem(p);
+                                        //TakeItem(p); TODO
                                         break;
                                     }
                                 }
@@ -613,7 +466,7 @@ namespace NPCS
                         //No current, but there are pending targets
                         CurrentNavTarget = NavigationQueue.First.Value;
                         NavigationQueue.RemoveFirst();
-                        if (CurrentNavTarget.AttachedElevator != null && Math.Abs(CurrentNavTarget.AttachedElevator.Value.Key.target.position.y - NPCPlayer.Position.y) > 2f)
+                        if (CurrentNavTarget.AttachedElevator != null && Math.Abs(CurrentNavTarget.AttachedElevator.Value.Key.target.position.y - PlayerInstance.Position.y) > 2f)
                         {
                             CurrentNavTarget.AttachedElevator.Value.Value.UseLift();
                             while (CurrentNavTarget.AttachedElevator.Value.Value.status == Lift.Status.Moving)
@@ -682,9 +535,9 @@ namespace NPCS
                     case MovementDirection.FORWARD:
                         try
                         {
-                            if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position + NPCPlayer.CameraTransform.forward / 10 * speed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                            if (!Physics.Linecast(PlayerInstance.Position, PlayerInstance.Position + PlayerInstance.CameraTransform.forward / 10 * speed, PlayerInstance.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position + NPCPlayer.CameraTransform.forward / 10 * speed, 0f, true);
+                                PlayerInstance.ReferenceHub.playerMovementSync.OverridePosition(PlayerInstance.Position + PlayerInstance.CameraTransform.forward / 10 * speed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -693,9 +546,9 @@ namespace NPCS
                     case MovementDirection.BACKWARD:
                         try
                         {
-                            if (!Physics.Linecast(NPCPlayer.Position, gameObject.transform.position - NPCPlayer.CameraTransform.forward / 10 * speed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                            if (!Physics.Linecast(PlayerInstance.Position, gameObject.transform.position - PlayerInstance.CameraTransform.forward / 10 * speed, PlayerInstance.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position - NPCPlayer.CameraTransform.forward / 10 * speed, 0f, true);
+                                PlayerInstance.ReferenceHub.playerMovementSync.OverridePosition(PlayerInstance.Position - PlayerInstance.CameraTransform.forward / 10 * speed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -704,9 +557,9 @@ namespace NPCS
                     case MovementDirection.LEFT:
                         try
                         {
-                            if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position + Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * speed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                            if (!Physics.Linecast(PlayerInstance.Position, PlayerInstance.Position + Quaternion.AngleAxis(90, Vector3.up) * PlayerInstance.CameraTransform.forward / 10 * speed, PlayerInstance.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position + Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * speed, 0f, true);
+                                PlayerInstance.ReferenceHub.playerMovementSync.OverridePosition(PlayerInstance.Position + Quaternion.AngleAxis(90, Vector3.up) * PlayerInstance.CameraTransform.forward / 10 * speed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -715,9 +568,9 @@ namespace NPCS
                     case MovementDirection.RIGHT:
                         try
                         {
-                            if (!Physics.Linecast(NPCPlayer.Position, NPCPlayer.Position - Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * speed, NPCPlayer.ReferenceHub.playerMovementSync.CollidableSurfaces))
+                            if (!Physics.Linecast(PlayerInstance.Position, PlayerInstance.Position - Quaternion.AngleAxis(90, Vector3.up) * PlayerInstance.CameraTransform.forward / 10 * speed, PlayerInstance.ReferenceHub.playerMovementSync.CollidableSurfaces))
                             {
-                                NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(NPCPlayer.Position - Quaternion.AngleAxis(90, Vector3.up) * NPCPlayer.CameraTransform.forward / 10 * speed, 0f, true);
+                                PlayerInstance.ReferenceHub.playerMovementSync.OverridePosition(PlayerInstance.Position - Quaternion.AngleAxis(90, Vector3.up) * PlayerInstance.CameraTransform.forward / 10 * speed, 0f, true);
                             }
                         }
                         catch (Exception) { }
@@ -746,14 +599,14 @@ namespace NPCS
         {
             if (TalkingStates.ContainsKey(p))
             {
-                p.SendConsoleMessage($"[{Name}] {Plugin.Instance.Config.TranslationAlreadyTalking}", "yellow");
+                p.SendConsoleMessage($"[{PlayerInstance.Nickname}] {Plugin.Instance.Config.TranslationAlreadyTalking}", "yellow");
             }
             else
             {
                 IsLocked = true;
                 LockHandler = p;
                 TalkingStates.Add(p, RootNode);
-                bool end = RootNode.Send(Name, p);
+                bool end = RootNode.Send(PlayerInstance.Nickname, p);
                 IsActionLocked = true;
                 foreach (NodeAction action in RootNode.Actions.Keys)
                 {
@@ -770,7 +623,7 @@ namespace NPCS
                 if (end)
                 {
                     TalkingStates.Remove(p);
-                    p.SendConsoleMessage(Name + $" {Plugin.Instance.Config.TranslationTalkEnd}", "yellow");
+                    p.SendConsoleMessage(PlayerInstance.Nickname + $" {Plugin.Instance.Config.TranslationTalkEnd}", "yellow");
                     IsLocked = false;
                 }
             }
@@ -787,7 +640,7 @@ namespace NPCS
                     {
                         TalkingStates[p] = new_node;
                         IsActionLocked = true;
-                        bool end = new_node.Send(Name, p);
+                        bool end = new_node.Send(PlayerInstance.Nickname, p);
                         foreach (NodeAction action in new_node.Actions.Keys)
                         {
                             try
@@ -810,7 +663,7 @@ namespace NPCS
                         if (end)
                         {
                             TalkingStates.Remove(p);
-                            p.SendConsoleMessage(Name + $" {Plugin.Instance.Config.TranslationTalkEnd}", "yellow");
+                            p.SendConsoleMessage(PlayerInstance.Nickname + $" {Plugin.Instance.Config.TranslationTalkEnd}", "yellow");
                             IsLocked = false;
                         }
                     }
@@ -842,34 +695,34 @@ namespace NPCS
             {
                 if (IsRunning)
                 {
-                    NPCPlayer.ReferenceHub.animationController.Network_curMoveState = (byte)PlayerMovementState.Sprinting;
+                    PlayerInstance.ReferenceHub.animationController.Network_curMoveState = (byte)PlayerMovementState.Sprinting;
                 }
                 else
                 {
-                    NPCPlayer.ReferenceHub.animationController.Network_curMoveState = (byte)PlayerMovementState.Walking;
+                    PlayerInstance.ReferenceHub.animationController.Network_curMoveState = (byte)PlayerMovementState.Walking;
                 }
             }
             float speed = MovementSpeed;
             switch (dir)
             {
                 case MovementDirection.FORWARD:
-                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(speed, 0);
+                    PlayerInstance.ReferenceHub.animationController.Networkspeed = new Vector2(speed, 0);
                     break;
 
                 case MovementDirection.BACKWARD:
-                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(-speed, 0);
+                    PlayerInstance.ReferenceHub.animationController.Networkspeed = new Vector2(-speed, 0);
                     break;
 
                 case MovementDirection.RIGHT:
-                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(0, speed);
+                    PlayerInstance.ReferenceHub.animationController.Networkspeed = new Vector2(0, speed);
                     break;
 
                 case MovementDirection.LEFT:
-                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(0, -speed);
+                    PlayerInstance.ReferenceHub.animationController.Networkspeed = new Vector2(0, -speed);
                     break;
 
                 default:
-                    NPCPlayer.ReferenceHub.animationController.Networkspeed = new Vector2(0, 0);
+                    PlayerInstance.ReferenceHub.animationController.Networkspeed = new Vector2(0, 0);
                     break;
             }
         }
@@ -894,20 +747,20 @@ namespace NPCS
         {
             IsActionLocked = true;
             Timing.KillCoroutines(MovementCoroutines.ToArray());
-            Vector3 heading = (position - NPCPlayer.Position);
+            Vector3 heading = (position - PlayerInstance.Position);
             heading.y = 0;
             Quaternion lookRot = Quaternion.LookRotation(heading.normalized);
             float dist = heading.magnitude;
-            NPCPlayer.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
+            PlayerInstance.Rotations = new Vector2(lookRot.eulerAngles.x, lookRot.eulerAngles.y);
             Move(MovementDirection.FORWARD);
-            float eta = Plugin.Instance.Config.MovementUpdateFrequency * (dist / (NPCPlayer.CameraTransform.forward / 10 * MovementSpeed).magnitude);
-            position.y = NPCPlayer.Position.y;
+            float eta = Plugin.Instance.Config.MovementUpdateFrequency * (dist / (PlayerInstance.CameraTransform.forward / 10 * MovementSpeed).magnitude);
+            position.y = PlayerInstance.Position.y;
             MovementCoroutines.Add(Timing.CallDelayed(eta, () =>
             {
                 Move(MovementDirection.NONE);
-                if (Vector3.Distance(NPCPlayer.Position, position) >= 2f)
+                if (Vector3.Distance(PlayerInstance.Position, position) >= 2f)
                 {
-                    NPCPlayer.ReferenceHub.playerMovementSync.OverridePosition(position, 0f, true);
+                    PlayerInstance.ReferenceHub.playerMovementSync.OverridePosition(position, 0f, true);
                 }
                 IsActionLocked = false;
             }));
@@ -960,7 +813,7 @@ namespace NPCS
             {
                 if (node.LinkedNodes.Count > 0)
                 {
-                    float new_dist = Vector3.Distance(NPCPlayer.Position, node.Position);
+                    float new_dist = Vector3.Distance(PlayerInstance.Position, node.Position);
                     if (new_dist < min_dist)
                     {
                         min_dist = new_dist;
@@ -1021,160 +874,7 @@ namespace NPCS
 
         public bool DisableDialogSystem { get; set; } = false;
 
-        public HashSet<RoleType> VisibleForRoles { get; set; } = new HashSet<RoleType>();
-        public HashSet<Player> VisibleForPlayers { get; set; } = new HashSet<Player>();
-
-        private bool __shouldTrigger = false;
-
-        public bool ShouldTrigger096 { 
-            get
-            {
-                return __shouldTrigger;
-            }
-            set
-            {
-                __shouldTrigger = value;
-                if (!value)
-                {
-                    Scp096.TurnedPlayers.Add(this.NPCPlayer);
-                }
-                else
-                {
-                    Scp096.TurnedPlayers.Remove(this.NPCPlayer);
-                }
-            }
-        }
-
-        public bool DontCleanup { get; set; } = false;
-
-        public bool AffectRoundSummary { get; set; } = false;
-
-        public bool IsValid { get; set; } = false;
-
         #endregion API
-
-        public void TakeItem(Pickup item)
-        {
-            /* if (item.ItemId.IsAmmo())
-             {
-                 uint delta = 0;
-                 uint limit;
-                 switch (item.ItemId)
-                 {
-                     case ItemType.Ammo556:
-                         limit = NPCPlayer.ReferenceHub.searchCoordinator.ConfigPipe.GetLimitAmmo((byte)AmmoType.Nato556);
-                         NPCPlayer.Ammo[(int)AmmoType.Nato556] += (uint)item.durability;
-                         if (NPCPlayer.Ammo[(int)AmmoType.Nato556] > limit)
-                         {
-                             delta = NPCPlayer.Ammo[(int)AmmoType.Nato556] - limit;
-                             NPCPlayer.Ammo[(int)AmmoType.Nato556] = limit;
-                         }
-                         break;
-
-                     case ItemType.Ammo762:
-                         limit = NPCPlayer.ReferenceHub.searchCoordinator.ConfigPipe.GetLimitAmmo((byte)AmmoType.Nato762);
-                         NPCPlayer.Ammo[(int)AmmoType.Nato762] += (uint)item.durability;
-                         if (NPCPlayer.Ammo[(int)AmmoType.Nato762] > limit)
-                         {
-                             delta = NPCPlayer.Ammo[(int)AmmoType.Nato762] - limit;
-                             NPCPlayer.Ammo[(int)AmmoType.Nato762] = limit;
-                         }
-                         break;
-
-                     case ItemType.Ammo9mm:
-                         limit = NPCPlayer.ReferenceHub.searchCoordinator.ConfigPipe.GetLimitAmmo((byte)AmmoType.Nato9);
-                         NPCPlayer.Ammo[(int)AmmoType.Nato9] += (uint)item.durability;
-                         if (NPCPlayer.Ammo[(int)AmmoType.Nato9] > limit)
-                         {
-                             delta = NPCPlayer.Ammo[(int)AmmoType.Nato9] - limit;
-                             NPCPlayer.Ammo[(int)AmmoType.Nato9] = limit;
-                         }
-                         break;
-                 }
-                 if (delta > 0)
-                 {
-                     item.durability = delta;
-                 }
-                 else
-                 {
-                     item.Delete();
-                 }
-             }
-             else
-             {*/
-            if (FreeSlots > 0) // If there are free slots...
-            {
-                //Take it
-                int free_slot = AvailableItems.IndexOf(ItemType.None);
-                AvailableItems[free_slot] = item.itemId;
-                if (item.itemId.IsWeapon())
-                {
-                    AvailableWeapons.Add(item.itemId, (int)item.durability);
-                }
-                item.Delete();
-            }
-            else //Otherwise we are probably went there from smart target...
-            {
-                //Try drop old item and take new one
-                if (CurrentAIItemGroupTarget == "keycard" && AvailableKeycards.Length != 0)
-                {
-                    DropItem(AvailableKeycards[0], true);
-                    TakeItem(item);
-                    item.Delete();
-                }
-                else if (CurrentAIItemGroupTarget == "weapon" && AvailableWeapons.Count != 0)
-                {
-                    DropItem(AvailableWeapons.Keys.ElementAt(0), true);
-                    TakeItem(item);
-                    AvailableWeapons[item.itemId] = (int)item.durability;
-                    item.Delete();
-                }
-            }
-            //  }
-        }
-
-        public void TakeItem(ItemType item)
-        {
-            if (item == ItemType.None)
-            {
-                return;
-            }
-            if (FreeSlots > 0)
-            {
-                int free_slot = AvailableItems.IndexOf(ItemType.None);
-                AvailableItems[free_slot] = item;
-                if (item.IsWeapon())
-                {
-                    WeaponManager.Weapon[] weapons = NPCPlayer.ReferenceHub.weaponManager.weapons;
-                    for (int i = 0; i < weapons.Length; i++)
-                    {
-                        if (weapons[i].inventoryID == item)
-                        {
-                            AvailableWeapons.Add(item, (int)NPCPlayer.ReferenceHub.weaponManager.weapons[i].maxAmmo);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        public void DropItem(ItemType type, bool spawn_drop)
-        {
-            if (AvailableItems.Contains(type))
-            {
-                int slot = AvailableItems.IndexOf(type);
-                AvailableItems[slot] = ItemType.None;
-                if (spawn_drop)
-                {
-                    Pickup pick = type.Spawn(1f, NPCPlayer.Position + new Vector3(0, 0.5f, 0));
-                    if (AvailableWeapons.ContainsKey(type))
-                    {
-                        pick.durability = AvailableWeapons[type];
-                        AvailableWeapons.Remove(type);
-                    }
-                }
-            }
-        }
 
         public void TalkWith(Player p)
         {
@@ -1189,100 +889,41 @@ namespace NPCS
             }
             else
             {
-                p.SendConsoleMessage($"[{Name}] {Plugin.Instance.Config.TranslationNpcBusy}", "yellow");
-            }
-        }
-
-        public void Kill(bool spawn_ragdoll)
-        {
-            if (IsValid)
-            {
-                IsValid = false;
-                Log.Debug($"kill() called in NPC {Name}", Plugin.Instance.Config.VerboseOutput);
-                if (spawn_ragdoll)
-                {
-                    gameObject.GetComponent<RagdollManager>().SpawnRagdoll(gameObject.transform.position, gameObject.transform.rotation, Vector3.zero, (int)NPCPlayer.Role, new PlayerStats.HitInfo(), false, "", Name, 9999);
-                }
-                UnityEngine.Object.Destroy(NPCPlayer.GameObject);
+                p.SendConsoleMessage($"[{PlayerInstance.Nickname}] {Plugin.Instance.Config.TranslationNpcBusy}", "yellow");
             }
         }
 
         public void FireEvent(NPCEvent ev)
         {
-            if (!IsValid)
-            {
-                Log.Debug($"Skipping event {ev.Name} on invalidated NPC", Plugin.Instance.Config.VerboseOutput);
-                return;
-            }
-            try
-            {
-                Log.Debug($"Fired event {ev.Name}", Plugin.Instance.Config.VerboseOutput);
-                ev.FireActions(Events[ev.Name]);
-                ev.OnFired(this);
-            }
-            catch (KeyNotFoundException)
-            {
-                Log.Debug($"Skipping unused event {ev.Name}", Plugin.Instance.Config.VerboseOutput);
-            }
+
         }
 
-        private void OnDestroy()
+        public override string GetIdentifier()
         {
-            Dictionary.Remove(this.gameObject);
+            return $"{Plugin.Instance.Name}_NPC_{__counter}";
+        }
+
+        public override bool IsVisibleFor(Player ply)
+        {
+            return true;
+        }
+
+        public override void OnPostInitialization()
+        {
+            __counter++;
+            PlayerInstance.SessionVariables.Add("IsNPC", true);
+        }
+
+        public override void OnPreInitialization()
+        {
+            
+        }
+
+        public override void OnDestroying()
+        {
             Timing.KillCoroutines(MovementCoroutines.ToArray());
-            Timing.KillCoroutines(AttachedCoroutines.ToArray());
-            Scp096.TurnedPlayers.Remove(this.NPCPlayer);
-            Log.SendRaw($"NPC {NPCPlayer.Nickname} ({NPCPlayer.Id}) deconstructed", ConsoleColor.Green);
-
-            //Player.IdsCache.Remove(NPCPlayer.Id);
-            //Player.Dictionary.Remove(NPCPlayer.GameObject);
         }
 
-        public static Npc Get(Player p)
-        {
-            if (Dictionary.TryGetValue(p.GameObject, out Npc npc))
-            {
-                return npc;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public static Npc Get(GameObject p)
-        {
-            if (Dictionary.TryGetValue(p, out Npc npc))
-            {
-                return npc;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        private void Awake()
-        {
-            Dictionary.Add(gameObject, this);
-        }
-
-        public void FinishInitialization()
-        {
-            try
-            {
-                NPCPlayer = Player.Get(gameObject);
-                AIController = new NPCAIController(this);
-                AIHelper = new NPCAIHelper(this);
-                AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
-                AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
-                AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
-                Log.Debug($"Constructed NPC", Plugin.Instance.Config.VerboseOutput);
-                IsValid = true;
-            }catch(Exception e)
-            {
-                Log.Error($"Exception in init finalizer: {e}");
-            }
-        }  
+        public override bool DisplayInRA { get; set; } = Plugin.Instance.Config.DisplayNpcInRemoteAdmin;
     }
 }

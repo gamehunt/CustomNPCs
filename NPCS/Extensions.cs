@@ -1,4 +1,5 @@
 using Exiled.API.Features;
+using FakePlayerAPI;
 
 namespace NPCS
 {
@@ -6,12 +7,12 @@ namespace NPCS
     {
         public static bool IsNPC(this Player p)
         {
-            return Npc.Dictionary.ContainsKey(p.GameObject);
+            return p.IsFakePlayer() && p.SessionVariables.ContainsKey("IsNPC");
         }
 
         public static Npc AsNPC(this Player p)
         {
-            return p.IsNPC() ? Npc.Dictionary[p.GameObject] : null;
+            return p.IsNPC() ? (Npc)p.AsFakePlayer() : null;
         }
 
         public static bool IsClosed(this Lift lift, Lift.Elevator elev)

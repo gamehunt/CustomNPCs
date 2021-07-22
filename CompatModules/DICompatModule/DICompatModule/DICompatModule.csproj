@@ -21,9 +21,6 @@
     <Reference Include="0Harmony">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="0NPCS">
-      <HintPath>..\..\..\NPCS\bin\Release\net472\0NPCS.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
@@ -44,6 +41,9 @@
     </Reference>
     <Reference Include="Exiled.Permissions">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="FakePlayerAPI">
+      <HintPath>..\..\..\..\FakePlayerAPI\FakePlayerAPI\bin\Release\net472\FakePlayerAPI.dll</HintPath>
     </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\..\..\SLServer\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>

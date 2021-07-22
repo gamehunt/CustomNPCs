@@ -9,7 +9,7 @@ namespace NPCS.Actions
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
-            npc.ItemHeld = ((ItemType)int.Parse(args["item_type"]));
+            npc.PlayerInstance.Inventory.Network_curItemSynced = ((ItemType)int.Parse(args["item_type"]));
         }
     }
 }

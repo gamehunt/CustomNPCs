@@ -10,7 +10,7 @@ namespace NPCS.Actions
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
-            npc.Kill(bool.Parse(args["spawn_ragdoll"]));
+            npc.PlayerInstance.Kill();
         }
     }
 }

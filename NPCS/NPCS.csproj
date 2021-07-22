@@ -53,6 +53,9 @@
     <Reference Include="Exiled.Permissions">
       <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
     </Reference>
+    <Reference Include="FakePlayerAPI">
+      <HintPath>..\..\FakePlayerAPI\FakePlayerAPI\bin\Release\net472\FakePlayerAPI.dll</HintPath>
+    </Reference>
     <Reference Include="Mirror">
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\publicized_assemblies\Mirror_publicized.dll</HintPath>
     </Reference>

@@ -23,7 +23,7 @@ namespace NPCS.Commands
                 bool flag = false;
                 foreach (Npc obj_npc in Npc.List)
                 {
-                    if (Vector3.Distance(obj_npc.NPCPlayer.Position, s.Position) < 3f)
+                    if (Vector3.Distance(obj_npc.PlayerInstance.Position, s.Position) < 3f)
                     {
                         if (obj_npc.IsLocked && obj_npc.LockHandler == s)
                         {
@@ -31,7 +31,7 @@ namespace NPCS.Commands
                             obj_npc.LockHandler = null;
                         }
                         obj_npc.TalkingStates.Remove(s);
-                        s.SendConsoleMessage($"ended talk with {obj_npc.Name}", "yellow");
+                        s.SendConsoleMessage($"ended talk with {obj_npc.PlayerInstance.Nickname}", "yellow");
                         flag = true;
                         break;
                     }

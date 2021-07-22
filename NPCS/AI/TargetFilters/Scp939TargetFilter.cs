@@ -8,7 +8,7 @@ namespace NPCS.AI.TargetFilters
 
         public override bool Check(Npc n, Player p)
         {
-            return p.GameObject.GetComponent<Scp939_VisionController>().CanSee(n.NPCPlayer.GameObject.GetComponent<Scp939PlayerScript>());
+            return p.GameObject.GetComponent<Scp939_VisionController>().CanSee(n.PlayerInstance.GameObject.GetComponent<Scp939PlayerScript>());
         }
     }
 }

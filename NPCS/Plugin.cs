@@ -53,32 +53,6 @@ namespace NPCS
                 Engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(HitBoxType)));
                 Engine.Runtime.LoadAssembly(Assembly.GetExecutingAssembly());
 
-                foreach (MethodBase bas in Evs.Events.Instance.Harmony.GetPatchedMethods())
-                {
-                    if (bas.Name.Equals("TransmitData"))
-                    {
-                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
-                    }
-                    else if (bas.DeclaringType.Name.Equals("RoundSummary") && bas.Name.Equals("Start"))
-                    {
-                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
-                    }
-                    else if (bas.Name.Equals("BanUser"))
-                    {
-                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
-                    }
-                    else if (bas.Name.Equals("CallCmdShoot"))
-                    {
-                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
-                    }
-                    else if (bas.Name.Equals("PlayEntranceAnnouncement"))
-                    {
-                        Exiled.Events.Events.DisabledPatchesHashSet.Add(bas);
-                    }
-                }
-
-                Evs.Events.Instance.ReloadDisabledPatches();
-
                 Harmony = new HarmonyLib.Harmony($"gamehunt.cnpcs.{reloads}");
                 reloads++;
 
@@ -187,26 +161,11 @@ namespace NPCS
                 NodeAction.Register(new Actions.ControlDoorAction());
                 NodeAction.Register(new Actions.ToggleAIAction());
 
-                Log.Info("Registering AI targets...");
-
-                AITarget.Register(new AITestTarget());
-                AITarget.Register(new AIFindPlayerTarget());
-                AITarget.Register(new AIAttackTarget());
-                AITarget.Register(new AINavigateToRoom());
-                AITarget.Register(new AIFollowTarget());
-                AITarget.Register(new AIFindItemTarget());
-                AITarget.Register(new AIConditionalJump());
-                //AITarget.Register(new AIRunAwayTarget());
-                //AITarget.Register(new AIFindAmmoTarget());
-                AITarget.Register(new AIStop());
-
                 Log.Info("Registering targets filters...");
 
                 TargetFilter.Register(new CommonTargetFilter());
                 TargetFilter.Register(new Scp939TargetFilter());
                 TargetFilter.Register(new Scp096TargetFilter());
-
-
 
                 Log.Info($"CustomNPCs plugin loaded. @gamehunt");
             }
@@ -218,17 +177,11 @@ namespace NPCS
 
         public override void OnDisabled()
         {
-            foreach (Npc npc in Npc.List)
-            {
-                npc.Kill(false);
-            }
-
             Harmony.UnpatchAll();
 
             NavigationNode.Clear();
             NodeCondition.Clear();
             NodeAction.Clear();
-            AITarget.Clear();
             TargetFilter.Clear();
 
             Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
@@ -256,7 +209,6 @@ namespace NPCS
             NavigationNode.Clear();
             NodeCondition.Clear();
             NodeAction.Clear();
-            AITarget.Clear();
             TargetFilter.Clear();
         }
     }

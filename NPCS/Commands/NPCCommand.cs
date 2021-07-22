@@ -53,7 +53,7 @@ namespace NPCS.Commands
                         {
                             file += ".yml";
                         }
-                        if (Methods.CreateNPC(s.Position, s.Rotations, file) == null)
+                        if (true /*Methods.CreateNPC(s.Position, s.Rotations, file) == null*/)
                         {
                             response = "Failed to load NPC!";
                             return false;
@@ -65,7 +65,7 @@ namespace NPCS.Commands
                         int id = 0;
                         foreach (Npc npc in Npc.List)
                         {
-                            s.RemoteAdminMessage($"{id} | {npc.Name} | {Path.GetFileName(npc.RootNode.NodeFile)}", true, Plugin.Instance.Name);
+                            s.RemoteAdminMessage($"{id} | {npc.PlayerInstance.Nickname} | {Path.GetFileName(npc.RootNode.NodeFile)}", true, Plugin.Instance.Name);
                             id++;
                         }
                         response = "List ended";
@@ -74,10 +74,7 @@ namespace NPCS.Commands
                     case "clean":
                         foreach (Npc npc in Npc.List)
                         {
-                            if (!npc.DontCleanup)
-                            {
-                                npc.Kill(false);
-                            }
+                           npc.Kill();
                         }
                         response = "NPCs cleaned";
                         break;
@@ -87,8 +84,8 @@ namespace NPCS.Commands
                         {
                             try
                             {
-                                obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
-                                obj_npc.Kill(false);
+                                obj_npc = (Npc)Npc.List.Where(n => n.PlayerInstance.IsNPC()).ToList()[int.Parse(arguments.At(1))];
+                                obj_npc.Kill();
                                 response = "NPC removed!";
                             }
                             catch (ArgumentOutOfRangeException)
@@ -112,8 +109,8 @@ namespace NPCS.Commands
                         }
                         try
                         {
-                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
-                            obj_npc.NPCPlayer.Position += new UnityEngine.Vector3(float.Parse(arguments.At(2)), float.Parse(arguments.At(3)), float.Parse(arguments.At(4)));
+                            obj_npc = (Npc)Npc.List.Where(n => n.PlayerInstance.IsNPC()).ToList()[int.Parse(arguments.At(1))];
+                            obj_npc.PlayerInstance.Position += new UnityEngine.Vector3(float.Parse(arguments.At(2)), float.Parse(arguments.At(3)), float.Parse(arguments.At(4)));
                             response = "NPC moved!";
                         }
                         catch (ArgumentOutOfRangeException)
@@ -132,7 +129,7 @@ namespace NPCS.Commands
                         }
                         try
                         {
-                            Npc.List.ToList()[int.Parse(arguments.At(1))].NPCPlayer.IsGodModeEnabled = bool.Parse(arguments.At(2));
+                            Npc.List.ToList()[int.Parse(arguments.At(1))].PlayerInstance.IsGodModeEnabled = bool.Parse(arguments.At(2));
                             response = "God-Mode switched";
                         }
                         catch (ArgumentOutOfRangeException)
@@ -151,7 +148,7 @@ namespace NPCS.Commands
                         try
                         {
                             name = arguments.At(2);
-                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                            obj_npc = (Npc)Npc.List.Where(n => n.PlayerInstance.IsNPC()).ToList()[int.Parse(arguments.At(1))];
                             node = NavigationNode.Get(name);
                             if (node == null)
                             {
@@ -177,7 +174,7 @@ namespace NPCS.Commands
                         try
                         {
                             name = arguments.At(2);
-                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                            obj_npc = (Npc)Npc.List.Where(n => n.PlayerInstance.IsNPC()).ToList()[int.Parse(arguments.At(1))];
                             node = NavigationNode.Get(name);
                             if (node == null)
                             {
@@ -204,7 +201,7 @@ namespace NPCS.Commands
                         {
                             int pid = int.Parse(arguments.At(2));
                             Player p = Player.Get(pid);
-                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                            obj_npc = (Npc)Npc.List.Where(n => n.PlayerInstance.IsNPC()).ToList()[int.Parse(arguments.At(1))];
                             obj_npc.Follow(p);
                             response = "Navigating npc to player!";
                         }
@@ -223,7 +220,7 @@ namespace NPCS.Commands
                         }
                         try
                         {
-                            obj_npc = Npc.List.ToList()[int.Parse(arguments.At(1))];
+                            obj_npc = (Npc)Npc.List.Where(n => n.PlayerInstance.IsNPC()).ToList()[int.Parse(arguments.At(1))];
                             Room r = Map.Rooms.Where(rm => rm.Name.Equals(arguments.At(2), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                             if (r != null)
                             {

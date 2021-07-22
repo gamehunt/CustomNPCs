@@ -8,7 +8,7 @@ namespace NPCS.AI.TargetFilters
 
         public override bool Check(Npc n, Player p)
         {
-            PlayableScps.Scp096 scp = n.NPCPlayer.ReferenceHub.scpsController.CurrentScp as PlayableScps.Scp096;
+            PlayableScps.Scp096 scp = n.PlayerInstance.ReferenceHub.scpsController.CurrentScp as PlayableScps.Scp096;
             if (scp != null)
             {
                 return scp.Enraged && scp.HasTarget(p.ReferenceHub);

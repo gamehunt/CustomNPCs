@@ -12,7 +12,7 @@ namespace NPCS.Actions
 
         private IEnumerator<float> StopAfterRoomCheck(Npc npc, string rname)
         {
-            while (npc.NPCPlayer.CurrentRoom == null || !npc.NPCPlayer.CurrentRoom.Name.Equals(rname, StringComparison.OrdinalIgnoreCase))
+            while (npc.PlayerInstance.CurrentRoom == null || !npc.PlayerInstance.CurrentRoom.Name.Equals(rname, StringComparison.OrdinalIgnoreCase))
             {
                 yield return Timing.WaitForSeconds(0.1f);
             }
