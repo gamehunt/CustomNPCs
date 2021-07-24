@@ -2,6 +2,7 @@
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
+using NPCS.Commands.Nav;
 using NPCS.Navigation;
 using RemoteAdmin;
 using System;
@@ -50,7 +51,11 @@ namespace NPCS.Commands
 
         public override void LoadGeneratedCommands()
         {
-            
+            RegisterCommand(new CreateCommand());
+            RegisterCommand(new RemoveCommand());
+            RegisterCommand(new LinkCommand());
+            RegisterCommand(new LoadCommand());
+            RegisterCommand(new SaveCommand());
         }
     }
 }
