@@ -79,4 +79,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\Nav\" />
+  </ItemGroup>
+
 </Project>

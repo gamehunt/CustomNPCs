@@ -91,9 +91,6 @@ namespace NPCS.Utils
         [YamlMember(Alias = "is_exclusive")]
         public bool IsExclusive { get; set; }
 
-        [YamlMember(Alias = "process_scp_logic")]
-        public bool ProcessScpLogic { get; set; }
-
         [YamlMember(Alias = "affect_summary")]
         public bool AffectSummary { get; set; }
 
@@ -104,8 +101,6 @@ namespace NPCS.Utils
 
         [YamlMember(Alias = "ai_mode")]
         public AIMode AiMode { get; set; }
-
-        public NpcNodeWithArgsSerializationInfo[] Ai { get; set; }
 
         [YamlMember(Alias = "ai_scripts")]
         public string[] AiScripts { get; set; }

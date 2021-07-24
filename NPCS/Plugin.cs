@@ -69,7 +69,6 @@ namespace NPCS
                 Handlers.Player.EnteringPocketDimension += EventHandlers.OnEnteringPocketDim;
                 Handlers.Player.Hurting += EventHandlers.OnHurt;
 
-                Handlers.Map.ExplodingGrenade += EventHandlers.OnGrenadeExplosion;
                 Handlers.Map.Decontaminating += EventHandlers.OnDecontamination;
 
                 Handlers.Warhead.Starting += EventHandlers.OnWarheadStart;
@@ -193,7 +192,6 @@ namespace NPCS
             Handlers.Player.EnteringPocketDimension -= EventHandlers.OnEnteringPocketDim;
             Handlers.Player.Hurting -= EventHandlers.OnHurt;
 
-            Handlers.Map.ExplodingGrenade -= EventHandlers.OnGrenadeExplosion;
             Handlers.Map.Decontaminating -= EventHandlers.OnDecontamination;
 
             Handlers.Warhead.Starting -= EventHandlers.OnWarheadStart;

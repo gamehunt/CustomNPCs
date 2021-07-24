@@ -15,8 +15,8 @@ namespace NPCS.Talking
         {
             public string Description { get; set; }
             public string Reply { get; set; }
-            public List<NPCS.Utils.NpcNodeWithArgsSerializationInfo> Conditions { get; set; }
-            public List<NPCS.Utils.NpcNodeWithArgsSerializationInfo> Actions { get; set; }
+            public List<NpcNodeWithArgsSerializationInfo> Conditions { get; set; }
+            public List<NpcNodeWithArgsSerializationInfo> Actions { get; set; }
 
             [YamlMember(Alias = "next_nodes")]
             public string[] NextNodes { get; set; }

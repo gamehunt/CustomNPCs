@@ -23,7 +23,7 @@ namespace NPCS.Commands
                 if (arguments.Count == 1)
                 {
                     bool flag = false;
-                    foreach (Npc npc in Npc.List)
+                    foreach (NPCS.Npc npc in NPCS.Npc.List)
                     {
                         if (Vector3.Distance(npc.PlayerInstance.Position, s.Position) < 3f)
                         {

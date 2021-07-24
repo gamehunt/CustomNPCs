@@ -21,7 +21,7 @@ namespace NPCS.Commands
             {
                 Player s = Player.Get(player.PlayerId);
                 bool flag = false;
-                foreach (Npc obj_npc in Npc.List)
+                foreach (NPCS.Npc obj_npc in NPCS.Npc.List)
                 {
                     if (obj_npc.DisableDialogSystem || obj_npc.AIEnabled)
                     {

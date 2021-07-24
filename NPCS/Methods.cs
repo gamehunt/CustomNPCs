@@ -2,28 +2,23 @@
 using Exiled.API.Features;
 using Interactables.Interobjects.DoorUtils;
 using MEC;
-using Mirror;
-using NPCS.AI;
-using NPCS.Events;
 using NPCS.Navigation;
-using NPCS.Talking;
-using NPCS.Utils;
-using RemoteAdmin;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization.TypeInspectors;
 
 namespace NPCS
 {
     public class Methods
     {
-
-        //Oh... More shitcode!
+        public static Npc LoadNPC(Npc.NPCMappingInfo info)
+        {
+            return null;
+        }
+        //shitcode
         public static void GenerateNavGraph()
         {
             try

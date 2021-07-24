@@ -185,14 +185,10 @@ namespace NPCS
         public bool DisableRun { get; set; } = false;
         public bool IsRunning { get; set; } = false;
 
-        public bool ProcessSCPLogic { get; set; } = false;
-
         public List<CoroutineHandle> MovementCoroutines { get; } = new List<CoroutineHandle>();
 
         //AI STATES -------------------------------
         public bool AIEnabled { get; set; } = false;
-
-        public Utils.AIMode AIMode { get; set; } = Utils.AIMode.Legacy;
         public List<string> AIScripts { get; set; } = new List<string>();
 
         // ============ Python
@@ -201,7 +197,6 @@ namespace NPCS
         public Room CurrentAIRoomTarget { get; set; } = null;
         public string CurrentAIItemGroupTarget { get; set; } = null;
         public NavigationNode CurrentAIItemNodeTarget { get; set; } = null;
-
         public NPCAIHelper AIHelper { get; set; } = null;
         //------------------------------------------
 
@@ -211,7 +206,6 @@ namespace NPCS
 
         public void StartAI()
         {
-            Log.Info($"Starting AI with mode: {AIMode:g}({AIEnabled})");
             AttachedCoroutines.Add(Timing.RunCoroutine(AICoroutine()));
         }
 
@@ -360,7 +354,7 @@ namespace NPCS
                         //There is current
                         float distance = Vector3.Distance(CurrentNavTarget.Position, PlayerInstance.Position);
 
-                        if (distance < 3f && (!ProcessSCPLogic || PlayerInstance.Role != RoleType.Scp106))
+                        if (distance < 3f)
                         {
                             //Try to open the door if there is one, so we wont collide with it
                             if (CurrentNavTarget.AttachedDoor != null && !CurrentNavTarget.AttachedDoor.NetworkTargetState)

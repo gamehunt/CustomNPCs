@@ -93,7 +93,6 @@ ai: []
 ai_scripts: []
 ";
 
-        // OH YEAAAAAH 60KB HARDCODED STRINGS XD
         public static string DefaultNavMappings =
 @"
 LCZ_ChkpB:

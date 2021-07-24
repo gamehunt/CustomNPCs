@@ -70,21 +70,6 @@ namespace NPCS
             }
         }
 
-        public void OnGrenadeExplosion(ExplodingGrenadeEventArgs ev)
-        {
-            foreach (Player p in ev.TargetToDamages.Keys)
-            {
-                if (p.IsNPC())
-                {
-                    Npc component = p.AsNPC();
-                    if (!component.PlayerInstance.IsGodModeEnabled)
-                    {
-                        p.Hurt(ev.TargetToDamages[p], ev.Thrower, DamageTypes.Grenade);
-                    }
-                }
-            }
-        }
-
         public void OnEnteringPocketDim(EnteringPocketDimensionEventArgs ev)
         {
             if (ev.Player.IsNPC())
