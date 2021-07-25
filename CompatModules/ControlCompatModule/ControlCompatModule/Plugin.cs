@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ControlCompatModule
 {
-    public class Plugin : Exiled.API.Features.Plugin<ControlCompatModule.Config>
+    public class Plugin : Plugin<Config>
     {
         public override string Author { get; } = "gamehunt";
         public override string Name { get; } = "ControlCompatModule";

@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace NPCS
 {
-    public class Npc: FakePlayerAPI.FakePlayer
+    public class Npc: FakePlayer.API.FakePlayer
     {
         #region Serialization
 
@@ -189,7 +189,7 @@ namespace NPCS
 
         //AI STATES -------------------------------
         public bool AIEnabled { get; set; } = false;
-        public List<string> AIScripts { get; set; } = new List<string>();
+        public string AIScript { get; set; }
 
         // ============ Python
         public NPCAIController AIController { get; set; } = null;
@@ -222,15 +222,13 @@ namespace NPCS
                 scope.SetVariable("npc_utils", AIHelper);
                 for (; ; )
                 {
-                    if (AIScripts.Count != 0)
+                    if (AIScript.Length != 0)
                     {
-                       foreach (string script in AIScripts)
-                       {
                           float delay = 0f;
                           try
                           {
                              scope.SetVariable("delay", Plugin.Instance.Config.AIIdleUpdateFrequency);
-                             Plugin.Engine.ExecuteFile(script, scope);
+                             Plugin.Engine.ExecuteFile(AIScript, scope);
                              delay = scope.GetVariable<float>("delay");
                           }
                           catch (Exception e)
@@ -238,7 +236,6 @@ namespace NPCS
                              Log.Error($"AI script failure: {e}");
                           }
                           yield return Timing.WaitForSeconds(delay);
-                       }
                     }
                     else
                     {
@@ -906,6 +903,11 @@ namespace NPCS
         {
             __counter++;
             PlayerInstance.SessionVariables.Add("IsNPC", true);
+            AIController = new NPCAIController(this);
+            AIHelper = new NPCAIHelper(this);
+            AttachedCoroutines.Add(Timing.RunCoroutine(UpdateTalking()));
+            AttachedCoroutines.Add(Timing.RunCoroutine(MoveCoroutine()));
+            AttachedCoroutines.Add(Timing.RunCoroutine(NavCoroutine()));
         }
 
         public override void OnPreInitialization()

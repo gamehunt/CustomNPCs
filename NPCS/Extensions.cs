@@ -1,5 +1,5 @@
 using Exiled.API.Features;
-using FakePlayerAPI;
+using FakePlayer.Extensions;
 
 namespace NPCS
 {

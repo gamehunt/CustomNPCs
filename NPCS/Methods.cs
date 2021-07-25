@@ -3,19 +3,77 @@ using Exiled.API.Features;
 using Interactables.Interobjects.DoorUtils;
 using MEC;
 using NPCS.Navigation;
+using NPCS.Talking;
+using NPCS.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
 using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+using YamlDotNet.Serialization.TypeInspectors;
 
 namespace NPCS
 {
     public class Methods
     {
+        public static Npc LoadNPC(Vector3 pos, Vector2 rotation, string file)
+        {
+            var input = new StringReader(File.ReadAllText(Path.Combine(Config.NPCs_root_path, file)));
+
+            var deserializer = new DeserializerBuilder()
+                                .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                                // Workaround to remove YamlAttributesTypeInspector
+                                .WithTypeInspector(inner => inner, s => s.InsteadOf<YamlAttributesTypeInspector>())
+                                .WithTypeInspector(
+                                    inner => new YamlAttributesTypeInspector(inner),
+                                    s => s.Before<NamingConventionTypeInspector>()
+                                )
+                                .Build();
+
+            NpcSerializationInfo raw_npc = deserializer.Deserialize<NpcSerializationInfo>(input);
+
+            Npc npc = FakePlayer.API.FakePlayer.Create<Npc>(pos, new Vector3(raw_npc.Scale[0], raw_npc.Scale[1], raw_npc.Scale[2]), raw_npc.Role);
+
+            Timing.CallDelayed(0.5f, () =>
+            {
+                npc.IsExclusive = raw_npc.IsExclusive;
+                npc.AIEnabled = raw_npc.AiEnabled;
+
+                string full = Path.Combine(Config.NPCs_scripts_path, raw_npc.AiScript);
+                Log.Debug($"Enabling script: {full}", Plugin.Instance.Config.VerboseOutput);
+                npc.AIScript = full;
+
+                foreach (ItemType type in raw_npc.Inventory)
+                {
+                    npc.PlayerInstance.AddItem(type);
+                }
+
+                npc.PlayerInstance.Rotations = rotation;
+                npc.PlayerInstance.Health = raw_npc.Health;
+                npc.PlayerInstance.ReferenceHub.nicknameSync.Network_myNickSync = raw_npc.Name;
+                npc.PlayerInstance.RankName = "NPC";
+                npc.PlayerInstance.Inventory.Network_curItemSynced = raw_npc.ItemHeld;
+                npc.PlayerInstance.IsGodModeEnabled = raw_npc.GodMode;
+                npc.AffectEndConditions = raw_npc.AffectSummary;
+                npc.RootNode = TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, raw_npc.RootNode));
+
+                npc.StartAI();
+            });
+
+            return npc;
+        }
         public static Npc LoadNPC(Npc.NPCMappingInfo info)
         {
+            Room rm = Map.Rooms.Where(r => r.Name.Equals(info.Room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (rm != null)
+            {
+                Vector3 position = rm.Position + Quaternion.Euler(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation, 0) * info.Relative.ToVector3();
+                Vector2 rotation = info.Rotation.ToVector2() + new Vector2(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation);
+                Npc npc = LoadNPC(position, rotation, info.File);
+                return npc;
+            }
             return null;
         }
         //shitcode

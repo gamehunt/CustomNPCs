@@ -64,12 +64,6 @@ namespace NPCS.Utils
         public Dictionary<string, string> Args { get; set; }
     }
 
-    public enum AIMode
-    {
-        Legacy,
-        Python
-    }
-
     public class NpcSerializationInfo
     {
         public string Name { get; set; }
@@ -94,16 +88,11 @@ namespace NPCS.Utils
         [YamlMember(Alias = "affect_summary")]
         public bool AffectSummary { get; set; }
 
-        public NpcEventSerializationInfo[] Events { get; set; }
-
         [YamlMember(Alias = "ai_enabled")]
         public bool AiEnabled { get; set; }
 
-        [YamlMember(Alias = "ai_mode")]
-        public AIMode AiMode { get; set; }
-
-        [YamlMember(Alias = "ai_scripts")]
-        public string[] AiScripts { get; set; }
+        [YamlMember(Alias = "ai_script")]
+        public string AiScript { get; set; }
     }
 
     public class Utils
