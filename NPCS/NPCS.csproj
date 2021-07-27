@@ -6,7 +6,7 @@
     <Authors>gamehunt</Authors>
     <Version>1.6.3</Version>
     <Product>CustomNPCS</Product>
-    <AssemblyName>0NPCS</AssemblyName>
+    <AssemblyName>NPCS</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -42,7 +42,7 @@
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\DissonanceVoip.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.API">
-      <HintPath>..\PublicizedAssemblies\Exiled.API_publicized.dll</HintPath>
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.Events">
       <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Events.dll</HintPath>
@@ -53,8 +53,8 @@
     <Reference Include="Exiled.Permissions">
       <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
     </Reference>
-    <Reference Include="FakePlayer.API">
-      <HintPath>..\..\FakePlayerAPI\API\bin\Release\net472\FakePlayer.API.dll</HintPath>
+    <Reference Include="FakePlayers.API">
+      <HintPath>..\..\FakePlayerAPI\API\bin\Release\net472\FakePlayers.API.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\publicized_assemblies\Mirror_publicized.dll</HintPath>

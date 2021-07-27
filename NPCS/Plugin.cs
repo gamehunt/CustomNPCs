@@ -2,21 +2,18 @@ using Exiled.API.Enums;
 using Exiled.API.Features;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
-using NPCS.AI;
 using NPCS.AI.TargetFilters;
 using NPCS.Conditions;
 using NPCS.Navigation;
 using NPCS.Talking;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Evs = Exiled.Events;
 using Handlers = Exiled.Events.Handlers;
 
 namespace NPCS
 {
-    public class Plugin : Exiled.API.Features.Plugin<NPCS.Config>
+    public class Plugin : Plugin<Config, Translations>
     {
         //Instance variable for eventhandlers
         public EventHandlers EventHandlers;

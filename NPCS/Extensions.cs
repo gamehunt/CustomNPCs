@@ -1,5 +1,6 @@
 using Exiled.API.Features;
-using FakePlayer.Extensions;
+using FakePlayers.API;
+using FakePlayers.Extensions;
 
 namespace NPCS
 {
@@ -8,6 +9,11 @@ namespace NPCS
         public static bool IsNPC(this Player p)
         {
             return p.IsFakePlayer() && p.SessionVariables.ContainsKey("IsNPC");
+        }
+
+        public static bool IsNPC(this FakePlayer p)
+        {
+            return p.PlayerInstance.IsNPC();
         }
 
         public static Npc AsNPC(this Player p)

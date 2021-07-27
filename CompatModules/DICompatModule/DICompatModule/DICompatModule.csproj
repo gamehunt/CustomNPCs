@@ -42,6 +42,9 @@
     <Reference Include="Exiled.Permissions">
       <HintPath>..\..\..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
     </Reference>
+    <Reference Include="FakePlayer.API">
+      <HintPath>..\..\..\..\FakePlayerAPI\API\bin\Release\net472\FakePlayer.API.dll</HintPath>
+    </Reference>
     <Reference Include="FakePlayerAPI">
       <HintPath>..\..\..\..\FakePlayerAPI\FakePlayerAPI\bin\Release\net472\FakePlayerAPI.dll</HintPath>
     </Reference>

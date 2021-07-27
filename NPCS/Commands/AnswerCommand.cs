@@ -25,6 +25,10 @@ namespace NPCS.Commands
                     bool flag = false;
                     foreach (NPCS.Npc npc in NPCS.Npc.List)
                     {
+                        if (!npc.IsNPC())
+                        {
+                            continue;
+                        }
                         if (Vector3.Distance(npc.PlayerInstance.Position, s.Position) < 3f)
                         {
                             npc.HandleAnswer(s, arguments.At(0));
@@ -34,7 +38,7 @@ namespace NPCS.Commands
                     }
                     if (!flag)
                     {
-                        response = Plugin.Instance.Config.TranslationNpcNotFound;
+                        response = Plugin.Instance.Translation.NpcNotFound;
                     }
                     else
                     {
@@ -43,13 +47,13 @@ namespace NPCS.Commands
                 }
                 else
                 {
-                    response = Plugin.Instance.Config.TranslationAnswerNumber;
+                    response = Plugin.Instance.Translation.AnswerNumber;
                     return false;
                 }
             }
             else
             {
-                response = Plugin.Instance.Config.TranslationOnlyPlayers;
+                response = Plugin.Instance.Translation.OnlyPlayers;
                 return false;
             }
             return true;

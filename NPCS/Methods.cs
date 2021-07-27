@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
+using FakePlayers.API;
 using Interactables.Interobjects.DoorUtils;
 using MEC;
 using NPCS.Navigation;
@@ -34,7 +35,13 @@ namespace NPCS
 
             NpcSerializationInfo raw_npc = deserializer.Deserialize<NpcSerializationInfo>(input);
 
-            Npc npc = FakePlayer.API.FakePlayer.Create<Npc>(pos, new Vector3(raw_npc.Scale[0], raw_npc.Scale[1], raw_npc.Scale[2]), raw_npc.Role);
+            if (raw_npc.ProcessEvents)
+            {
+                Log.Warn("Your NPC have process_events set to true, so EXILED and some plugins can produce NRE's/incorrect behaviour");
+                Log.Warn("Make sure you are really need this flag before using!");
+            }
+
+            Npc npc = FakePlayer.Create<Npc>(pos, new Vector3(raw_npc.Scale[0], raw_npc.Scale[1], raw_npc.Scale[2]), raw_npc.Role, raw_npc.ProcessEvents);
 
             Timing.CallDelayed(0.5f, () =>
             {
@@ -64,6 +71,7 @@ namespace NPCS
 
             return npc;
         }
+
         public static Npc LoadNPC(Npc.NPCMappingInfo info)
         {
             Room rm = Map.Rooms.Where(r => r.Name.Equals(info.Room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
@@ -76,6 +84,7 @@ namespace NPCS
             }
             return null;
         }
+
         //shitcode
         public static void GenerateNavGraph()
         {
@@ -216,13 +225,8 @@ namespace NPCS
         {
             foreach (Npc.NPCMappingInfo info in infos)
             {
-                Room rm = Map.Rooms.Where(r => r.Name.Equals(info.Room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                if (rm != null)
-                {
-                    //FakePlayerAPI.FakePlayer.Create<Npc>(rm.Position + Quaternion.Euler(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation, 0) * info.Relative.ToVector3(), info.Rotation.ToVector2() + new Vector2(0, rm.Transform.localRotation.eulerAngles.y - info.RoomRotation), info.File);
-                    //TODO
-                    yield return Timing.WaitForSeconds(0.1f);
-                }
+                LoadNPC(info);
+                yield return Timing.WaitForSeconds(0.1f);
             }
         }
 

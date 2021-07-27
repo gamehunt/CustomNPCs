@@ -23,6 +23,10 @@ namespace NPCS.Commands
                 bool flag = false;
                 foreach (NPCS.Npc obj_npc in NPCS.Npc.List)
                 {
+                    if (!obj_npc.IsNPC())
+                    {
+                        continue;
+                    }
                     if (obj_npc.DisableDialogSystem || obj_npc.AIEnabled)
                     {
                         continue;
@@ -40,11 +44,11 @@ namespace NPCS.Commands
                     {
                         if (obj_npc.IsLocked && obj_npc.LockHandler == s)
                         {
-                            s.SendConsoleMessage($"[{obj_npc.PlayerInstance.Nickname}] {Plugin.Instance.Config.TranslationAlreadyTalking}", "yellow");
+                            s.SendConsoleMessage($"[{obj_npc.PlayerInstance.Nickname}] {Plugin.Instance.Translation.AlreadyTalking}", "yellow");
                         }
                         else
                         {
-                            s.SendConsoleMessage($"[{obj_npc.PlayerInstance.Nickname}] {Plugin.Instance.Config.TranslationNpcBusy}", "yellow");
+                            s.SendConsoleMessage($"[{obj_npc.PlayerInstance.Nickname}] {Plugin.Instance.Translation.NpcBusy}", "yellow");
                         }
                         response = null;
 
@@ -53,14 +57,14 @@ namespace NPCS.Commands
                 }
                 if (!flag)
                 {
-                    response = Plugin.Instance.Config.TranslationNpcNotFound;
+                    response = Plugin.Instance.Translation.NpcNotFound;
                     return false;
                 }
                 response = null;
             }
             else
             {
-                response = Plugin.Instance.Config.TranslationOnlyPlayers;
+                response = Plugin.Instance.Translation.OnlyPlayers;
                 return false;
             }
 

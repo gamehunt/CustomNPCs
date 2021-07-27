@@ -11,7 +11,7 @@ namespace NPCS.Conditions
         public override bool Check(Player player, Dictionary<string, string> args)
         {
             float value = float.Parse(args["value"].Replace('.', ','));
-            return Utils.Utils.CompareWithType(args["comparsion_type"], player.AdrenalineHealth, value);
+            return Utils.Utils.CompareWithType(args["comparsion_type"], player.ArtificialHealth, value);
         }
     }
 }

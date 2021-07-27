@@ -31,21 +31,6 @@ namespace NPCS
         [Description("Maximum distance between manual mapped nodes for auto linking")]
         public float NavNodeMapperMaxDistance { get; set; } = 3f;
 
-        //TRANSLATIONS
-
-        [Description("Localizations")]
-        public string TranslationAlreadyTalking { get; set; } = "We are already talking!";
-
-        public string TranslationNpcBusy { get; set; } = "I'm busy now, wait a second";
-        public string TranslationTalkEnd { get; set; } = "ended talk";
-        public string TranslationInvalidAnswer { get; set; } = "Invalid answer!";
-        public string TranslationIncorrectFormat { get; set; } = "Incorrect answer format!";
-        public string TranslationNotTalking { get; set; } = "You aren't talking to this NPC!";
-        public string TranslationNpcNotFound { get; set; } = "NPC not found!";
-        public string TranslationAnswerNumber { get; set; } = "You must provide answer number!";
-        public string TranslationOnlyPlayers { get; set; } = "Only players can use this!";
-        public string TranslationBanBroadcast { get; set; } = "<color=red>DONT BAN OR KICK NPCs</color>";
-
         //Frequencies
         [Description("Update frequencies")]
         public float AIIdleUpdateFrequency { get; set; } = 0.3f;
@@ -79,17 +64,14 @@ name: DEFAULT
 role: Scientist
 health: -1
 scale: [1, 1, 1]
+process_events: false
 inventory: [KeycardO5, GunLogicer]
 item_held: GunLogicer
 root_node: default_node.yml
 god_mode: true
 is_exclusive: true
 affect_summary: false
-process_scp_logic: false
-events: []
 ai_enabled: false
-ai_mode: Legacy
-ai: []
 ai_scripts: []
 ";
 

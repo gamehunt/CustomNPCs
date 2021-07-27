@@ -71,6 +71,9 @@ namespace NPCS.Utils
         public RoleType Role { get; set; }
         public float[] Scale { get; set; }
 
+        [YamlMember(Alias = "process_events")]
+        public bool ProcessEvents { get; set; }
+
         [YamlMember(Alias = "item_held")]
         public ItemType ItemHeld { get; set; }
 

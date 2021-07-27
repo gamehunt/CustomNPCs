@@ -2,6 +2,7 @@
 using Exiled.API.Features;
 using RemoteAdmin;
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace NPCS.Commands
@@ -23,6 +24,10 @@ namespace NPCS.Commands
                 bool flag = false;
                 foreach (NPCS.Npc obj_npc in NPCS.Npc.List)
                 {
+                    if (!obj_npc.IsNPC())
+                    {
+                        continue;
+                    }
                     if (Vector3.Distance(obj_npc.PlayerInstance.Position, s.Position) < 3f)
                     {
                         if (obj_npc.TalkingStates.ContainsKey(s))
@@ -35,14 +40,14 @@ namespace NPCS.Commands
                 }
                 if (!flag)
                 {
-                    response = Plugin.Instance.Config.TranslationNpcNotFound;
+                    response = Plugin.Instance.Translation.NpcNotFound;
                     return false;
                 }
                 response = null;
             }
             else
             {
-                response = Plugin.Instance.Config.TranslationOnlyPlayers;
+                response = Plugin.Instance.Translation.OnlyPlayers;
                 return false;
             }
 

@@ -2,7 +2,7 @@
 using Exiled.API.Features;
 using MEC;
 using Microsoft.Scripting.Hosting;
-using NPCS.AI;
+using FakePlayers.API;
 using NPCS.AI.Python;
 using NPCS.Events;
 using NPCS.Navigation;
@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace NPCS
 {
-    public class Npc: FakePlayer.API.FakePlayer
+    public class Npc: FakePlayer
     {
         #region Serialization
 
@@ -590,7 +590,7 @@ namespace NPCS
         {
             if (TalkingStates.ContainsKey(p))
             {
-                p.SendConsoleMessage($"[{PlayerInstance.Nickname}] {Plugin.Instance.Config.TranslationAlreadyTalking}", "yellow");
+                p.SendConsoleMessage($"[{PlayerInstance.Nickname}] {Plugin.Instance.Translation.AlreadyTalking}", "yellow");
             }
             else
             {
@@ -614,7 +614,7 @@ namespace NPCS
                 if (end)
                 {
                     TalkingStates.Remove(p);
-                    p.SendConsoleMessage(PlayerInstance.Nickname + $" {Plugin.Instance.Config.TranslationTalkEnd}", "yellow");
+                    p.SendConsoleMessage(PlayerInstance.Nickname + $" {Plugin.Instance.Translation.TalkEnd}", "yellow");
                     IsLocked = false;
                 }
             }
@@ -654,23 +654,23 @@ namespace NPCS
                         if (end)
                         {
                             TalkingStates.Remove(p);
-                            p.SendConsoleMessage(PlayerInstance.Nickname + $" {Plugin.Instance.Config.TranslationTalkEnd}", "yellow");
+                            p.SendConsoleMessage(PlayerInstance.Nickname + $" {Plugin.Instance.Translation.TalkEnd}", "yellow");
                             IsLocked = false;
                         }
                     }
                     else
                     {
-                        p.SendConsoleMessage(Plugin.Instance.Config.TranslationInvalidAnswer, "red");
+                        p.SendConsoleMessage(Plugin.Instance.Translation.InvalidAnswer, "red");
                     }
                 }
                 else
                 {
-                    p.SendConsoleMessage(Plugin.Instance.Config.TranslationIncorrectFormat, "red");
+                    p.SendConsoleMessage(Plugin.Instance.Translation.IncorrectFormat, "red");
                 }
             }
             else
             {
-                p.SendConsoleMessage(Plugin.Instance.Config.TranslationNotTalking, "red");
+                p.SendConsoleMessage(Plugin.Instance.Translation.NotTalking, "red");
             }
         }
 
@@ -880,7 +880,7 @@ namespace NPCS
             }
             else
             {
-                p.SendConsoleMessage($"[{PlayerInstance.Nickname}] {Plugin.Instance.Config.TranslationNpcBusy}", "yellow");
+                p.SendConsoleMessage($"[{PlayerInstance.Nickname}] {Plugin.Instance.Translation.NpcBusy}", "yellow");
             }
         }
 

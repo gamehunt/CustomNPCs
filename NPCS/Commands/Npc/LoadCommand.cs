@@ -1,9 +1,8 @@
 ﻿using CommandSystem;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FakePlayers.API;
+using RemoteAdmin;
+using Exiled.API.Features;
 
 namespace NPCS.Commands.Npc
 {
@@ -17,8 +16,19 @@ namespace NPCS.Commands.Npc
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            response = "123";
-            return false;
+            PlayerCommandSender ply = (PlayerCommandSender)sender;
+            Player ply_obj = Player.Get(ply.PlayerId);
+            NPCS.Npc npc = Methods.LoadNPC(ply_obj.Position, ply_obj.Rotations, arguments.Count > 0 ? arguments.Array[0] : "default_npc.yml");
+            if (npc != null)
+            {
+                response = $"NPC loaded! Debug identifier: {npc.GetIdentifier()}";
+                return true;
+            }
+            else
+            {
+                response = "Failed to load NPC! Check console for details";
+                return false;
+            }
         }
     }
 }

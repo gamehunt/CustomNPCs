@@ -9,11 +9,11 @@ namespace NPCS.Commands.Nav
 {
     class SaveCommand : ICommand
     {
-        public string Command => "create";
+        public string Command => "save";
 
         public string[] Aliases => new string[] { };
 
-        public string Description => "Creates navigation node";
+        public string Description => "Saves current graph";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
