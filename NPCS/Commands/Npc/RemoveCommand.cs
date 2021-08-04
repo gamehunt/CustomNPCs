@@ -17,8 +17,23 @@ namespace NPCS.Commands.Npc
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            response = null;
-            return false;
+            if(arguments.Count < 1)
+            {
+                response = "NPC id required!";
+                return false;
+            }
+            NPCS.Npc npc = (NPCS.Npc)FakePlayers.API.FakePlayer.List.Where(n => n.IsNPC() && n.PlayerInstance.Id == int.Parse(arguments.Array[0]));
+            if (npc != null)
+            {
+                npc.Kill();
+                response = "Removed NPC";
+                return true;
+            }
+            else
+            {
+                response = "NPC not found!";
+                return false;
+            }
         }
     }
 }

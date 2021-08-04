@@ -158,5 +158,10 @@ namespace NPCS.AI.Python
                     return null;
             }
         }
+
+        public void Print(string val)
+        {
+            Log.Info($"[AI:{npc.GetIdentifier()}] {val}");
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace NPCS.Commands.Npc
                 response = "Path required";
                 return false;
             }
-            string path = Path.Combine(Config.NPCs_mappings_path, arguments.Array[0]);
+            string path = Path.Combine(Config.MappingsDirectory, arguments.Array[0]);
             StreamReader sr;
             if (File.Exists(path))
             {

@@ -1,9 +1,6 @@
 ﻿using CommandSystem;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NPCS.Commands.Npc
 {
@@ -17,8 +14,12 @@ namespace NPCS.Commands.Npc
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            response = null;
-            return false;
+            foreach(NPCS.Npc npc in FakePlayers.API.FakePlayer.List.Where(n => n.IsNPC()))
+            {
+                npc.Kill();
+            }
+            response = "All NPCs have been destroyed";
+            return true;
         }
     }
 }

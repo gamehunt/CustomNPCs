@@ -34,21 +34,17 @@ namespace NPCS
         //Frequencies
         [Description("Update frequencies")]
         public float AIIdleUpdateFrequency { get; set; } = 0.3f;
-
         public float MovementUpdateFrequency { get; set; } = 0.1f;
         public float NavUpdateFrequency { get; set; } = 0.1f;
 
         [Description("Mappings listed there will be loaded on round start")]
         public List<string> InitialMappings { get; set; } = new List<string>();
 
-        public static string NPCs_root_path = Path.Combine(Paths.Configs, "npcs");
-        public static string NPCs_scripts_path = Path.Combine(NPCs_root_path, "scripts");
-
-        public static string NPCs_mappings_path = Path.Combine(NPCs_root_path, "mappings");
-
-        public static string NPCs_nav_mappings_path = Path.Combine(NPCs_root_path, "nav_mappings.yml");
-
-        public static string NPCs_nodes_path = Path.Combine(NPCs_root_path, "nodes");
+        public static string RootDirectory = Path.Combine(Paths.Configs, "npcs");
+        public static string ScriptsDirectory = Path.Combine(RootDirectory, "scripts");
+        public static string MappingsDirectory = Path.Combine(RootDirectory, "mappings");
+        public static string NavMappingsDirectory = Path.Combine(RootDirectory, "nav_mappings.yml");
+        public static string DialogNodesDirectory = Path.Combine(RootDirectory, "dialog_nodes");
 
         public static string DefaultNodeContents =
 @"---

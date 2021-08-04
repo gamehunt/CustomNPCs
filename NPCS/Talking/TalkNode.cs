@@ -96,7 +96,7 @@ namespace NPCS.Talking
                 Log.Debug("Parsing next nodes...", Plugin.Instance.Config.VerboseOutput);
                 foreach (string item in raw_node.NextNodes)
                 {
-                    NextNodes.Add(TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, item)));
+                    NextNodes.Add(TalkNode.FromFile(Path.Combine(Config.DialogNodesDirectory, item)));
                 }
             }
             catch (Exception e)

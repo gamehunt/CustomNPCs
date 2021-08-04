@@ -1,10 +1,9 @@
 ﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
+using FakePlayers.API;
 using MEC;
 using Microsoft.Scripting.Hosting;
-using FakePlayers.API;
 using NPCS.AI.Python;
-using NPCS.Events;
 using NPCS.Navigation;
 using NPCS.Talking;
 using System;
@@ -14,7 +13,7 @@ using UnityEngine;
 
 namespace NPCS
 {
-    public class Npc: FakePlayer
+    public class Npc : FakePlayer
     {
         #region Serialization
 
@@ -189,10 +188,12 @@ namespace NPCS
 
         //AI STATES -------------------------------
         public bool AIEnabled { get; set; } = false;
+
         public string AIScript { get; set; }
 
         // ============ Python
         public NPCAIController AIController { get; set; } = null;
+        public ScriptScope ScriptScope { get; private set; } = null;
         public Player CurrentAIPlayerTarget { get; set; } = null;
         public Room CurrentAIRoomTarget { get; set; } = null;
         public string CurrentAIItemGroupTarget { get; set; } = null;
@@ -211,36 +212,45 @@ namespace NPCS
 
         private IEnumerator<float> AICoroutine()
         {
-            if (AIEnabled)
+            while (!IsValid)
             {
-                ScriptScope scope = Plugin.Engine.CreateScope();
-                while (!IsValid)
+                yield return Timing.WaitForOneFrame;
+            }
+            Func<NPCAIController, NPCAIHelper, float, float> tick = null;
+            if (!string.IsNullOrEmpty(AIScript))
+            {
+                try
                 {
-                   yield return 0.0f;
+                    ScriptScope = Plugin.Engine.ExecuteFile(AIScript);
+                    tick = ScriptScope.GetVariable<Func<NPCAIController, NPCAIHelper, float, float>>("Tick");
                 }
-                scope.SetVariable("npc", AIController);
-                scope.SetVariable("npc_utils", AIHelper);
-                for (; ; )
+                catch (Exception e)
                 {
-                    if (AIScript.Length != 0)
+                    Log.Error($"Failed to prepare AI script: {e}");
+                }
+            }
+            for (; ; )
+            {
+                if (AIEnabled && tick != null)
+                {
+                    float delay = Plugin.Instance.Config.AIIdleUpdateFrequency;
+                    try
                     {
-                          float delay = 0f;
-                          try
-                          {
-                             scope.SetVariable("delay", Plugin.Instance.Config.AIIdleUpdateFrequency);
-                             Plugin.Engine.ExecuteFile(AIScript, scope);
-                             delay = scope.GetVariable<float>("delay");
-                          }
-                          catch (Exception e)
-                          {
-                             Log.Error($"AI script failure: {e}");
-                          }
-                          yield return Timing.WaitForSeconds(delay);
+                        delay = tick.Invoke(AIController, AIHelper, Plugin.Instance.Config.AIIdleUpdateFrequency);
                     }
-                    else
+                    catch (Exception e)
                     {
-                       yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
+                        Log.Error($"AI script failure: {e}");
                     }
+                    if (delay < Plugin.Instance.Config.AIIdleUpdateFrequency)
+                    {
+                        delay = Plugin.Instance.Config.AIIdleUpdateFrequency;
+                    }
+                    yield return Timing.WaitForSeconds(delay);
+                }
+                else
+                {
+                    yield return Timing.WaitForSeconds(Plugin.Instance.Config.AIIdleUpdateFrequency);
                 }
             }
         }
@@ -276,7 +286,7 @@ namespace NPCS
                             {
                                 //Stop or try to search otherwise
 
-                                FireEvent(new NPCTargetLostEvent(this, FollowTarget));
+                                //FireEvent(new NPCTargetLostEvent(this, FollowTarget));
 
                                 FollowTargetPosCache.Clear();
                                 eta = 0;
@@ -318,7 +328,7 @@ namespace NPCS
                         // Target dead, reset
                         FollowTargetPosCache.Clear();
                         eta = 0;
-                        FireEvent(new NPCFollowTargetDiedEvent(this, FollowTarget));
+                        //FireEvent(new NPCFollowTargetDiedEvent(this, FollowTarget));
                         Stop();
                         continue;
                     }
@@ -884,9 +894,26 @@ namespace NPCS
             }
         }
 
-        public void FireEvent(NPCEvent ev)
+        public void FireEvent(string eventName, Dictionary<string, object> args)
         {
-
+            if(ScriptScope == null)
+            {
+                Log.Debug("Skipping event process: ScriptScope == null", Plugin.Instance.Config.VerboseOutput);
+                return;
+            }
+            args["npc"] = AIController;
+            args["helper"] = AIHelper;
+            try
+            {
+                Func<Dictionary<string, object>, bool> eventHandler = ScriptScope.GetVariable<Func<Dictionary<string, object>, bool>>(eventName + "Handler");
+                eventHandler.Invoke(args);
+            }catch(MissingMemberException)
+            {
+                Log.Debug($"[{GetIdentifier()}({PlayerInstance.Nickname})] Skipping unused event: {eventName}", Plugin.Instance.Config.VerboseOutput);
+            }catch(Exception e)
+            {
+                Log.Error($"Error occured during handling event {eventName} in {GetIdentifier()}({PlayerInstance.Nickname}): {e}");
+            }
         }
 
         public override string GetIdentifier()
@@ -912,7 +939,6 @@ namespace NPCS
 
         public override void OnPreInitialization()
         {
-            
         }
 
         public override void OnDestroying()

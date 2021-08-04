@@ -22,7 +22,7 @@ namespace NPCS
         public override string Name { get; } = "CustomNPCs";
         public override string Prefix { get; } = "CNPCS";
         public override Version Version { get; } = new Version(1, 6, 4);
-        public override Version RequiredExiledVersion { get; } = new Version(2, 9, 4);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 11, 1);
 
         public override PluginPriority Priority => PluginPriority.Lower;
 
@@ -47,10 +47,9 @@ namespace NPCS
                 Random = new Random();
 
                 Engine = Python.CreateEngine();
-                Engine.Runtime.LoadAssembly(Assembly.GetAssembly(typeof(HitBoxType)));
                 Engine.Runtime.LoadAssembly(Assembly.GetExecutingAssembly());
 
-                Harmony = new HarmonyLib.Harmony($"gamehunt.cnpcs.{reloads}");
+                Harmony = new HarmonyLib.Harmony($"gamehunt.cnpcs.{reloads}"); 
                 reloads++;
 
                 Harmony.PatchAll();
@@ -62,7 +61,6 @@ namespace NPCS
                 Handlers.Server.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
                 Handlers.Server.RespawningTeam += EventHandlers.OnTeamRespawning;
 
-                Handlers.Player.Dying += EventHandlers.OnDying;
                 Handlers.Player.EnteringPocketDimension += EventHandlers.OnEnteringPocketDim;
                 Handlers.Player.Hurting += EventHandlers.OnHurt;
 
@@ -70,37 +68,37 @@ namespace NPCS
 
                 Handlers.Warhead.Starting += EventHandlers.OnWarheadStart;
 
-                if (!Directory.Exists(Config.NPCs_root_path))
+                if (!Directory.Exists(Config.RootDirectory))
                 {
-                    Directory.CreateDirectory(Config.NPCs_root_path);
+                    Directory.CreateDirectory(Config.RootDirectory);
                 }
-                if (!Directory.Exists(Config.NPCs_nodes_path))
+                if (!Directory.Exists(Config.DialogNodesDirectory))
                 {
-                    Directory.CreateDirectory(Config.NPCs_nodes_path);
+                    Directory.CreateDirectory(Config.DialogNodesDirectory);
                 }
-                if (!Directory.Exists(Config.NPCs_mappings_path))
+                if (!Directory.Exists(Config.MappingsDirectory))
                 {
-                    Directory.CreateDirectory(Config.NPCs_mappings_path);
+                    Directory.CreateDirectory(Config.MappingsDirectory);
                 }
-                if (!Directory.Exists(Config.NPCs_scripts_path))
+                if (!Directory.Exists(Config.ScriptsDirectory))
                 {
-                    Directory.CreateDirectory(Config.NPCs_scripts_path);
+                    Directory.CreateDirectory(Config.ScriptsDirectory);
                 }
-                if (!File.Exists(Config.NPCs_nav_mappings_path))
+                if (!File.Exists(Config.NavMappingsDirectory))
                 {
-                    StreamWriter sw = File.CreateText(Config.NPCs_nav_mappings_path);
+                    StreamWriter sw = File.CreateText(Config.NavMappingsDirectory);
                     sw.Write(Config.DefaultNavMappings);
                     sw.Close();
                 }
-                if (!File.Exists(Path.Combine(Config.NPCs_nodes_path, "default_node.yml")))
+                if (!File.Exists(Path.Combine(Config.DialogNodesDirectory, "default_node.yml")))
                 {
-                    StreamWriter sw = File.CreateText(Path.Combine(Config.NPCs_nodes_path, "default_node.yml"));
+                    StreamWriter sw = File.CreateText(Path.Combine(Config.DialogNodesDirectory, "default_node.yml"));
                     sw.Write(Config.DefaultNodeContents);
                     sw.Close();
                 }
-                if (!File.Exists(Path.Combine(Config.NPCs_root_path, "default_npc.yml")))
+                if (!File.Exists(Path.Combine(Config.RootDirectory, "default_npc.yml")))
                 {
-                    StreamWriter sw = File.CreateText(Path.Combine(Config.NPCs_root_path, "default_npc.yml"));
+                    StreamWriter sw = File.CreateText(Path.Combine(Config.RootDirectory, "default_npc.yml"));
                     sw.Write(Config.DefaultNPCContents);
                     sw.Close();
                 }
@@ -185,7 +183,6 @@ namespace NPCS
             Handlers.Server.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
             Handlers.Server.RespawningTeam -= EventHandlers.OnTeamRespawning;
 
-            Handlers.Player.Dying -= EventHandlers.OnDying;
             Handlers.Player.EnteringPocketDimension -= EventHandlers.OnEnteringPocketDim;
             Handlers.Player.Hurting -= EventHandlers.OnHurt;
 

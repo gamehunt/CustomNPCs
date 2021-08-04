@@ -21,7 +21,7 @@ namespace NPCS
     {
         public static Npc LoadNPC(Vector3 pos, Vector2 rotation, string file)
         {
-            var input = new StringReader(File.ReadAllText(Path.Combine(Config.NPCs_root_path, file)));
+            var input = new StringReader(File.ReadAllText(Path.Combine(Config.RootDirectory, file)));
 
             var deserializer = new DeserializerBuilder()
                                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
@@ -45,30 +45,37 @@ namespace NPCS
 
             Timing.CallDelayed(0.5f, () =>
             {
-                npc.IsExclusive = raw_npc.IsExclusive;
-                npc.AIEnabled = raw_npc.AiEnabled;
-
-                string full = Path.Combine(Config.NPCs_scripts_path, raw_npc.AiScript);
-                Log.Debug($"Enabling script: {full}", Plugin.Instance.Config.VerboseOutput);
-                npc.AIScript = full;
-
-                foreach (ItemType type in raw_npc.Inventory)
+                try
                 {
-                    npc.PlayerInstance.AddItem(type);
+                    npc.IsExclusive = raw_npc.IsExclusive;
+                    npc.AIEnabled = raw_npc.AiEnabled;
+
+                    string full = Path.Combine(Config.ScriptsDirectory, raw_npc.AiScript);
+                    Log.Debug($"Enabling script: {full}", Plugin.Instance.Config.VerboseOutput);
+                    npc.AIScript = full;
+
+                    foreach (ItemType type in raw_npc.Inventory)
+                    {
+                        npc.PlayerInstance.AddItem(type);
+                    }
+
+                    npc.PlayerInstance.Rotations = rotation;
+                    npc.PlayerInstance.Health = raw_npc.Health <= 0 ? npc.PlayerInstance.ReferenceHub.characterClassManager.Classes.SafeGet(raw_npc.Role).maxHP : raw_npc.Health;
+                    npc.PlayerInstance.ReferenceHub.nicknameSync.Network_myNickSync = raw_npc.Name;
+                    npc.PlayerInstance.RankName = "NPC";
+                    npc.PlayerInstance.Inventory.Network_curItemSynced = raw_npc.ItemHeld;
+                    npc.PlayerInstance.IsGodModeEnabled = raw_npc.GodMode;
+                    npc.AffectEndConditions = raw_npc.AffectSummary;
+                    npc.RootNode = TalkNode.FromFile(Path.Combine(Config.DialogNodesDirectory, raw_npc.RootNode));
+
+                    npc.StartAI();
                 }
-
-                npc.PlayerInstance.Rotations = rotation;
-                npc.PlayerInstance.Health = raw_npc.Health;
-                npc.PlayerInstance.ReferenceHub.nicknameSync.Network_myNickSync = raw_npc.Name;
-                npc.PlayerInstance.RankName = "NPC";
-                npc.PlayerInstance.Inventory.Network_curItemSynced = raw_npc.ItemHeld;
-                npc.PlayerInstance.IsGodModeEnabled = raw_npc.GodMode;
-                npc.AffectEndConditions = raw_npc.AffectSummary;
-                npc.RootNode = TalkNode.FromFile(Path.Combine(Config.NPCs_nodes_path, raw_npc.RootNode));
-
-                npc.StartAI();
+                catch(Exception e)
+                {
+                    Log.Error($"Exception in NPC initializer: {e}");
+                }
             });
-
+            
             return npc;
         }
 
@@ -92,7 +99,7 @@ namespace NPCS
             {
                 Log.Info("[NAV] Generating navigation graph...");
 
-                StreamReader sr = File.OpenText(Config.NPCs_nav_mappings_path);
+                StreamReader sr = File.OpenText(Config.NavMappingsDirectory);
                 var deserializer = new DeserializerBuilder().IgnoreUnmatchedProperties().Build();
                 Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>> manual_mappings = deserializer.Deserialize<Dictionary<string, List<NavigationNode.NavNodeSerializationInfo>>>(sr);
                 sr.Close();
@@ -197,7 +204,7 @@ namespace NPCS
 
         public static void SaveNPCMappings(string path)
         {
-            path = Path.Combine(Config.NPCs_mappings_path, path);
+            path = Path.Combine(Config.MappingsDirectory, path);
             StreamWriter sw;
             if (!File.Exists(path))
             {
@@ -232,7 +239,7 @@ namespace NPCS
 
         public static void LoadNPCMappings(string path)
         {
-            path = Path.Combine(Config.NPCs_mappings_path, path);
+            path = Path.Combine(Config.MappingsDirectory, path);
             StreamReader sr;
             if (File.Exists(path))
             {

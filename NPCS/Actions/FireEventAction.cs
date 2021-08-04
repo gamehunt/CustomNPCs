@@ -1,5 +1,4 @@
 ﻿using Exiled.API.Features;
-using NPCS.Events;
 using NPCS.Talking;
 using System.Collections.Generic;
 
@@ -11,17 +10,16 @@ namespace NPCS.Actions
 
         public override void Process(Npc npc, Player player, Dictionary<string, string> args)
         {
-            NPCCustomEvent ev = new NPCCustomEvent(npc, player, args["event_name"]);
             if (bool.Parse(args["global"]))
             {
                 foreach (Npc n in Npc.List)
                 {
-                    n.FireEvent(ev);
+                    n.FireEvent(args["event_name"], new Dictionary<string, object>() { });
                 }
             }
             else
             {
-                npc.FireEvent(ev);
+                npc.FireEvent(args["event_name"], new Dictionary<string, object>() { });
             }
         }
     }

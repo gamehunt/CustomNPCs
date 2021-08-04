@@ -17,8 +17,12 @@ namespace NPCS.Commands.Npc
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            response = null;
-            return false;
+            foreach (NPCS.Npc npc in FakePlayers.API.FakePlayer.List.Where(n => n.IsNPC()))
+            {
+                sender.Respond($"{npc.PlayerInstance.Id} {npc.PlayerInstance.Nickname} {npc.GetIdentifier()}");
+            }
+            response = "List end";
+            return true;
         }
     }
 }

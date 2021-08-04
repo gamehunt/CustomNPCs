@@ -1,7 +1,6 @@
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using MEC;
-using NPCS.Events;
 using NPCS.Navigation;
 using System.Collections.Generic;
 using System;
@@ -37,8 +36,7 @@ namespace NPCS
         {
             foreach (Npc npc in Npc.List)
             {
-                NPCWarheadStartedEvent nev = new NPCWarheadStartedEvent(npc, ev.Player);
-                npc.AttachedCoroutines.Add(Timing.CallDelayed(0.1f, () => npc.FireEvent(nev)));
+                npc.FireEvent("WarheadStartEvent", new Dictionary<string, object>() { });
             }
         }
 
@@ -46,18 +44,7 @@ namespace NPCS
         {
             foreach (Npc npc in Npc.List)
             {
-                NPCTeamRespawnEvent nev = new NPCTeamRespawnEvent(npc, null, ev.NextKnownTeam);
-                npc.FireEvent(nev);
-            }
-        }
-
-        public void OnDying(DyingEventArgs ev)
-        {
-            if (ev.Target.IsNPC())
-            {
-                Npc cmp = ev.Target.AsNPC();
-                NPCDiedEvent npc_ev = new NPCDiedEvent(cmp, ev.Killer);
-                cmp.FireEvent(npc_ev);
+                npc.FireEvent("HurtEvent", new Dictionary<string, object>() { { "team", ev.NextKnownTeam } });
             }
         }
 
@@ -66,7 +53,7 @@ namespace NPCS
             if (ev.Target.IsNPC())
             {
                 Npc npc = ev.Target.AsNPC();
-                npc.FireEvent(new NPCHurtEvent(npc, ev.Attacker));
+                npc.FireEvent("HurtEvent", new Dictionary<string, object>() { {"damage" , ev.Amount}});
             }
         }
 
@@ -86,7 +73,7 @@ namespace NPCS
         {
             foreach (Npc component in Npc.List)
             {
-                component.FireEvent(new NPCDecontaminationEvent(component, null));
+                component.FireEvent("DecontaminationEvent", new Dictionary<string, object>() { });
             }
         }
     }

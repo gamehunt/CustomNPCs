@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="DynamicLanguageRuntime" Version="1.3.0" />
+    <PackageReference Include="EXILED" Version="2.11.1" />
     <PackageReference Include="IronPython" Version="2.7.11" />
     <PackageReference Include="IronPython.Interpreter" Version="2.7.4" />
     <PackageReference Include="IronPython.StdLib" Version="2.7.11" />
@@ -40,18 +41,6 @@
     </Reference>
     <Reference Include="DissonanceVoip">
       <HintPath>..\..\..\SLServer\SCPSL_Data\Managed\DissonanceVoip.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.API">
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Events">
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Events.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Loader">
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Exiled.Loader.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Permissions">
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Permissions.dll</HintPath>
     </Reference>
     <Reference Include="FakePlayers.API">
       <HintPath>..\..\FakePlayerAPI\API\bin\Release\net472\FakePlayers.API.dll</HintPath>
