@@ -1,5 +1,5 @@
 # CustomNPCs
-Plugin is currently under development, so new features will be added soon
+SCP:SL Plugin is currently under development, so new features will be added soon
 
 Permission node: `npc.all`
 
